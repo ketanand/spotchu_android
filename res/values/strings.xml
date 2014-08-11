@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">Spotchu</string>
+    <string name="camera">Camera</string>
+    <string name="no_internet">Internet not available.</string>
+    <string name="registration_failed">Login Failed, Please try again.</string>
+    <string name="app_incompatible">Play Services not found, Please install to use Spotchu.</string>
+
+</resources>

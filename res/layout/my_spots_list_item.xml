@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp"
+    android:background="@android:color/white"
+    android:layout_margin="5dp"
+>
+    	<ImageView
+        android:id="@+id/imgSpot"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="6dp"
+        android:scaleType="centerCrop"
+         />
+    	
+	    <TextView
+		        android:id="@+id/lblSpotTitle"
+		        android:layout_alignParentTop="true"
+		        android:layout_toRightOf="@id/imgSpot"
+		        style="@style/label.medium"
+		>
+		</TextView>
+		
+	    <TextView
+		        android:id="@+id/lblSpotTime"
+		        android:layout_alignParentBottom="true"
+		        android:layout_toRightOf="@id/imgSpot"
+		        style="@style/label.small"
+		>
+		</TextView>
+		
+		<!-- ImageButton 
+		     android:id="@+id/btnRetry"
+		     android:layout_alignParentRight="true"
+		     android:layout_alignParentTop="true"
+        	 android:layout_alignWithParentIfMissing="true"
+        	 android:layout_width="20dp"
+		     android:layout_height="20dp"
+		     android:visibility="gone"
+		    /-->
+		
+		
+		
+		<ImageView
+	        android:id="@+id/imgHi5"
+	        android:layout_width="20dp"
+	        android:layout_height="20dp"
+	        android:layout_below="@+id/lblSpotTitle"
+	        android:layout_toRightOf="@+id/imgSpot"
+	        android:layout_margin="2dip"
+	        android:src="@drawable/hi5"
+         />
+		
+		<TextView
+		        android:id="@+id/lblHi5Count"
+		        android:layout_below="@+id/lblSpotTitle"
+		        android:layout_toRightOf="@+id/imgHi5"
+		        style="@style/label.small"
+		>
+		</TextView>
+		
+		<ImageView
+	        android:id="@+id/imgComment"
+	        android:layout_width="20dp"
+	        android:layout_height="20dp"
+	        android:layout_below="@+id/lblSpotTitle"
+	        android:layout_toRightOf="@+id/lblHi5Count"
+	        android:layout_margin="2dip"
+	        android:src="@drawable/comment"
+         />
+		
+		<TextView
+		        android:id="@+id/lblCommentCount"
+		        android:layout_below="@+id/lblSpotTitle"
+		        android:layout_toRightOf="@+id/imgComment"
+		        style="@style/label.small"	        
+		>
+		</TextView>
+		
+		<!-- ImageButton 
+		     android:id="@+id/btnEditSpot"
+		     android:layout_toLeftOf="@+id/btnDeleteSpot"
+		     android:layout_alignParentTop="true"
+        	 android:layout_width="40dp"
+		     android:layout_height="40dp"
+		     android:src="@android:drawable/ic_menu_edit"
+		     android:background="@color/white"
+		/-->
+		
+		<ImageButton 
+		     android:id="@+id/btnDeleteSpot"
+		     android:layout_alignParentRight="true"
+		     android:layout_alignParentTop="true"
+        	 android:layout_width="40dp"
+		     android:layout_height="40dp"
+		     android:src="@android:drawable/ic_menu_delete"
+		     android:background="@drawable/button_background"
+		/>
+</RelativeLayout>
+

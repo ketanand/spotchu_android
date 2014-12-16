@@ -4,66 +4,93 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-    
-    <EditText
-        android:id="@+id/txtTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Enter Title" >
-
-        <requestFocus />
-    </EditText>
 
     <ImageView
         android:id="@+id/imgPic"
-        android:layout_width="225dp"
-        android:layout_height="225dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         android:layout_gravity="center_horizontal"
         android:scaleType="centerCrop"
-        android:layout_margin="10dp" />
+    />
+         
+    <!-- android.opengl.GLSurfaceView
+        android:id="@+id/effectsview"
+        android:layout_width="fill_parent"
+        android:layout_height="300dp"
+    /-->     
     
     <EditText
-        android:id="@+id/txtTags"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/txtCaption"
+        style="@style/label.medium"
         android:ems="10"
-        android:hint="Add Tags" >
+        android:hint="@string/add_caption"
+        android:layout_margin="10dp"
+        android:layout_gravity="center_horizontal"
+        android:maxLength="100" >
+        <requestFocus />
     </EditText>
-	
-    </LinearLayout>
     
-    <RelativeLayout 
-    	 android:layout_width="match_parent"
-    	 android:layout_height="wrap_content"
-    	    
-    >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="1"
-        android:weightSum="1.0"
-        android:layout_alignParentBottom="true"   >
-
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:layout_weight=".5" />
-
-        <Button
-            android:id="@+id/btnOk"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Share"
-            android:layout_weight=".5" />
-    
-    </LinearLayout>
-    </RelativeLayout>
+	    <!-- LinearLayout 
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:weightSum="1.0"
+	    	    android:layout_above="@+id/layoutBottomButtons"
+	    	    android:layout_margin="2dp"
+	    	    android:layout_alignParentTop="true"
+	    	>
+	    	 
+		    	<ImageButton 
+				     android:id="@+id/btnNoEffect"
+		        	 android:layout_width="40dp"
+				     android:layout_height="40dp"
+				     android:layout_weight="0.2"
+				     android:src="@drawable/hi5"
+				     android:background="@android:color/white"
+				/>
+				
+				<ImageButton 
+				     android:id="@+id/btnEffectDocumentary"
+		        	 android:layout_width="40dp"
+				     android:layout_height="40dp"
+				     android:layout_weight="0.2"
+				     android:src="@drawable/comment"
+				     android:background="@android:color/white"
+				/>
+				
+				<ImageButton 
+				     android:id="@+id/btnEffectGrain"
+		        	 android:layout_width="40dp"
+				     android:layout_height="40dp"
+				     android:layout_weight="0.2"
+				     android:src="@android:drawable/ic_menu_share"
+				     android:background="@android:color/white"
+				/>
+				
+				<ImageButton 
+				     android:id="@+id/btnEffectGreyscale"
+		        	 android:layout_width="40dp"
+				     android:layout_height="40dp"
+				     android:layout_weight="0.2"
+				     android:src="@android:drawable/ic_menu_share"
+				     android:background="@android:color/white"
+				/>
+				
+				<ImageButton 
+				     android:id="@+id/btnEffectSepia"
+		        	 android:layout_width="40dp"
+				     android:layout_height="40dp"
+				     android:layout_weight="0.2"
+				     android:src="@android:drawable/ic_menu_share"
+				     android:background="@android:color/white"
+				/>
+		</LinearLayout-->     
+	        
+	        
+	        <Button
+	            android:id="@+id/btnOk"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:text="@string/share"
+	            android:enabled="true"
+	            android:layout_gravity="bottom" />
 </LinearLayout>

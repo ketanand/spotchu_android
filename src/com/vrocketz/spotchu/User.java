@@ -2,9 +2,23 @@ package com.vrocketz.spotchu;
 
 import java.io.File;
 
+import com.vrocketz.spotchu.helper.Constants;
+import com.vrocketz.spotchu.helper.Util;
+import com.vrocketz.spotchu.runnables.DownloadFileRunnable;
+
 public class User {
 	public enum Type {
-		GOOGLE, FACEBOOK;
+		GOOGLE("Google"), FACEBOOK("Facebook");
+		
+		private String val;
+		
+		private Type(String val){
+			this.val = val;
+		}
+		
+		public String toString(){
+			return this.val;
+		}
 	}
 	private String email;
 	private String name;

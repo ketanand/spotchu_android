@@ -5,5 +5,20 @@
     <string name="no_internet">Internet not available.</string>
     <string name="registration_failed">Login Failed, Please try again.</string>
     <string name="app_incompatible">Play Services not found, Please install to use Spotchu.</string>
-
+	<string name="spot_being_uploaded">Spot upload in progress.</string>
+	<string name="spot_posted">Spot posted successfully.</string>
+	<string name="spot_post_failed">Post failed. Click here to try again.</string>
+	<string name="close">Close</string>
+	<string name="hi5">Hi5</string>
+	<string name="comment">Comment</string>
+	<string name="cancel">Cancel</string>
+	<string name="share">Share</string>
+	<string name="add_caption">      Write Image Caption ..    </string>
+	<string name="enter_title">Enter Title</string>
+	<string name="spot_url_not_found_message">Hey Chekout this cool spot @ http://spotchu.com</string>
+	<string name="spot_url_share_message">Hey Chekout this cool spot @ </string>
+	<string name="past_activity">Past Activity</string>
+	<string name="my_spots">My Spots</string>
+	<string name="explore">Explore</string>
+	<string name="share_via">Share via..</string>
 </resources>

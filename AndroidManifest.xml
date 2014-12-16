@@ -1,10 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vrocketz.spotchu"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionCode="3"
+    android:versionName="0.2.2" >
 
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="14"
         android:targetSdkVersion="19" />
     
     <uses-feature android:name="android.hardware.camera" android:required="false" />
@@ -26,19 +26,54 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
+        android:logo="@drawable/logo"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:name="com.vrocketz.spotchu.SpotchuApp"
+        android:theme="@style/Theme.Spotchuactionbar"
+         >
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
-        <activity android:name="com.vrocketz.spotchu.LoginActivity">
+        <activity android:name="com.vrocketz.spotchu.activity.LoginActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            "
             <intent-filter>
             <category android:name="android.intent.category.LAUNCHER" />
             <action android:name="android.intent.action.MAIN" />
         	</intent-filter>
         </activity>
-        <activity android:name="com.vrocketz.spotchu.SpotuHome">
-            
+        <activity android:name="com.vrocketz.spotchu.activity.MainActivity"
+            android:launchMode="singleTask" 
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.vrocketz.spotchu.PostReview"></activity>
+        <activity android:name="com.vrocketz.spotchu.activity.PostSpotActivity"
+            android:parentActivityName="com.vrocketz.spotchu.activity.MainActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.vrocketz.spotchu.activity.MainActivity" />
+        </activity>
+        <activity android:name="com.vrocketz.spotchu.activity.FullScreenSpotActivity"
+            android:parentActivityName="com.vrocketz.spotchu.activity.MainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+            	android:value="com.vrocketz.spotchu.activity.MainActivity" />
+        </activity>
+        <activity android:name="com.vrocketz.spotchu.activity.CommentsActivity"
+            android:parentActivityName="com.vrocketz.spotchu.activity.FullScreenSpotActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.vrocketz.spotchu.activity.FullScreenSpotActivity" />
+        </activity>
+        <service android:name="com.vrocketz.spotchu.SpotchuLocationService"></service>
+        <receiver android:name="com.vrocketz.spotchu.Receiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

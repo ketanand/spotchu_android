@@ -3,29 +3,39 @@ package com.vrocketz.spotchu;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.vrocketz.spotchu.helper.Config;
+import com.vrocketz.spotchu.helper.Constants;
+import com.vrocketz.spotchu.helper.Util;
+
 import android.util.Log;
 
 public class Api {
 	
+	private static final String API_HOST = "http://spotapi.vrocketz.com/v1/";
+	private static final String API_HOST_SECURE = "";
+	
 	public static String registerUser(User user){
-		String url = "http://spotapi.vrocketz.com/v1/login";
+		String url = API_HOST + "login";
 		ArrayList<NameValuePair> nameValuePairs = new  ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("name",user.getName()));
         nameValuePairs.add(new BasicNameValuePair("email",user.getEmail()));
         nameValuePairs.add(new BasicNameValuePair("image_url",user.getImageUrl()));
         nameValuePairs.add(new BasicNameValuePair("profile_url",user.getProfileUrl()));
+        nameValuePairs.add(new BasicNameValuePair("profile_type", user.getType().toString()));
+        nameValuePairs.add(new BasicNameValuePair("regId", Util.getRegistrationId()));
         try {
 			String res = Util.convertResponseToString((Util.sendPost(url, nameValuePairs)));
 			if (res != null){
 				JSONObject json = new JSONObject(res);
 				if (!json.getBoolean("error")){
-					Util.setPref(Constants.USER_KEY, json.getString("key"));
+					//Util.setPref(Constants.USER_KEY, json.getString("key"));
 					return user.getEmail();
 				}else {
 					if (Config.DEBUG)
@@ -54,11 +64,14 @@ public class Api {
 	
 	public static void sendRegistrationIdToBackend(String regId){
 		//TODO : Add Registration URL.
-		String url = "";
+		String url = API_HOST + "register";
 		ArrayList<NameValuePair> nameValuePairs = new  ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("registration_id",regId));
+        nameValuePairs.add(new BasicNameValuePair("registration_id", regId));
         try {
-			Util.sendPost(url, nameValuePairs);
+			HttpResponse response = Util.sendPost(url, nameValuePairs);
+			String res = Util.convertResponseToString(response);
+			if (Config.DEBUG)
+            	Log.d(Constants.APP_NAME, "[SendRegistrationIdToBackend], response=" + res);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

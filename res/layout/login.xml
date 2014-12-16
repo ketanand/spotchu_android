@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="@drawable/backgroud_splash" >
+    
+    <ImageView
+        	android:id="@+id/imgIcon"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true"
+			android:layout_marginTop="10dp"
+			android:layout_marginBottom="10dp"
+			android:adjustViewBounds="true"
+			android:scaleType="centerCrop"
+			android:src="@drawable/ic_launcher" />
+    
+    <ViewFlipper
+	android:id="@+id/viewFlipper"
+	android:layout_width="match_parent"
+	android:layout_height="400dp"
+	android:layout_below="@id/imgIcon" >
+
+		<RelativeLayout
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" >
+
+			<ImageView
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:adjustViewBounds="true"
+			android:scaleType="centerCrop"
+			android:src="@drawable/slide_1" />
+			
+		</RelativeLayout>
+			
+		<RelativeLayout
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" >
+			
+			<ImageView
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:layout_gravity="center"
+			android:adjustViewBounds="true"
+			android:scaleType="centerCrop"
+			android:src="@drawable/slide_2" />
+			
+		</RelativeLayout>
+			
+		<RelativeLayout
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" >
+			
+			<ImageView
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:layout_gravity="center"
+			android:adjustViewBounds="true"
+			android:scaleType="centerCrop"
+			android:src="@drawable/slide_3" />
+		</RelativeLayout>
+	</ViewFlipper>
+
+    <com.google.android.gms.common.SignInButton
+    android:id="@+id/sign_in_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="10dp"
+    android:text="@string/common_signin_button_text_long" />
+
+
+</RelativeLayout>

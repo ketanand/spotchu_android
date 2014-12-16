@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!--   item   android:id="@+id/menu_item_hi5"
+            android:showAsAction="ifRoom"
+            android:title="@string/hi5"
+            android:icon="@drawable/hi5"
+    />
+    
+    <item   android:id="@+id/menu_item_comment"
+            android:showAsAction="ifRoom"
+            android:title="@string/comment"
+            android:icon="@drawable/comment"
+    /-->
+    
+    <item   android:id="@+id/menu_item_share"
+            android:showAsAction="ifRoom"
+            android:title="@string/share"
+            android:actionProviderClass=
+                "android.widget.ShareActionProvider" />
+
+</menu>

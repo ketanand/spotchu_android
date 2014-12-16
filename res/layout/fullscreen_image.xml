@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+ >
+ 	<LinearLayout 
+ 	    android:id="@+id/layoutUserDetails"
+ 	    android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="horizontal"
+    	android:layout_alignParentTop="true"
+    	android:layout_margin="2dp"
+ 	    >
+ 	    
+ 	    <com.vrocketz.spotchu.views.RoundedImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/imgUserPic"
+        android:scaleType="fitCenter"
+        app:riv_corner_radius="30dip"
+        app:riv_border_width="2dip"
+        app:riv_border_color="#333333"
+        app:riv_mutate_background="true"
+        app:riv_oval="true"
+        android:layout_weight="0.3"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
+    
+	    <TextView 
+	        android:id="@+id/lblUserName"
+			android:layout_weight="0.7"
+			style="@style/label.large"        
+	    />
+ 	    
+ 	</LinearLayout>
+    
+    
+    <ImageView
+        android:id="@+id/imgDisplay"
+        android:layout_width="fill_parent"
+        android:layout_height="350dp"
+        android:layout_margin="5dp"
+        android:layout_below="@id/layoutUserDetails"
+        android:scaleType="fitCenter" />
+    
+     <TextView 
+	 	android:id="@+id/lblSpotTitle"
+		android:layout_below="@id/imgDisplay"
+		android:layout_centerHorizontal="true"
+		style="@style/label.medium"        
+	 />
+ 
+    <LinearLayout 
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+    	    android:layout_alignParentBottom="true"
+    	>
+    	 
+	    	 <ImageButton 
+			     android:id="@+id/btnHi5Spot"
+	        	 android:layout_width="40dp"
+			     android:layout_height="40dp"
+			     android:layout_weight="0.3"
+			     android:src="@drawable/hi5"
+			     android:background="@drawable/button_background"
+			/>
+			
+			<ImageButton 
+			     android:id="@+id/btnCommentSpot"
+	        	 android:layout_width="40dp"
+			     android:layout_height="40dp"
+			     android:layout_weight="0.3"
+			     android:src="@drawable/comment"
+			     android:background="@drawable/button_background"
+			/>
+			
+			<ImageButton 
+			     android:id="@+id/btnShareSpot"
+	        	 android:layout_width="40dp"
+			     android:layout_height="40dp"
+			     android:layout_weight="0.3"
+			     android:src="@android:drawable/ic_menu_share"
+			     android:background="@drawable/button_background"
+			/>
+		</LinearLayout> 
+        
+</RelativeLayout>

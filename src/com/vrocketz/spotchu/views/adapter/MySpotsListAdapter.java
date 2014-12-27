@@ -6,7 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,19 +111,42 @@ public class MySpotsListAdapter extends BaseAdapter{
 			
 			@Override
 			public void onClick(final View view) {
-			    animView.startAnimation(mAnim);
-			    Handler handle = new Handler();
-			    handle.postDelayed(new Runnable() {
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
+					mAnim.setAnimationListener(new Animation.AnimationListener() {
+						
+						@SuppressLint("NewApi") @Override
+						public void onAnimationStart(Animation animation) {
+							animView.setHasTransientState(true);
+						}
+						
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+							
+						}
+						
+						@SuppressLint("NewApi") @Override
+						public void onAnimationEnd(Animation animation) {
+							new Thread(new DeleteSpot(null, mSpots.get(pos).getId()));
+							mSpots.remove(pos);
+				            adapter.notifyDataSetChanged();
+				            animView.setHasTransientState(false);
+						}
+					});
+				}else {
+					Handler handle = new Handler();
+				    handle.postDelayed(new Runnable() {
 
-			        @Override
-			        public void run() {
-			            // TODO Auto-generated method stub
-			        	new Thread(new DeleteSpot(null, mSpots.get(pos).getId()));
-						mSpots.remove(pos);
-			            adapter.notifyDataSetChanged();
-			            mAnim.cancel();
-			        }
-			    }, 1000);
+				        @Override
+				        public void run() {
+				            // TODO Auto-generated method stub
+				        	new Thread(new DeleteSpot(null, mSpots.get(pos).getId()));
+							mSpots.remove(pos);
+				            adapter.notifyDataSetChanged();
+				            mAnim.cancel();
+				        }
+				    }, 3000);
+				}
+			    animView.startAnimation(mAnim);
 			}
 		});
 	}

@@ -29,6 +29,8 @@ public class Constants {
 	public static final int COMMENT_POSTED = 8;
 	public static final int NO_INTERNET = 9;
 	public static final int COMMENT_POST_FAILED = 10;
+	public static final int SPOT_DELETED = 11;
+	public static final int SPOT_DELETE_FAILED = 12;
 	
 	//Intent data keys
 	public static final String SPOT_ID = "spot_id";

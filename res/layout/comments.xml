@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     >
      <ProgressBar
-	        android:id="@+id/progressBarComment"
+	        android:id="@+id/progressBarFetchComment"
 	        style="?android:attr/progressBarStyleLarge"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
@@ -26,9 +26,19 @@
         android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:dividerHeight="1px"
-	    android:layout_above="@+id/layoutCommentBottomView"
+	    android:layout_above="@+id/progressBarPostComment"
 	    android:visibility="gone">
 	  </ListView> 
+	  
+       <ProgressBar
+	        android:id="@+id/progressBarPostComment"
+	        style="?android:attr/progressBarStyleLarge"
+	        android:layout_width="20dp"
+	        android:layout_height="20dp"
+	        android:layout_margin="10dp"
+	        android:layout_centerHorizontal="true"
+	        android:layout_above="@+id/layoutCommentBottomView"
+	        android:visibility="gone" />
      
 	    <LinearLayout
 	        android:id="@+id/layoutCommentBottomView"

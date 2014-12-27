@@ -43,7 +43,7 @@ public class FullScreenSpotActivity extends Activity implements OnPageChangeList
 		super.onCreate(savedInstanceState);
 	
 		setContentView(R.layout.spot_fullscreen);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		//getActionBar().setDisplayHomeAsUpEnabled(true);
 		// get intent data
 		
 		Intent i = getIntent();

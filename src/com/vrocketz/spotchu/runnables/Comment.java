@@ -7,12 +7,15 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
 
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 public class Comment implements Runnable{
@@ -39,9 +42,20 @@ public class Comment implements Runnable{
 			String res = Util.convertResponseToString(response);
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "[Comment] response : " + res);
+			JSONObject json = new JSONObject(res);
+			if (!json.getBoolean("error")){
+				Message msg = mHandler.obtainMessage(Constants.COMMENT_POSTED, json);
+				mHandler.sendMessage(msg);
+			} else {
+				Message msg = mHandler.obtainMessage(Constants.COMMENT_POST_FAILED);
+				mHandler.sendMessage(msg);
+			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

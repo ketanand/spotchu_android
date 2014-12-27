@@ -13,11 +13,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.helper.Config;
@@ -33,6 +35,7 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 	ListView mCommentsList;
 	ImageButton mLoadMore;
 	ProgressBar mProgressBar;
+	ProgressBar mPostProgressBar;
 	int mSpotId;
 	private CommentsListAdapter mAdapter;
     private JSONArray mComments;
@@ -52,20 +55,22 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		Button btnComment = (Button)findViewById(R.id.btnPostComment);
 		btnComment.setOnClickListener(this);
-		mProgressBar = (ProgressBar)findViewById(R.id.progressBarComment);
+		mProgressBar = (ProgressBar)findViewById(R.id.progressBarFetchComment);
+		mPostProgressBar = (ProgressBar)findViewById(R.id.progressBarPostComment);
 		mText = (EditText)findViewById(R.id.txtComment);
 		mCommentsList = (ListView)findViewById(R.id.lstSpotComments);
 		mLoadMore = (ImageButton)findViewById(R.id.btnLoadMoreComments);
-		mFrom = 0;
-    	mStartTime = Util.getTimeInMilliseconds();
-		new Thread(new GetComments(mHandler, mSpotId, mFrom, mStartTime)).start();
+		fetchCompleteComments();
 	}
 
 	@Override
 	public void onClick(View view) {
 		if (view.getId() == R.id.btnPostComment){
 			String text = mText.getText().toString();
+			hideSoftKeyboard();
+			mText.setText("");
 			new Thread(new Comment(mSpotId, text, mHandler)).start();
+			showPostCommentLoader();
 			//TODO : add to adapter in posting state.
 		}else if (view.getId() == R.id.btnLoadMoreComments){
 			new Thread(new GetComments(mHandler, mSpotId, mFrom, mStartTime)).start();
@@ -88,7 +93,12 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 			final int what = msg.what;
 			switch(what){
 				case Constants.COMMENT_POSTED:
-					//TODO : update last posted comment with time.
+					mAdapter = null;
+					fetchCompleteComments();
+					break;
+				case Constants.COMMENT_POST_FAILED:
+					hidePostCommentLoader();
+					handleFailure();
 					break;
 				case Constants.COMMENTS_FETCHED:
 					JSONObject result = (JSONObject) msg.obj;
@@ -105,6 +115,27 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 		}
 	};
 	
+	public void hideSoftKeyboard() {
+	    if(getCurrentFocus()!=null) {
+	        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+	        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+	    }
+	}
+	
+	private void fetchCompleteComments(){
+		mFrom = 0;
+    	mStartTime = Util.getTimeInMilliseconds();
+		new Thread(new GetComments(mHandler, mSpotId, mFrom, mStartTime)).start();
+	}
+	
+	private void showPostCommentLoader(){
+		mPostProgressBar.setVisibility(View.VISIBLE);
+	}
+	
+	private void hidePostCommentLoader(){
+		mPostProgressBar.setVisibility(View.GONE);
+	}
+	
 	private void toggleLoadMoreButton(int total){
 		if (total > mComments.length()){
 			mLoadMore.setVisibility(View.VISIBLE);
@@ -114,7 +145,7 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	private void handleFailure(){
-		//TODO: 
+		Toast.makeText(this, getResources().getString(R.string.operation_failed), Toast.LENGTH_LONG).show(); 
 	}
 	
 	private void onLoadMoreItems(JSONArray newComments) {
@@ -144,6 +175,7 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 		mCommentsList.setAdapter(mAdapter);
 		mCommentsList.setVisibility(View.VISIBLE);
 		mProgressBar.setVisibility(View.GONE);
+		hidePostCommentLoader();
 	}
 
 }

@@ -18,11 +18,8 @@ import android.util.Log;
 
 public class Api {
 	
-	private static final String API_HOST = "http://spotapi.vrocketz.com/v1/";
-	private static final String API_HOST_SECURE = "";
-	
 	public static String registerUser(User user){
-		String url = API_HOST + "login";
+		String url = Constants.API_HOST + "login";
 		ArrayList<NameValuePair> nameValuePairs = new  ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("name",user.getName()));
         nameValuePairs.add(new BasicNameValuePair("email",user.getEmail()));
@@ -64,7 +61,7 @@ public class Api {
 	
 	public static void sendRegistrationIdToBackend(String regId){
 		//TODO : Add Registration URL.
-		String url = API_HOST + "register";
+		String url = Constants.API_HOST + "register";
 		ArrayList<NameValuePair> nameValuePairs = new  ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("registration_id", regId));
         try {

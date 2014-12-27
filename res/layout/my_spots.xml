@@ -71,7 +71,8 @@
 	    android:visibility="gone"
 	    android:divider="@android:color/transparent"
   		android:dividerHeight="2px"
-	    android:background="@color/activity_background">
+	    android:background="@color/activity_background"
+	    android:clickable="true">
         
     </ListView>
 

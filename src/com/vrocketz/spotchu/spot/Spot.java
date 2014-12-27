@@ -1,14 +1,11 @@
 package com.vrocketz.spotchu.spot;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Spot {
-	
+
 	private Integer id;
 	private Integer userId;
 	private String tag;
-	private String scale;
+	private Integer scale;
 	private String locationLong;
 	private String locationLati;
 	private String city;
@@ -32,7 +29,7 @@ public class Spot {
 	* The id
 	*/
 	public Integer getId() {
-		return id;
+	return id;
 	}
 	
 	/**
@@ -41,7 +38,7 @@ public class Spot {
 	* The id
 	*/
 	public void setId(Integer id) {
-		this.id = id;
+	this.id = id;
 	}
 	
 	/**
@@ -50,7 +47,7 @@ public class Spot {
 	* The userId
 	*/
 	public Integer getUserId() {
-		return userId;
+	return userId;
 	}
 	
 	/**
@@ -59,7 +56,7 @@ public class Spot {
 	* The user_id
 	*/
 	public void setUserId(Integer userId) {
-		this.userId = userId;
+	this.userId = userId;
 	}
 	
 	/**
@@ -68,7 +65,7 @@ public class Spot {
 	* The tag
 	*/
 	public String getTag() {
-		return tag;
+	return tag;
 	}
 	
 	/**
@@ -77,7 +74,7 @@ public class Spot {
 	* The tag
 	*/
 	public void setTag(String tag) {
-		this.tag = tag;
+	this.tag = tag;
 	}
 	
 	/**
@@ -85,8 +82,8 @@ public class Spot {
 	* @return
 	* The scale
 	*/
-	public String getScale() {
-		return scale;
+	public Integer getScale() {
+	return scale;
 	}
 	
 	/**
@@ -94,8 +91,8 @@ public class Spot {
 	* @param scale
 	* The scale
 	*/
-	public void setScale(String scale) {
-		this.scale = scale;
+	public void setScale(Integer scale) {
+	this.scale = scale;
 	}
 	
 	/**
@@ -104,7 +101,7 @@ public class Spot {
 	* The locationLong
 	*/
 	public String getLocationLong() {
-		return locationLong;
+	return locationLong;
 	}
 	
 	/**
@@ -113,7 +110,7 @@ public class Spot {
 	* The location_long
 	*/
 	public void setLocationLong(String locationLong) {
-		this.locationLong = locationLong;
+	this.locationLong = locationLong;
 	}
 	
 	/**
@@ -122,7 +119,7 @@ public class Spot {
 	* The locationLati
 	*/
 	public String getLocationLati() {
-		return locationLati;
+	return locationLati;
 	}
 	
 	/**
@@ -131,7 +128,7 @@ public class Spot {
 	* The location_lati
 	*/
 	public void setLocationLati(String locationLati) {
-		this.locationLati = locationLati;
+	this.locationLati = locationLati;
 	}
 	
 	/**
@@ -140,7 +137,7 @@ public class Spot {
 	* The city
 	*/
 	public String getCity() {
-		return city;
+	return city;
 	}
 	
 	/**
@@ -149,7 +146,7 @@ public class Spot {
 	* The city
 	*/
 	public void setCity(String city) {
-		this.city = city;
+	this.city = city;
 	}
 	
 	/**
@@ -158,7 +155,7 @@ public class Spot {
 	* The locality
 	*/
 	public String getLocality() {
-		return locality;
+	return locality;
 	}
 	
 	/**
@@ -167,7 +164,7 @@ public class Spot {
 	* The locality
 	*/
 	public void setLocality(String locality) {
-		this.locality = locality;
+	this.locality = locality;
 	}
 	
 	/**
@@ -176,7 +173,7 @@ public class Spot {
 	* The img
 	*/
 	public String getImg() {
-		return img;
+	return img;
 	}
 	
 	/**
@@ -185,7 +182,7 @@ public class Spot {
 	* The img
 	*/
 	public void setImg(String img) {
-		this.img = img;
+	this.img = img;
 	}
 	
 	/**
@@ -194,7 +191,7 @@ public class Spot {
 	* The url
 	*/
 	public String getUrl() {
-		return url;
+	return url;
 	}
 	
 	/**
@@ -203,7 +200,7 @@ public class Spot {
 	* The url
 	*/
 	public void setUrl(String url) {
-		this.url = url;
+	this.url = url;
 	}
 	
 	/**
@@ -212,7 +209,7 @@ public class Spot {
 	* The desc
 	*/
 	public String getDesc() {
-		return desc;
+	return desc;
 	}
 	
 	/**
@@ -221,7 +218,7 @@ public class Spot {
 	* The desc
 	*/
 	public void setDesc(String desc) {
-		this.desc = desc;
+	this.desc = desc;
 	}
 	
 	/**
@@ -230,7 +227,7 @@ public class Spot {
 	* The createdAt
 	*/
 	public Long getCreatedAt() {
-		return createdAt;
+	return createdAt;
 	}
 	
 	/**
@@ -239,7 +236,7 @@ public class Spot {
 	* The created_at
 	*/
 	public void setCreatedAt(Long createdAt) {
-		this.createdAt = createdAt;
+	this.createdAt = createdAt;
 	}
 	
 	/**
@@ -248,7 +245,7 @@ public class Spot {
 	* The noOfComments
 	*/
 	public Integer getNoOfComments() {
-		return noOfComments;
+	return noOfComments;
 	}
 	
 	/**
@@ -257,7 +254,7 @@ public class Spot {
 	* The no_of_comments
 	*/
 	public void setNoOfComments(Integer noOfComments) {
-		this.noOfComments = noOfComments;
+	this.noOfComments = noOfComments;
 	}
 	
 	/**
@@ -266,7 +263,7 @@ public class Spot {
 	* The noOfLikes
 	*/
 	public Integer getNoOfLikes() {
-		return noOfLikes;
+	return noOfLikes;
 	}
 	
 	/**
@@ -275,7 +272,7 @@ public class Spot {
 	* The no_of_likes
 	*/
 	public void setNoOfLikes(Integer noOfLikes) {
-		this.noOfLikes = noOfLikes;
+	this.noOfLikes = noOfLikes;
 	}
 	
 	/**
@@ -293,7 +290,7 @@ public class Spot {
 	* The modified_at
 	*/
 	public void setModifiedAt(Long modifiedAt) {
-		this.modifiedAt = modifiedAt;
+	this.modifiedAt = modifiedAt;
 	}
 	
 	/**
@@ -302,7 +299,7 @@ public class Spot {
 	* The name
 	*/
 	public String getName() {
-		return name;
+	return name;
 	}
 	
 	/**
@@ -311,7 +308,7 @@ public class Spot {
 	* The name
 	*/
 	public void setName(String name) {
-		this.name = name;
+	this.name = name;
 	}
 	
 	/**
@@ -320,7 +317,7 @@ public class Spot {
 	* The profileUrl
 	*/
 	public String getProfileUrl() {
-		return profileUrl;
+	return profileUrl;
 	}
 	
 	/**
@@ -329,7 +326,7 @@ public class Spot {
 	* The profile_url
 	*/
 	public void setProfileUrl(String profileUrl) {
-		this.profileUrl = profileUrl;
+	this.profileUrl = profileUrl;
 	}
 	
 	/**
@@ -338,7 +335,7 @@ public class Spot {
 	* The profileType
 	*/
 	public String getProfileType() {
-		return profileType;
+	return profileType;
 	}
 	
 	/**
@@ -347,7 +344,7 @@ public class Spot {
 	* The profile_type
 	*/
 	public void setProfileType(String profileType) {
-		this.profileType = profileType;
+	this.profileType = profileType;
 	}
 	
 	/**
@@ -356,7 +353,7 @@ public class Spot {
 	* The imageUrl
 	*/
 	public String getImageUrl() {
-		return imageUrl;
+	return imageUrl;
 	}
 	
 	/**
@@ -365,7 +362,7 @@ public class Spot {
 	* The image_url
 	*/
 	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
+	this.imageUrl = imageUrl;
 	}
 	
 	/**
@@ -374,7 +371,7 @@ public class Spot {
 	* The selfHi5Id
 	*/
 	public Integer getSelfHi5Id() {
-		return selfHi5Id;
+	return selfHi5Id;
 	}
 	
 	/**
@@ -383,7 +380,7 @@ public class Spot {
 	* The selfHi5Id
 	*/
 	public void setSelfHi5Id(Integer selfHi5Id) {
-		this.selfHi5Id = selfHi5Id;
+	this.selfHi5Id = selfHi5Id;
 	}
-	
+
 }

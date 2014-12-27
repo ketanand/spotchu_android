@@ -1,10 +1,13 @@
 package com.vrocketz.spotchu.views.adapter;
 
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +24,12 @@ import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Util;
+import com.vrocketz.spotchu.runnables.DeleteSpot;
+import com.vrocketz.spotchu.spot.Spot;
 
 public class MySpotsListAdapter extends BaseAdapter{
 	
-	private JSONArray spots;
+	private ArrayList<Spot> mSpots;
 	private LayoutInflater mLayoutInflater;
 	private Context context;
 	private Animation mAnim;
@@ -32,40 +37,40 @@ public class MySpotsListAdapter extends BaseAdapter{
 	public MySpotsListAdapter(Context c){
 		context = c;
 		mLayoutInflater = LayoutInflater.from(c);
-		spots = new JSONArray();
+		mSpots = new ArrayList<Spot>();
 		mAnim = AnimationUtils.loadAnimation(context, R.anim.fade_out);
 	}
 	
-	public MySpotsListAdapter(Context c, JSONArray spots){
-		this.spots = spots;
+	public MySpotsListAdapter(Context c, ArrayList<Spot> spots){
+		this.mSpots = spots;
 		context = c;
 		mLayoutInflater = LayoutInflater.from(c);
 		mAnim = AnimationUtils.loadAnimation(context, R.anim.fade_out);
 	}
 	
-	public void setSpots(JSONArray spots){
-		this.spots = spots;
+	public void setSpots(ArrayList<Spot> spots){
+		this.mSpots = spots;
 	}
 
 	@Override
 	public int getCount() {
-		return spots.length();
+		return mSpots.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		try {
-			return spots.get(position);
-		} catch (JSONException e) {
-			if (Config.DEBUG)
-				e.printStackTrace();
-			return null;
-		}
+		return mSpots.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return position + 1;
+		return mSpots.get(position).getId();
+	}
+	
+	@Override
+	public boolean isEnabled(int position) {
+		// TODO Auto-generated method stub
+		return true;//super.isEnabled(position);
 	}
 
 	@Override
@@ -87,47 +92,39 @@ public class MySpotsListAdapter extends BaseAdapter{
 			holder = (ViewHolder)view.getTag();
 		}
 		
-		try {
-			JSONObject spot = (JSONObject) spots.get(pos);
+			Spot spot =  mSpots.get(pos);
 		    ImageAware imageAware = new ImageViewAware(holder.img, false);
-		    ImageLoader.getInstance().displayImage(spot.getString("img"), imageAware);
-			holder.title.setText(spot.getString("desc"));
-			holder.time.setText(Util.getPrintableTimeFormat(spot.getLong("created_at")));
-			holder.hi5Count.setText(spot.getString("no_of_likes"));
-			holder.commentCount.setText(spot.getString("no_of_comments"));
-			//setOnClickListner(holder.delete, pos);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		    ImageLoader.getInstance().displayImage(spot.getImg(), imageAware);
+			holder.title.setText(spot.getDesc());
+			holder.time.setText(Util.getPrintableTimeFormat(spot.getCreatedAt()));
+			holder.hi5Count.setText(String.valueOf(spot.getNoOfLikes()));
+			holder.commentCount.setText(String.valueOf(spot.getNoOfComments()));
+			setOnClickListner(holder.delete, view, pos, this);
 		
 		return view;
 	}
 	
-	/*private void setOnClickListner(ImageButton image, final int pos){
+	private void setOnClickListner(ImageButton image, final View animView, final int pos, final BaseAdapter adapter){
 		image.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(final View view) {
-				 mAnim.setAnimationListener(new Animation.AnimationListener() {              
-					 
-	                @Override
-			         public void onAnimationStart(Animation animation) {
-			                   view.setHasTransientState(true);
-			         }
-			
-			                @Override
-			         public void onAnimationRepeat(Animation animation) {}
-			
+			    animView.startAnimation(mAnim);
+			    Handler handle = new Handler();
+			    handle.postDelayed(new Runnable() {
+
 			        @Override
-			        public void onAnimationEnd(Animation animation) {
-			                   spots.remove(pos);
-			                   view.setHasTransientState(false);
-			       }
-			     });
-				 view.startAnimation(mAnim);
+			        public void run() {
+			            // TODO Auto-generated method stub
+			        	new Thread(new DeleteSpot(null, mSpots.get(pos).getId()));
+						mSpots.remove(pos);
+			            adapter.notifyDataSetChanged();
+			            mAnim.cancel();
+			        }
+			    }, 1000);
 			}
 		});
-	}*/
+	}
 	
 	private class ViewHolder {
 		public ImageView img;

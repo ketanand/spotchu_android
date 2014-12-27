@@ -17,6 +17,7 @@
         android:layout_alignParentTop="true"
         android:layout_margin="6dp"
         android:scaleType="centerCrop"
+        android:clickable="false"
          />
     	
 	    <TextView
@@ -24,6 +25,7 @@
 		        android:layout_alignParentTop="true"
 		        android:layout_toRightOf="@id/imgSpot"
 		        style="@style/label.medium"
+		        android:clickable="false"
 		>
 		</TextView>
 		
@@ -32,6 +34,7 @@
 		        android:layout_alignParentBottom="true"
 		        android:layout_toRightOf="@id/imgSpot"
 		        style="@style/label.small"
+		        android:clickable="false"
 		>
 		</TextView>
 		
@@ -55,6 +58,7 @@
 	        android:layout_toRightOf="@+id/imgSpot"
 	        android:layout_margin="2dip"
 	        android:src="@drawable/hi5"
+	        android:clickable="false"
          />
 		
 		<TextView
@@ -62,6 +66,7 @@
 		        android:layout_below="@+id/lblSpotTitle"
 		        android:layout_toRightOf="@+id/imgHi5"
 		        style="@style/label.small"
+		        android:clickable="false"
 		>
 		</TextView>
 		
@@ -73,13 +78,15 @@
 	        android:layout_toRightOf="@+id/lblHi5Count"
 	        android:layout_margin="2dip"
 	        android:src="@drawable/comment"
+	        android:clickable="false"
          />
 		
 		<TextView
 		        android:id="@+id/lblCommentCount"
 		        android:layout_below="@+id/lblSpotTitle"
 		        android:layout_toRightOf="@+id/imgComment"
-		        style="@style/label.small"	        
+		        style="@style/label.small"	    
+		        android:clickable="false"    
 		>
 		</TextView>
 		

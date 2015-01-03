@@ -60,10 +60,10 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 	 */
 	private UiLifecycleHelper uiHelper;
 
-	/* Request code used to invoke sign in user interactions. */
-	private static final int RC_SIGN_IN = 0;
 	/* Client used to interact with Google APIs. */
 	private GoogleApiClient mGoogleApiClient = null;
+	/* Request code used to invoke sign in user interactions. */
+	private static final int RC_SIGN_IN = 0;
 	private GoogleCloudMessaging gcm;
 
 	private boolean mSignInClicked;
@@ -102,7 +102,8 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 		} else {
 			setContentView(R.layout.login);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-				Log.d("spotchu", "On Version greated than GingerBread");
+				if (Config.DEBUG)
+					Log.d("spotchu", "On Version greated than GingerBread");
 				mGoogleApiClient = new GoogleApiClient.Builder(this)
 						.addConnectionCallbacks(this)
 						.addOnConnectionFailedListener(this).addApi(Plus.API)
@@ -374,7 +375,7 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 				Api.sendRegistrationIdToBackend(regid);
 
 				Util.setPref(Constants.REGISTRATION_ID, regid);
-				Util.setPrefInt(Constants.APP_VERSION,
+				Util.setPref(Constants.APP_VERSION,
 						Util.getAppVersion(getApplicationContext()));
 			} catch (IOException ex) {
 
@@ -414,9 +415,7 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 				Toast.makeText(getApplicationContext(),
 						R.string.registration_failed, Toast.LENGTH_LONG).show();
 			} else {
-				Editor e = mPref.edit();
-				e.putBoolean(Constants.USER_LOGGED_IN, true);
-				e.commit();
+				Util.setPref(Constants.USER_LOGGED_IN, true);
 				startMainActivity();
 				finish();
 			}

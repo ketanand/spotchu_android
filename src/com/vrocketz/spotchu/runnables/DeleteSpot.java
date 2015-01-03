@@ -35,29 +35,27 @@ public class DeleteSpot implements Runnable {
 			if (!Util.isInternetAvailable()){
 				Message msg = mHandler.obtainMessage(Constants.NO_INTERNET);
 				mHandler.sendMessage(msg);
+				if (Config.DEBUG)
+					Log.d(Constants.APP_NAME, "[DeleteSpots] Internet not available ");
 			}else {
 				HttpResponse response = Util.sendDelete(url.toString());
 				String res = Util.convertResponseToString(response);
 				if (Config.DEBUG)
-					Log.d(Constants.APP_NAME, "[DeleteComments] response : " + res);
-				if (res != null){
+					Log.d(Constants.APP_NAME, "[DeleteSpots] response : " + res);
+				/*if (res != null){
 					JSONObject json = new JSONObject(res);
 					if (!json.getBoolean("error")){
-						Message msg = mHandler.obtainMessage(Constants.COMMENT_POSTED, json);
+						Message msg = mHandler.obtainMessage(Constants.SPOT_DELETED, json);
 						mHandler.sendMessage(msg);
 					} else {
-						Message msg = mHandler.obtainMessage(Constants.COMMENT_POST_FAILED);
+						Message msg = mHandler.obtainMessage(Constants.SPOT_DELETE_FAILED);
 						mHandler.sendMessage(msg);
 					}
-				}
+				}*/
 			}
 		}catch (IOException e) {
-			Message msg = mHandler.obtainMessage(Constants.COMMENT_POST_FAILED);
-			mHandler.sendMessage(msg);
-			e.printStackTrace();
-		} catch (JSONException e) {
-			Message msg = mHandler.obtainMessage(Constants.COMMENT_POST_FAILED);
-			mHandler.sendMessage(msg);
+			/*Message msg = mHandler.obtainMessage(Constants.SPOT_DELETE_FAILED);
+			mHandler.sendMessage(msg);*/
 			e.printStackTrace();
 		} 
 	}

@@ -211,9 +211,15 @@ public class Util {
 		e.commit();
 	}
 	
-	public static void setPrefInt(String key, int val){
+	public static void setPref(String key, int val){
 		Editor e = getGlobalPreferences().edit();
 		e.putInt(key, val);
+		e.commit();
+	}
+	
+	public static void setPref(String key, boolean val){
+		Editor e = getGlobalPreferences().edit();
+		e.putBoolean(key, val);
 		e.commit();
 	}
 	

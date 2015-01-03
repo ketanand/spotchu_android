@@ -1,5 +1,8 @@
 package com.vrocketz.spotchu;
 
+import android.app.Application;
+import android.content.SharedPreferences;
+
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -9,9 +12,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
-
-import android.app.Application;
-import android.content.SharedPreferences;
 
 public class SpotchuApp extends Application {
 	
@@ -53,5 +53,5 @@ public class SpotchuApp extends Application {
 		}
 		return mPref;
 	}
-
+	
 }

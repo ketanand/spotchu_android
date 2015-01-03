@@ -25,4 +25,5 @@
 	<string name="your_day_today">Checkout, What was happening around you all day.</string>
 	<string name="new_spot">Just spotted near you, </string>
 	<string name="facebook_app_id">775540655859682</string>
+	<string name="logout">Logout</string>
 </resources>

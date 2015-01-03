@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.helper.Config;
+import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
 import com.vrocketz.spotchu.runnables.DeleteSpot;
 import com.vrocketz.spotchu.spot.Spot;
@@ -126,7 +128,9 @@ public class MySpotsListAdapter extends BaseAdapter{
 						
 						@SuppressLint("NewApi") @Override
 						public void onAnimationEnd(Animation animation) {
-							new Thread(new DeleteSpot(null, mSpots.get(pos).getId()));
+							if (Config.DEBUG)
+								Log.d(Constants.APP_NAME, "[Delete Button Animation Ends] delete thread started.");
+							new Thread(new DeleteSpot(null, mSpots.get(pos).getId())).start();
 							mSpots.remove(pos);
 				            adapter.notifyDataSetChanged();
 				            animView.setHasTransientState(false);
@@ -139,7 +143,7 @@ public class MySpotsListAdapter extends BaseAdapter{
 				        @Override
 				        public void run() {
 				            // TODO Auto-generated method stub
-				        	new Thread(new DeleteSpot(null, mSpots.get(pos).getId()));
+				        	new Thread(new DeleteSpot(null, mSpots.get(pos).getId())).start();
 							mSpots.remove(pos);
 				            adapter.notifyDataSetChanged();
 				            mAnim.cancel();

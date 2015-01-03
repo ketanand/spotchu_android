@@ -967,7 +967,8 @@ containing a value of this type.
         public static final int lstSpotComments=0x7f05003e;
         public static final int match_parent=0x7f050017;
         public static final int menu_item_camera=0x7f050069;
-        public static final int menu_item_share=0x7f05006a;
+        public static final int menu_item_logout=0x7f05006a;
+        public static final int menu_item_share=0x7f05006b;
         public static final int mirror=0x7f050021;
         public static final int monochrome=0x7f05001e;
         public static final int none=0x7f05000c;
@@ -1171,6 +1172,7 @@ containing a value of this type.
         public static final int explore=0x7f080050;
         public static final int facebook_app_id=0x7f080055;
         public static final int hi5=0x7f080046;
+        public static final int logout=0x7f080056;
         public static final int my_spots=0x7f08004f;
         public static final int new_spot=0x7f080054;
         public static final int no_internet=0x7f08003f;

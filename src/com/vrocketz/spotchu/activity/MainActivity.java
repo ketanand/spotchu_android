@@ -24,6 +24,7 @@ import com.vrocketz.spotchu.activity.fragment.MySpotsFragment;
 import com.vrocketz.spotchu.activity.fragment.TabListner;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
+import com.vrocketz.spotchu.helper.UserHelper;
 import com.vrocketz.spotchu.helper.Util;
 
 public class MainActivity extends FragmentActivity implements OnClickListener{
@@ -102,10 +103,28 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	    	case R.id.menu_item_camera:
 	    		openCameraApp();
 	    		return true;
+	    	case R.id.menu_item_logout:
+	    		clearUser();
+	    		finish();
+	    		return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
+	
+	private void clearUser(){
+		Util.setPref(Constants.USER_LOGGED_IN, false);
+		Util.setPref(Constants.USER_EMAIL, null);
+		Util.setPref(Constants.USER_NAME, null);
+		//logoutFromGoogle();
+		startLoginActivity();
+	}
+	
+	private void startLoginActivity() {
+		Intent intent = new Intent(this, LoginActivity.class);
+		startActivity(intent);
+	}
+
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {

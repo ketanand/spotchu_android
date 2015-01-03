@@ -806,6 +806,7 @@ containing a value of this type.
         public static final int explore=0x7f060033;
         public static final int hi5=0x7f060029;
         public static final int my_spots=0x7f060032;
+        public static final int new_spot=0x7f060037;
         public static final int no_internet=0x7f060022;
         public static final int operation_failed=0x7f060035;
         public static final int past_activity=0x7f060031;
@@ -821,6 +822,7 @@ containing a value of this type.
          available or up-to-date 
          */
         public static final int wallet_buy_button_place_holder=0x7f06001f;
+        public static final int your_day_today=0x7f060036;
     }
     public static final class style {
         public static final int ActionBar_Solid_Spotchuactionbar=0x7f05000d;

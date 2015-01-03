@@ -22,4 +22,6 @@
 	<string name="explore">Explore</string>
 	<string name="share_via">Share via..</string>
 	<string name="operation_failed">Oops Operation Failed :( </string>
+	<string name="your_day_today">Checkout, What was happening around you all day.</string>
+	<string name="new_spot">Just spotted near you, </string>
 </resources>

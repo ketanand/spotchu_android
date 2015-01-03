@@ -1,21 +1,9 @@
 package com.vrocketz.spotchu.activity;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.BufferUnderflowException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -27,18 +15,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.location.Location;
-import android.media.effect.Effect;
-import android.media.effect.EffectContext;
-import android.media.effect.EffectFactory;
 import android.net.Uri;
-import android.opengl.GLES20;
-import android.opengl.GLException;
-import android.opengl.GLSurfaceView;
-import android.opengl.GLUtils;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -56,17 +35,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.google.android.gms.internal.bt;
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.SpotchuLocationService;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
-import com.vrocketz.spotchu.helper.GLToolbox;
-import com.vrocketz.spotchu.helper.ImageFilters;
-import com.vrocketz.spotchu.helper.TextureRenderer;
 import com.vrocketz.spotchu.helper.Util;
 import com.vrocketz.spotchu.runnables.GetAddress;
 import com.vrocketz.spotchu.runnables.PostSpot;

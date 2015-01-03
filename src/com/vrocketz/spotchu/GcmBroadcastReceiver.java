@@ -1,28 +1,27 @@
 package com.vrocketz.spotchu;
 
-import android.content.BroadcastReceiver;
+import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 
-public class GcmBroadcastReceiver extends BroadcastReceiver{
+public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
+	
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Bundle extras = intent.getExtras();
-		//TODO : Handle intent in an intent service
-		if (!extras.isEmpty()){
-			if (Config.DEBUG)
-				Log.d(Constants.APP_NAME, "[GCM Received] " + extras.toString());
-			
-		}else {
-			if (Config.DEBUG)
-				Log.d(Constants.APP_NAME, "[GCM Received] extras empty.");
-		}
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "[GCM Received]" );
+		// Explicitly specify that IntentService will handle the intent.
+        ComponentName comp = new ComponentName(context.getPackageName(),
+                NotificationService.class.getName());
+        startWakefulService(context, (intent.setComponent(comp)));
+        setResultCode(Activity.RESULT_OK);
 	}
-
+	
 }

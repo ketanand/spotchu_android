@@ -16,7 +16,7 @@
 			android:layout_marginBottom="10dp"
 			android:adjustViewBounds="true"
 			android:scaleType="centerCrop"
-			android:src="@drawable/ic_launcher" />
+			android:src="@drawable/logo" />
     
     <ViewFlipper
 	android:id="@+id/viewFlipper"
@@ -64,6 +64,15 @@
 			android:src="@drawable/slide_3" />
 		</RelativeLayout>
 	</ViewFlipper>
+	
+    <com.facebook.widget.LoginButton
+        android:id="@+id/authButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/sign_in_button"
+        android:layout_margin="10dp"
+        />
 
     <com.google.android.gms.common.SignInButton
     android:id="@+id/sign_in_button"
@@ -71,7 +80,7 @@
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
     android:layout_alignParentBottom="true"
-    android:layout_marginBottom="10dp"
+    android:layout_margin="10dp"
     android:text="@string/common_signin_button_text_long" />
 
 

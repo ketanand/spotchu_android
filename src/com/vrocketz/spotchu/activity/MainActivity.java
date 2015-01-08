@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
@@ -18,6 +19,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.activity.fragment.ExploreGridFragment;
 import com.vrocketz.spotchu.activity.fragment.MySpotsFragment;
@@ -32,6 +36,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private Uri fileUri;
 	private String imageFilePath;
+	/* Client used to interact with Google APIs. */
+	private GoogleApiClient mGoogleApiClient = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,27 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		    	fileUri = null;
 		    }
 	    }
+	    
+	    initGoogleAPIClient();
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		if (mGoogleApiClient != null) {
+			mGoogleApiClient.connect();
+		}
+
+	}
+	
+	private void initGoogleAPIClient(){
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+			if (Config.DEBUG)
+				Log.d("spotchu", "On Version greated than GingerBread");
+			mGoogleApiClient = new GoogleApiClient.Builder(this)
+					.addApi(Plus.API)
+					.addScope(Plus.SCOPE_PLUS_LOGIN).build();
+		}
 	}
 	
 	@Override
@@ -116,12 +143,27 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		Util.setPref(Constants.USER_LOGGED_IN, false);
 		Util.setPref(Constants.USER_EMAIL, null);
 		Util.setPref(Constants.USER_NAME, null);
-		//logoutFromGoogle();
+		logoutFromGoogle();
 		startLoginActivity();
+	}
+	
+	private void logoutFromGoogle(){
+		if (mGoogleApiClient.isConnected()) {
+			if (Config.DEBUG)
+				Log.d(Constants.APP_NAME, "[Main Activity] Signing Out of Google.");
+		      Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
+		      mGoogleApiClient.disconnect();
+		      mGoogleApiClient.connect();
+		}else {
+			if (Config.DEBUG)
+				Log.d(Constants.APP_NAME, "[Main Activity] Client Disconnected.");
+		}
 	}
 	
 	private void startLoginActivity() {
 		Intent intent = new Intent(this, LoginActivity.class);
+		//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.putExtra("logout", true);
 		startActivity(intent);
 	}
 

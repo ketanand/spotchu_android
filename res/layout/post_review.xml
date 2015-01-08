@@ -24,9 +24,12 @@
         style="@style/label.medium"
         android:ems="10"
         android:hint="@string/add_caption"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:layout_gravity="center_horizontal"
-        android:maxLength="100" >
+        android:maxLength="100"
+        android:inputType="text"
+    	android:singleLine="true"
+        android:imeOptions="actionDone" >
         <requestFocus />
     </EditText>
     

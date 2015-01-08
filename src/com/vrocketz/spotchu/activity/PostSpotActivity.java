@@ -30,12 +30,15 @@ import android.text.Spannable;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.SpotchuLocationService;
@@ -55,6 +58,7 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 	private Map<String, Object> mAddress;
 	private EditText mTitle;
 	private ImageView mImageView;
+	private Button mButton;
 	private NotificationManager mNM;
 	private static int NOTIFICATION_ID = 999;
 	private boolean isUpdate;
@@ -85,8 +89,8 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		setContentView(R.layout.post_review);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		//Set listeners for buttons
-		Button ok = (Button)findViewById(R.id.btnOk);
-		ok.setOnClickListener(this);
+		mButton = (Button)findViewById(R.id.btnOk);
+		mButton.setOnClickListener(this);
 		/*ImageButton noEffect = (ImageButton)findViewById(R.id.btnNoEffect);
 		noEffect.setOnClickListener(this);
 		ImageButton effectDocumentary = (ImageButton)findViewById(R.id.btnEffectDocumentary);
@@ -100,6 +104,19 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		
 		mTitle = (EditText)findViewById(R.id.txtCaption);
 		mTitle.addTextChangedListener(mTitleTextWatcher);
+		mTitle.setImeActionLabel("Share", KeyEvent.KEYCODE_ENTER);
+		mTitle.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+
+				@Override
+				public boolean onEditorAction(TextView v, int actionId,
+	                    KeyEvent event) {
+					if (actionId == EditorInfo.IME_ACTION_DONE) {
+						postSpot();
+	                    return true;
+	                }
+	                return false;
+				}
+	        });
 		
 		//Bind to location Service
 		doBindService();
@@ -170,41 +187,45 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		super.onDestroy();
 	}
 	
+	private void postSpot(){
+		ArrayList<NameValuePair> nameValuePairs = new  ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("desc", mTitle.getText().toString()));
+		nameValuePairs.add(new BasicNameValuePair("tags", Util.getTagsFromTitle(mTitle.getText().toString())));
+		if (mLocation != null){
+			nameValuePairs.add(new BasicNameValuePair("locationLong", String.valueOf(mLocation.getLongitude())));
+			nameValuePairs.add(new BasicNameValuePair("locationLati", String.valueOf(mLocation.getLatitude())));
+		}/*if (mCurrentEffect != R.id.btnNoEffect){
+			//TODO : figure out a way to save the modified image
+			try {
+				//saveBitmap();
+				saveModifiedImage();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			FileOutputStream fos;
+			try {
+				fos = new FileOutputStream(imageFilePath);
+				mImageWithEffect.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+			    fos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}*/
+		PostSpot instance = new PostSpot(imageFilePath, mHandler, nameValuePairs);
+		Thread t = new Thread(instance);
+		t.start();
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "Post Spot Runnable called");
+		
+		showNotification();
+		finish();
+	}
+	
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()){
 		case R.id.btnOk:
-			ArrayList<NameValuePair> nameValuePairs = new  ArrayList<NameValuePair>();
-			nameValuePairs.add(new BasicNameValuePair("desc", mTitle.getText().toString()));
-			nameValuePairs.add(new BasicNameValuePair("tags", Util.getTagsFromTitle(mTitle.getText().toString())));
-			if (mLocation != null){
-				nameValuePairs.add(new BasicNameValuePair("locationLong", String.valueOf(mLocation.getLongitude())));
-				nameValuePairs.add(new BasicNameValuePair("locationLati", String.valueOf(mLocation.getLatitude())));
-			}/*if (mCurrentEffect != R.id.btnNoEffect){
-				//TODO : figure out a way to save the modified image
-				try {
-					//saveBitmap();
-					saveModifiedImage();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				FileOutputStream fos;
-				try {
-					fos = new FileOutputStream(imageFilePath);
-					mImageWithEffect.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-				    fos.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}*/
-			PostSpot instance = new PostSpot(imageFilePath, mHandler, nameValuePairs);
-			Thread t = new Thread(instance);
-			t.start();
-			if (Config.DEBUG)
-				Log.d(Constants.APP_NAME, "Post Spot Runnable called");
-			
-			showNotification();
-			finish();
+			postSpot();
 			break;
 		/*case R.id.btnNoEffect:
 			mImageView.setImageBitmap(mImage);

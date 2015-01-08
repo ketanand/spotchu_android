@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -22,11 +23,17 @@ import com.vrocketz.spotchu.helper.Util;
 
 public class NotificationService extends IntentService{
 	
-	private NotificationManager mNM;
 	private static final int NOTIFICATION_SUMMARY_ID = 998;
 	private static final String MSG_TYPE = "type";
+	private static final String MSG = "msg";
+	private static final String SPOT_TITLE = "name";
 	private int notify_no = 0;
 
+	public NotificationService() {
+        super(NotificationService.class.getName());
+       
+    }
+	
 	public NotificationService(String name) {
 		super(name);
 	}
@@ -51,10 +58,10 @@ public class NotificationService extends IntentService{
 	            	//For now ignore
 	            } else if (GoogleCloudMessaging.
 	                    MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-	                // Post notification of received message.
-	                sendNotification(extras.toString());
-	                if (Config.DEBUG)
+	            	if (Config.DEBUG)
 	                	Log.d(Constants.APP_NAME, "GCM Received: " + extras.toString());
+	                // Post notification of received message.
+	                sendNotification(extras.getString("message"));
 	            }
 	        }
 	        // Release the wake lock provided by the WakefulBroadcastReceiver.
@@ -73,10 +80,11 @@ public class NotificationService extends IntentService{
 	}
 	
 	private void sendNotificationFromMessage(JSONObject gcm) throws JSONException{
+		NotificationManager mNM = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
 		GCMMessageType type = GCMMessageType.getFromValue(gcm.getInt(MSG_TYPE));
 		if (type == GCMMessageType.SUMMARY){
 			Intent intent = new Intent(Util.getApp(), Summary.class);
-			intent.putExtra("url", gcm.getString("msg"));
+			intent.putExtra("url", gcm.getString(MSG));
 	        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		    stackBuilder.addParentStack(MainActivity.class);
 		    stackBuilder.addNextIntent(intent);
@@ -101,7 +109,7 @@ public class NotificationService extends IntentService{
 							             );
 		    StringBuilder textBuilder = new StringBuilder();
 		    textBuilder.append(getResources().getString(R.string.new_spot));
-		    textBuilder.append(gcm.getJSONObject("msg").getString("name")).append(".");
+		    textBuilder.append(gcm.getJSONObject(MSG).getString(SPOT_TITLE)).append(".");
 		    String text = textBuilder.toString();
 		    NotificationCompat.Builder m_notificationBuilder = new NotificationCompat.Builder(this)
 	        .setContentTitle(getText(R.string.app_name))

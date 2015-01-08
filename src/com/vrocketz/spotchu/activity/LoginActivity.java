@@ -58,7 +58,7 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 	/**
 	 * Facebook Login
 	 */
-	private UiLifecycleHelper uiHelper;
+	//private UiLifecycleHelper uiHelper;
 
 	/* Client used to interact with Google APIs. */
 	private GoogleApiClient mGoogleApiClient = null;
@@ -115,12 +115,12 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 			}
 
 			// Initialize facebook login UI Helper
-			uiHelper = new UiLifecycleHelper(this, callback);
+			/*uiHelper = new UiLifecycleHelper(this, callback);
 			uiHelper.onCreate(savedInstanceState);
 			
 			//Initialize FB login button
 			LoginButton authButton = (LoginButton) findViewById(R.id.authButton);
-			authButton.setReadPermissions(Arrays.asList("public_profile", "email"));
+			authButton.setReadPermissions(Arrays.asList("public_profile", "email"));*/
 			
 			// Initialize Slider
 			initSlider();
@@ -203,7 +203,7 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 			onSessionStateChange(session, session.getState(), null);
 		}
 
-		uiHelper.onResume();
+		//uiHelper.onResume();
 		AppEventsLogger.activateApp(this);
 	}
 

@@ -70,6 +70,7 @@
             android:value="com.vrocketz.spotchu.activity.FullScreenSpotActivity" />
         </activity>
         <service android:name="com.vrocketz.spotchu.SpotchuLocationService"></service>
+        <service android:name="com.vrocketz.spotchu.NotificationService"></service>
         <receiver android:name="com.vrocketz.spotchu.Receiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

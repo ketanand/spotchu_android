@@ -24,9 +24,10 @@ import com.vrocketz.spotchu.helper.Util;
 public class NotificationService extends IntentService{
 	
 	private static final int NOTIFICATION_SUMMARY_ID = 998;
-	private static final String MSG_TYPE = "type";
-	private static final String MSG = "msg";
-	private static final String SPOT_TITLE = "name";
+	public static final String GCM_MSG_TYPE = "type";
+	public static final String GCM_MSG = "msg";
+	public static final String SPOT_TITLE = "name";
+	public static final String SPOT_ID = "spotId";
 	private int notify_no = 0;
 
 	public NotificationService() {
@@ -81,10 +82,10 @@ public class NotificationService extends IntentService{
 	
 	private void sendNotificationFromMessage(JSONObject gcm) throws JSONException{
 		NotificationManager mNM = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
-		GCMMessageType type = GCMMessageType.getFromValue(gcm.getInt(MSG_TYPE));
+		GCMMessageType type = GCMMessageType.getFromValue(gcm.getInt(GCM_MSG_TYPE));
 		if (type == GCMMessageType.SUMMARY){
 			Intent intent = new Intent(Util.getApp(), Summary.class);
-			intent.putExtra("url", gcm.getString(MSG));
+			intent.putExtra("url", gcm.getString(GCM_MSG));
 	        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		    stackBuilder.addParentStack(MainActivity.class);
 		    stackBuilder.addNextIntent(intent);
@@ -100,7 +101,9 @@ public class NotificationService extends IntentService{
 		    m_notificationBuilder.setContentIntent(pendingIntent);
 		    mNM.notify(NOTIFICATION_SUMMARY_ID, m_notificationBuilder.build());
 		}else if (type == GCMMessageType.NEW_SPOT){
+			int spotId = gcm.getJSONObject(GCM_MSG).getInt(SPOT_ID);
 			Intent intent = new Intent(Util.getApp(), ViewSpot.class);
+			intent.putExtra(SPOT_ID, spotId);
 	        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		    stackBuilder.addParentStack(MainActivity.class);
 		    stackBuilder.addNextIntent(intent);
@@ -109,7 +112,7 @@ public class NotificationService extends IntentService{
 							             );
 		    StringBuilder textBuilder = new StringBuilder();
 		    textBuilder.append(getResources().getString(R.string.new_spot));
-		    textBuilder.append(gcm.getJSONObject(MSG).getString(SPOT_TITLE)).append(".");
+		    textBuilder.append(gcm.getJSONObject(GCM_MSG).getString(SPOT_TITLE)).append(".");
 		    String text = textBuilder.toString();
 		    NotificationCompat.Builder m_notificationBuilder = new NotificationCompat.Builder(this)
 	        .setContentTitle(getText(R.string.app_name))

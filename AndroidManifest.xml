@@ -62,6 +62,20 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
             	android:value="com.vrocketz.spotchu.activity.MainActivity" />
         </activity>
+        <activity android:name="com.vrocketz.spotchu.activity.ViewSpot"
+            android:parentActivityName="com.vrocketz.spotchu.activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+            	android:value="com.vrocketz.spotchu.activity.MainActivity" />
+        </activity>
+        <activity android:name="com.vrocketz.spotchu.activity.Summary"
+            android:parentActivityName="com.vrocketz.spotchu.activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+            	android:value="com.vrocketz.spotchu.activity.MainActivity" />
+        </activity>
         <activity android:name="com.vrocketz.spotchu.activity.CommentsActivity"
             android:parentActivityName="com.vrocketz.spotchu.activity.FullScreenSpotActivity"
             android:screenOrientation="portrait" >

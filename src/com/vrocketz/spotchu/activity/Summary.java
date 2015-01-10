@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebView;
 
+import com.vrocketz.spotchu.NotificationService;
 import com.vrocketz.spotchu.R;
 
 public class Summary extends Activity{
@@ -15,7 +16,7 @@ public class Summary extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.summary);
 		WebView browser = (WebView) findViewById(R.id.webview);
-		String url = getIntent().getStringExtra("msg");
+		String url = getIntent().getStringExtra(NotificationService.GCM_MSG);
 		browser.loadUrl(url);
 	}
 }

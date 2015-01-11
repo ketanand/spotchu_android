@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -28,6 +29,7 @@ public class NotificationService extends IntentService{
 	public static final String GCM_MSG = "msg";
 	public static final String SPOT_TITLE = "name";
 	public static final String SPOT_ID = "spotId";
+	public static final String SUMMARY_URL = "url";
 	private int notify_no = 0;
 
 	public NotificationService() {
@@ -85,7 +87,7 @@ public class NotificationService extends IntentService{
 		GCMMessageType type = GCMMessageType.getFromValue(gcm.getInt(GCM_MSG_TYPE));
 		if (type == GCMMessageType.SUMMARY){
 			Intent intent = new Intent(Util.getApp(), Summary.class);
-			intent.putExtra("url", gcm.getString(GCM_MSG));
+			intent.putExtra("url", gcm.getJSONObject(GCM_MSG).getString(SUMMARY_URL));
 	        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		    stackBuilder.addParentStack(MainActivity.class);
 		    stackBuilder.addNextIntent(intent);
@@ -97,6 +99,8 @@ public class NotificationService extends IntentService{
 	        .setContentTitle(getText(R.string.app_name))
 	        .setContentText(text)
 	        .setTicker(text)
+	        .setDefaults(Notification.DEFAULT_ALL)
+	        .setAutoCancel(true)
 	        .setSmallIcon(R.drawable.ic_launcher);
 		    m_notificationBuilder.setContentIntent(pendingIntent);
 		    mNM.notify(NOTIFICATION_SUMMARY_ID, m_notificationBuilder.build());
@@ -118,7 +122,10 @@ public class NotificationService extends IntentService{
 	        .setContentTitle(getText(R.string.app_name))
 	        .setContentText(text)
 	        .setTicker(text)
+	        .setDefaults(Notification.DEFAULT_ALL)
+	        .setAutoCancel(true)
 	        .setSmallIcon(R.drawable.ic_launcher);
+		    
 		    m_notificationBuilder.setContentIntent(pendingIntent);
 		    if (notify_no < 9) {
 	            notify_no = notify_no + 1;

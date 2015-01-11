@@ -62,26 +62,18 @@ public class MySpotsFragment extends Fragment{
 		mUserId.setText(pref.getString(Constants.USER_NAME, ""));
 		//TODO : show spinner.
 		mSpotList = (ListView) v.findViewById(R.id.lstMySpots);
-		mSpotList.setOnItemClickListener(mListClickListener);
-		adapter = new MySpotsListAdapter(getActivity());
-		mSpotList.setAdapter(adapter);
 		mProgressBar = (ProgressBar) v.findViewById(R.id.progressBarMySpotsLoad);
+		if (adapter == null){
+			adapter = new MySpotsListAdapter(getActivity());
+		}else {
+			mProgressBar.setVisibility(View.GONE);
+			mSpotList.setVisibility(View.VISIBLE);
+		}
+		mSpotList.setAdapter(adapter);
+		
 		new Thread(new GetMySpots(mHandler)).start();
 		return v;
 	}
-	
-	AdapterView.OnItemClickListener mListClickListener = new AdapterView.OnItemClickListener() {
-
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-			Toast.makeText(getActivity(), "[MySpotsFragment] Item Clicked: " + position, Toast.LENGTH_SHORT).show();
-			Intent i = new Intent(getActivity(), FullScreenSpotActivity.class);
-	        i.putExtra(Constants.SPOT_ID, position);
-	        i.putExtra(Constants.SPOTS, spots.toString());
-	        getActivity().startActivity(i);
-		}
-		
-	};
 	
 	private final Handler mHandler = new Handler(){
 		public void handleMessage(Message msg){

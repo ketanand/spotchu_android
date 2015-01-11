@@ -39,6 +39,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.SpotchuLocationService;
@@ -104,12 +105,14 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		
 		mTitle = (EditText)findViewById(R.id.txtCaption);
 		mTitle.addTextChangedListener(mTitleTextWatcher);
-		mTitle.setImeActionLabel("Share", KeyEvent.KEYCODE_ENTER);
+		mTitle.setImeActionLabel("Share", EditorInfo.IME_ACTION_DONE);
 		mTitle.setOnEditorActionListener(new EditText.OnEditorActionListener() {
 
 				@Override
 				public boolean onEditorAction(TextView v, int actionId,
 	                    KeyEvent event) {
+					if (Config.DEBUG)
+						Log.d(Constants.APP_NAME, "[PostSpotActivity] Done Button Clicked , action id " + actionId);
 					if (actionId == EditorInfo.IME_ACTION_DONE) {
 						postSpot();
 	                    return true;
@@ -187,9 +190,14 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		super.onDestroy();
 	}
 	
-	private void postSpot(){
+	private boolean postSpot(){
 		ArrayList<NameValuePair> nameValuePairs = new  ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair("desc", mTitle.getText().toString()));
+		String desc = mTitle.getText().toString();
+		if (desc.length() == 0){
+			Toast.makeText(this, getResources().getString(R.string.required_desc), Toast.LENGTH_LONG).show();
+			return false;
+		}
+		nameValuePairs.add(new BasicNameValuePair("desc", desc));
 		nameValuePairs.add(new BasicNameValuePair("tags", Util.getTagsFromTitle(mTitle.getText().toString())));
 		if (mLocation != null){
 			nameValuePairs.add(new BasicNameValuePair("locationLong", String.valueOf(mLocation.getLongitude())));
@@ -219,6 +227,7 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		
 		showNotification();
 		finish();
+		return true;
 	}
 	
 	@Override
@@ -348,7 +357,7 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 
         // create the pending intent and add to the notification
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("tab", 2);// Open My Spots when notificaition is clicked
+        intent.putExtra("postSpot", true);// Open My Spots when notificaition is clicked
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         /*TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 	     // Adds the back stack for the Intent (but not the Intent itself)

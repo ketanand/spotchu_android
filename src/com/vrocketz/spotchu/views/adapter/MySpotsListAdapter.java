@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
@@ -24,7 +25,9 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
+import com.vrocketz.spotchu.NotificationService;
 import com.vrocketz.spotchu.R;
+import com.vrocketz.spotchu.activity.ViewSpot;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
@@ -84,7 +87,7 @@ public class MySpotsListAdapter extends BaseAdapter{
 		if (convertView == null){
 			view = mLayoutInflater.inflate(R.layout.my_spots_list_item, parent, false);
 			holder = new ViewHolder();
-			holder.img = (ImageView)view.findViewById(R.id.imgSpot);
+			holder.img = (ImageButton)view.findViewById(R.id.imgSpot);
 			holder.title = (TextView)view.findViewById(R.id.lblSpotTitle);
 			holder.time = (TextView)view.findViewById(R.id.lblSpotTime);
 			holder.hi5Count = (TextView) view.findViewById(R.id.lblHi5Count);
@@ -96,19 +99,29 @@ public class MySpotsListAdapter extends BaseAdapter{
 			holder = (ViewHolder)view.getTag();
 		}
 		
-			Spot spot =  mSpots.get(pos);
+			final Spot spot =  mSpots.get(pos);
 		    ImageAware imageAware = new ImageViewAware(holder.img, false);
 		    ImageLoader.getInstance().displayImage(spot.getImg(), imageAware);
 			holder.title.setText(spot.getDesc());
 			holder.time.setText(Util.getPrintableTimeFormat(spot.getCreatedAt()));
 			holder.hi5Count.setText(String.valueOf(spot.getNoOfLikes()));
 			holder.commentCount.setText(String.valueOf(spot.getNoOfComments()));
-			setOnClickListner(holder.delete, view, pos, this);
-		
+			setDeleteOnClickListner(holder.delete, view, pos, this);
+			holder.img.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if (Config.DEBUG)
+						Log.d(Constants.APP_NAME, "[Image Button Clicked] Spot ID:" + spot.getId());
+					Intent intent = new Intent(Util.getApp(), ViewSpot.class);
+					intent.putExtra(NotificationService.SPOT_ID, spot.getId());
+					context.startActivity(intent);
+				}
+			});
 		return view;
 	}
 	
-	private void setOnClickListner(ImageButton image, final View animView, final int pos, final BaseAdapter adapter){
+	private void setDeleteOnClickListner(ImageButton image, final View animView, final int pos, final BaseAdapter adapter){
 		image.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -156,9 +169,8 @@ public class MySpotsListAdapter extends BaseAdapter{
 	}
 	
 	private class ViewHolder {
-		public ImageView img;
 		public TextView title, time, hi5Count, commentCount;
-		public ImageButton delete;
+		public ImageButton img, delete;
 	}
 
 

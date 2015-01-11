@@ -67,7 +67,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		    	fileUri = null;
 		    }
 	    }
-	    
+	    if (getIntent().getBooleanExtra("postSpot", false)){
+	    	actionBar.selectTab(tab);
+	    }
 	    initGoogleAPIClient();
 	}
 	

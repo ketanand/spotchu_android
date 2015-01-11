@@ -42,7 +42,7 @@ public class GetSpotById implements Runnable{
 				if (res != null){
 					JSONObject json = new JSONObject(res);
 					if (!json.getBoolean("error")){
-						Message msg = mHandler.obtainMessage(Constants.SPOTS_FETCHED, json.getJSONArray("spot"));
+						Message msg = mHandler.obtainMessage(Constants.SPOTS_FETCHED, json.getJSONObject("spot"));
 						mHandler.sendMessage(msg);
 					} else {
 						Message msg = mHandler.obtainMessage(Constants.SPOTS_FETCH_FAILED);

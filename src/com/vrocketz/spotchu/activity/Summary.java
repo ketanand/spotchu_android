@@ -16,7 +16,7 @@ public class Summary extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.summary);
 		WebView browser = (WebView) findViewById(R.id.webview);
-		String url = getIntent().getStringExtra(NotificationService.GCM_MSG);
+		String url = getIntent().getStringExtra(NotificationService.SUMMARY_URL);
 		browser.loadUrl(url);
 	}
 }

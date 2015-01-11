@@ -29,7 +29,8 @@
         android:maxLength="100"
         android:inputType="text"
     	android:singleLine="true"
-        android:imeOptions="actionDone" >
+        android:imeOptions="actionDone"
+    >
         <requestFocus />
     </EditText>
     

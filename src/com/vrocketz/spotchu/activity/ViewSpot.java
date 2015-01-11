@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -20,6 +21,7 @@ import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.vrocketz.spotchu.NotificationService;
 import com.vrocketz.spotchu.R;
+import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.runnables.GetSpotById;
 import com.vrocketz.spotchu.runnables.Like;
@@ -41,6 +43,7 @@ public class ViewSpot extends Activity{
 		setContentView(R.layout.fullscreen_spinner);
 		context = this;
 		mProgressBar = (ProgressBar) findViewById(R.id.progressBarFetchSpot);
+		mProgressBar.setVisibility(View.VISIBLE);
 		int id = getIntent().getIntExtra(NotificationService.SPOT_ID, 0);
 		new Thread(new GetSpotById(mHandler, id)).start();
 	}
@@ -67,6 +70,8 @@ public class ViewSpot extends Activity{
 	};
 	
 	private void initView(){
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "[ViewSpot] InitView");
 		mProgressBar.setVisibility(View.GONE);
 		setContentView(R.layout.fullscreen_image);
 		imgDisplay = (ImageView) this.findViewById(R.id.imgDisplay);

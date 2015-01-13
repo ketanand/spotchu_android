@@ -246,9 +246,15 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 			try {
 				mIntentInProgress = true;
 				mConnectionResult.startResolutionForResult(this, RC_SIGN_IN);
+				//Show dialog as soon as login button is clicked.
+				mDialog = new ProgressDialog(LoginActivity.this);
+				mDialog.setTitle("Spotchu");
+				mDialog.setMessage("Logging In..");
+				mDialog.show();
 			} catch (SendIntentException e) {
 				mIntentInProgress = false;
 				mGoogleApiClient.connect();
+				mDialog.dismiss();
 			}
 		}
 	}
@@ -392,10 +398,10 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "Registered user: Pre Execute");
 			super.onPreExecute();
-			mDialog = new ProgressDialog(LoginActivity.this);
+			/*mDialog = new ProgressDialog(LoginActivity.this);
 			mDialog.setTitle("Spotchu");
 			mDialog.setMessage("Logging In..");
-			mDialog.show();
+			mDialog.show();*/
 		}
 
 		@Override

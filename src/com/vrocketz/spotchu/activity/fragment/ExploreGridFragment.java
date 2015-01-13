@@ -59,7 +59,7 @@ public class ExploreGridFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.explore, container, false);
-		if (mGridView != null){
+		//if (mGridView != null){
 			mGridView = (PullToRefreshStaggeredGridView) v
 					.findViewById(R.id.exploreGridView);
 			mGridView
@@ -73,7 +73,7 @@ public class ExploreGridFragment extends Fragment implements
 							refershSpots();
 						}
 					});
-		}
+		//}
 		if (Config.DEBUG)
 			Log.d(Constants.APP_NAME, "[ExploreGridFragment] onCreateView ");
 		if (mAdapter != null) {

@@ -50,8 +50,7 @@ public class SpotDao {
 
 	  public Spot createSpot(JSONObject spot) throws JSONException {
 	    ContentValues values = getValuesFromSpot(spot);
-	    long insertId = database.insert(SpotSQLiteHelper.TABLE_SPOTS, null,
-	        values);
+	    long insertId = database.insert(SpotSQLiteHelper.TABLE_SPOTS, null, values);
 	    Cursor cursor = database.query(SpotSQLiteHelper.TABLE_SPOTS,
 	        allColumns, SpotSQLiteHelper.COLUMN_ID + " = " + insertId, null,
 	        null, null, null);
@@ -65,6 +64,12 @@ public class SpotDao {
 	    long id = spot.getId();
 	    database.delete(SpotSQLiteHelper.TABLE_SPOTS, SpotSQLiteHelper.COLUMN_ID
 	        + " = " + id, null);
+	  }
+	  
+	  public boolean deleteAllSpots() {
+		  int doneDelete = 0;
+		  doneDelete = database.delete(SpotSQLiteHelper.TABLE_SPOTS, null , null);
+		  return doneDelete > 0;
 	  }
 
 	  public List<Spot> getAllSpots() {
@@ -140,5 +145,13 @@ public class SpotDao {
 		  values.put(SpotSQLiteHelper.COLUMN_PROFILE_TYPE, spot.getString(SpotHelper.SPOT_PROFILE_TYPE));
 		  values.put(SpotSQLiteHelper.COLUMN_USER_IMG, spot.getString(SpotHelper.SPOT_USERPIC));
 		  return values;
+	  }
+	  
+	  @Override
+	  protected void finalize() throws Throwable {
+		  if (dbHelper != null){
+			  dbHelper.close();
+		  }
+		  super.finalize();
 	  }
 }

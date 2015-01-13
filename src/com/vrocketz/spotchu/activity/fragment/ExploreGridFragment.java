@@ -59,19 +59,21 @@ public class ExploreGridFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.explore, container, false);
-		mGridView = (PullToRefreshStaggeredGridView) v
-				.findViewById(R.id.exploreGridView);
-		mGridView
-				.setOnRefreshListener(new OnRefreshListener<StaggeredGridView>() {
-					@Override
-					public void onRefresh(
-							PullToRefreshBase<StaggeredGridView> refreshView) {
-						if (Config.DEBUG)
-							Log.d(Constants.APP_NAME,
-									"[ExploreGridFragment] gridview Refreshed. ");
-						refershSpots();
-					}
-				});
+		if (mGridView != null){
+			mGridView = (PullToRefreshStaggeredGridView) v
+					.findViewById(R.id.exploreGridView);
+			mGridView
+					.setOnRefreshListener(new OnRefreshListener<StaggeredGridView>() {
+						@Override
+						public void onRefresh(
+								PullToRefreshBase<StaggeredGridView> refreshView) {
+							if (Config.DEBUG)
+								Log.d(Constants.APP_NAME,
+										"[ExploreGridFragment] gridview Refreshed. ");
+							refershSpots();
+						}
+					});
+		}
 		if (Config.DEBUG)
 			Log.d(Constants.APP_NAME, "[ExploreGridFragment] onCreateView ");
 		if (mAdapter != null) {

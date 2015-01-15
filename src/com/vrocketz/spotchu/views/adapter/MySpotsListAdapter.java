@@ -102,7 +102,13 @@ public class MySpotsListAdapter extends BaseAdapter{
 			final Spot spot =  mSpots.get(pos);
 		    ImageAware imageAware = new ImageViewAware(holder.img, false);
 		    ImageLoader.getInstance().displayImage(spot.getImg(), imageAware);
-			holder.title.setText(spot.getDesc());
+		    String desc = spot.getDesc();
+		    if (desc.length() > Constants.MAX_TITLE_SIZE){
+		    	StringBuilder s = new StringBuilder(desc.subSequence(0, Constants.MAX_TITLE_SIZE));
+		    	s.append("...");
+		    	desc = s.toString();
+		    }
+			holder.title.setText(desc);
 			holder.time.setText(Util.getPrintableTimeFormat(spot.getCreatedAt()));
 			holder.hi5Count.setText(String.valueOf(spot.getNoOfLikes()));
 			holder.commentCount.setText(String.valueOf(spot.getNoOfComments()));

@@ -36,6 +36,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -64,6 +65,7 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 	private static int NOTIFICATION_ID = 999;
 	private boolean isUpdate;
 	private JSONObject mSpot;
+	private CheckBox mCheck;
 	
 	//Image Effects Variables
 	/*private GLSurfaceView mEffectView;
@@ -92,6 +94,7 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		//Set listeners for buttons
 		mButton = (Button)findViewById(R.id.btnOk);
 		mButton.setOnClickListener(this);
+		mCheck = (CheckBox)findViewById(R.id.chkAnonymous);
 		/*ImageButton noEffect = (ImageButton)findViewById(R.id.btnNoEffect);
 		noEffect.setOnClickListener(this);
 		ImageButton effectDocumentary = (ImageButton)findViewById(R.id.btnEffectDocumentary);
@@ -199,6 +202,7 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		}
 		nameValuePairs.add(new BasicNameValuePair("desc", desc));
 		nameValuePairs.add(new BasicNameValuePair("tags", Util.getTagsFromTitle(mTitle.getText().toString())));
+		nameValuePairs.add(new BasicNameValuePair("goanonymous", String.valueOf(mCheck.isChecked())));
 		if (mLocation != null){
 			nameValuePairs.add(new BasicNameValuePair("locationLong", String.valueOf(mLocation.getLongitude())));
 			nameValuePairs.add(new BasicNameValuePair("locationLati", String.valueOf(mLocation.getLatitude())));

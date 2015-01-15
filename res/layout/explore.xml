@@ -4,15 +4,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res/com.vrocketz.spotchu"
     android:background="@color/activity_background">
-    <!--  com.etsy.android.grid.StaggeredGridView
-	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    xmlns:app="http://schemas.android.com/apk/res-auto"
-	    android:id="@+id/gridview"
+    <!-- com.etsy.android.grid.StaggeredGridView
+	    android:id="@+id/exploreGridView"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    app:item_margin="8dp"
 	    app:column_count="@integer/grid_column_count"
 	 /-->
+	 
+	<ProgressBar
+	        android:id="@+id/progressBarFetchSpot"
+	        style="?android:attr/progressBarStyleLarge"
+	        android:layout_width="40dp"
+	        android:layout_height="40dp"
+	        android:layout_marginLeft="80dp"
+	        android:layout_marginTop="58dp"
+	        android:visibility="gone"
+	 /> 
+	        
+	 <ImageView
+        android:id="@+id/imgNoInternet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        android:src="@drawable/no_internet"
+    />
     
     <com.handmark.pulltorefresh.library.PullToRefreshStaggeredGridView
     	android:id="@+id/exploreGridView"

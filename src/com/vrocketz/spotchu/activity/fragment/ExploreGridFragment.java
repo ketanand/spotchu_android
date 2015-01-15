@@ -19,10 +19,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
 import com.handmark.pulltorefresh.library.PullToRefreshStaggeredGridView;
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.activity.FullScreenSpotActivity;
@@ -42,12 +46,33 @@ public class ExploreGridFragment extends Fragment implements
 	public static final String SAVED_PAGE_NUMBER = "saved_page_number";
 	public static final String SAVED_START_TIME = "saved_start_time";
 	private PullToRefreshStaggeredGridView mGridView;
+	private ProgressBar mProgressBar;
+	private ImageView mNoInternet;
 	private boolean mHasRequestedMore;
+	private int mScrollX, mScrollY;
 	private ExploreGridViewAdapter mAdapter;
 	private JSONArray mSpotsJson;
 	private ArrayList<Spot> mSpots;
 	private Integer mFrom;
 	private long mStartTime;
+	
+	/*private StaggeredGridView.OnLoadMoreListener loadMoreListener = new StaggeredGridView.OnLoadMoreListener() {
+
+	    @Override
+	    public boolean onLoadMore() {
+	        //loading.setVisibility(View.VISIBLE);
+	        // load more data from internet (not in the UI thread)
+	    	if (Config.DEBUG)
+	    		Log.d(Constants.APP_NAME, "[Staggered Grid View] on Load more");
+	    	getNextPage();
+	        return true; // true if you have more data to load, false you dont have more data to load 
+	    }
+	};*/
+	
+	/*private void doneLoading() {
+	    mGridView.getRefreshableView().loadMoreCompleated();
+	    //loading.setVisibility(View.GONE);
+	}*/
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +85,8 @@ public class ExploreGridFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.explore, container, false);
 		//if (mGridView != null){
+		mProgressBar  = (ProgressBar)v.findViewById(R.id.progressBarFetchSpot);
+		mNoInternet = (ImageView)v.findViewById(R.id.imgNoInternet);
 			mGridView = (PullToRefreshStaggeredGridView) v
 					.findViewById(R.id.exploreGridView);
 			mGridView
@@ -78,25 +105,6 @@ public class ExploreGridFragment extends Fragment implements
 			Log.d(Constants.APP_NAME, "[ExploreGridFragment] onCreateView ");
 		if (mAdapter != null) {
 			mGridView.getRefreshableView().setAdapter(mAdapter);
-		} else if (savedInstanceState != null) {
-			if (Config.DEBUG)
-				Log.d(Constants.APP_NAME,
-						"[ExploreGridFragment] onCreateView savedInstanceState");
-			/*
-			 * mFrom = savedInstanceState.getInt(SAVED_PAGE_NUMBER); try {
-			 * String spotsJson = savedInstanceState.getString(SAVED_SPOTS_KEY);
-			 * if (spotsJson != null){ mSpots = new JSONArray(spotsJson); } }
-			 * catch (JSONException e) { e.printStackTrace(); } mStartTime =
-			 * savedInstanceState.getLong(SAVED_START_TIME); if (mData != null){
-			 * if (Config.DEBUG) Log.d(Constants.APP_NAME,
-			 * "[ExploreGridFragment] onCreateView mData present.");
-			 * initGridView(mData); }else {
-			 */
-			showStartOverlay();
-			mFrom = 0;
-			mStartTime = Util.getTimeInMilliseconds();
-			getNextPage();
-			// }
 		} else {
 			showStartOverlay();
 			mFrom = 0;
@@ -105,11 +113,19 @@ public class ExploreGridFragment extends Fragment implements
 		}
 		mGridView.getRefreshableView().setOnScrollListener(this);
 		mGridView.getRefreshableView().setOnItemClickListener(this);
+		//mGridView.getRefreshableView().setOnLoadMoreListener(loadMoreListener);
 		return v;
 	}
 
 	private void showStartOverlay() {
 		// TODO : create OverLay.
+		mProgressBar.setVisibility(View.VISIBLE);
+		mGridView.setVisibility(View.GONE);
+	}
+	
+	private void hideOverlay(){
+		mProgressBar.setVisibility(View.GONE);
+		mGridView.setVisibility(View.VISIBLE);
 	}
 
 	private void showLoadMore() {
@@ -149,12 +165,14 @@ public class ExploreGridFragment extends Fragment implements
 	public void onScroll(final AbsListView view, final int firstVisibleItem,
 			final int visibleItemCount, final int totalItemCount) {
 		if (!mHasRequestedMore) {
-			int lastInScreen = firstVisibleItem + visibleItemCount;
+			int lastInScreen = firstVisibleItem + visibleItemCount + 4;
 			if (lastInScreen >= totalItemCount) {
 				if (Config.DEBUG)
 					Log.d(Constants.APP_NAME,
 							"[ExploreGridFragment] onScroll lastInScreen - so load more");
 				mHasRequestedMore = true;
+				mScrollX = mGridView.getRefreshableView().getScrollX();
+				mScrollY = mGridView.getRefreshableView().getScrollY();
 				getNextPage();
 			}
 		}
@@ -191,6 +209,9 @@ public class ExploreGridFragment extends Fragment implements
 				//mSpots.addAll(spotList);
 				mAdapter.addAll(spotList);
 				mAdapter.notifyDataSetChanged();
+				mGridView.getRefreshableView().setScrollX(mScrollX);
+				mGridView.getRefreshableView().setScrollY(mScrollY);
+				//doneLoading();
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -228,6 +249,7 @@ public class ExploreGridFragment extends Fragment implements
 			case Constants.SPOTS_FETCHED:
 				onLoadMoreItems((JSONArray) msg.obj);
 				mGridView.onRefreshComplete();
+				hideOverlay();
 				break;
 			case Constants.SPOTS_FETCH_FAILED:
 				handleFailure();
@@ -238,15 +260,13 @@ public class ExploreGridFragment extends Fragment implements
 	};
 
 	private void handleFailure() {
-
+		hideOverlay();
+		mNoInternet.setVisibility(View.VISIBLE);
 	}
 
 	@Override
 	public void onItemClick(StaggeredGridView parent, View view, int position,
 			long id) {
-		Toast.makeText(getActivity(),
-				"[ExploreGridFragment] Item Clicked: " + position,
-				Toast.LENGTH_SHORT).show();
 		Intent i = new Intent(getActivity(), FullScreenSpotActivity.class);
 		i.putExtra(Constants.SPOT_ID, position);
 		i.putExtra(Constants.SPOTS, mSpotsJson.toString());

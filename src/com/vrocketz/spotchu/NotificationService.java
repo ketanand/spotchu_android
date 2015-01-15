@@ -89,7 +89,7 @@ public class NotificationService extends IntentService{
 			Intent intent = new Intent(Util.getApp(), Summary.class);
 			intent.putExtra("url", gcm.getJSONObject(GCM_MSG).getString(SUMMARY_URL));
 	        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-		    stackBuilder.addParentStack(MainActivity.class);
+		    stackBuilder.addParentStack(Summary.class);
 		    stackBuilder.addNextIntent(intent);
 		    PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,
 							                 PendingIntent.FLAG_UPDATE_CURRENT
@@ -109,7 +109,7 @@ public class NotificationService extends IntentService{
 			Intent intent = new Intent(Util.getApp(), ViewSpot.class);
 			intent.putExtra(SPOT_ID, spotId);
 	        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-		    stackBuilder.addParentStack(MainActivity.class);
+		    stackBuilder.addParentStack(ViewSpot.class);
 		    stackBuilder.addNextIntent(intent);
 		    PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,
 							                 PendingIntent.FLAG_UPDATE_CURRENT

@@ -6,9 +6,14 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.Spannable;
+import android.text.TextWatcher;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -23,6 +28,7 @@ import com.vrocketz.spotchu.NotificationService;
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
+import com.vrocketz.spotchu.helper.Util;
 import com.vrocketz.spotchu.runnables.GetSpotById;
 import com.vrocketz.spotchu.runnables.Like;
 import com.vrocketz.spotchu.spot.Spot;
@@ -33,7 +39,7 @@ public class ViewSpot extends Activity{
 	ProgressBar mProgressBar;
 	Spot spot;
 	ImageView imgDisplay, imgUserPic;
-	TextView lblTitle, lblUserName;
+	TextView lblTitle, lblUserName, lblNoOfLikes, lblNoOfComments;
 	ImageButton btnLike, btnComment, btnShare;
 	Context context;
 	
@@ -76,7 +82,7 @@ public class ViewSpot extends Activity{
 		setContentView(R.layout.fullscreen_image);
 		imgDisplay = (ImageView) this.findViewById(R.id.imgDisplay);
 	    ImageAware imageAware = new ImageViewAware(imgDisplay, false);
-        ImageLoader.getInstance().displayImage(spot.getImg().replace("_sm", ""), imageAware);
+        ImageLoader.getInstance().displayImage(spot.getImg(), imageAware);
         
 		lblTitle = (TextView) this.findViewById(R.id.lblSpotTitle);
 		lblTitle.setText(spot.getDesc());
@@ -127,31 +133,18 @@ public class ViewSpot extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				Intent shareIntent = getShareIntent();
+				Intent shareIntent = SpotHelper.getShareIntent(spot.getUrl());
 				context.startActivity(Intent.createChooser(shareIntent,
 							context.getResources().getString(R.string.share_via)));
 			}
 		});
+        
+        lblNoOfComments = (TextView) findViewById(R.id.lblNoOfComment);
+        int comments = spot.getNoOfComments(); 
+        lblNoOfComments.setText(comments + " " + getResources().getString(R.string.comment_v));
+        int likes = spot.getNoOfLikes();
+        lblNoOfLikes = (TextView)findViewById(R.id.lblNoOfLike);
+        lblNoOfLikes.setText(likes + " " + getResources().getString(R.string.hi5_v));
 	}
 	
-	private Intent getShareIntent(){
-		Intent sendIntent = new Intent();
-		sendIntent.setAction(Intent.ACTION_SEND);
-		String text = getShareText();
-		if (text != null){
-			sendIntent.putExtra(Intent.EXTRA_TEXT, text);
-		}else {
-			sendIntent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.spot_url_not_found_message));
-		}
-		sendIntent.setType("text/plain");
-		return sendIntent;
-	}
-	
-	private String getShareText(){
-		StringBuilder share = new StringBuilder();;
-		String url = spot.getUrl(); 
-		share.append(getResources().getString(R.string.spot_url_share_message)).append(url);
-		return share.toString();
-	}
-
 }

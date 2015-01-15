@@ -29,11 +29,16 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.format.DateFormat;
+import android.text.style.StyleSpan;
 import android.util.Log;
 
 public class Util {
@@ -291,6 +296,22 @@ public class Util {
 		}else {
 			return "";
 		}
+	}
+	
+	public static String boldHashTags(String s){
+		Editable title = new SpannableStringBuilder(s);
+		for (int i = 0; i < s.length(); i++){
+			char c = s.charAt(i);
+			if (c == '#'){
+				int end = s.indexOf(" ", i);
+				if (end == -1){
+					end = s.length();
+				}
+				title.setSpan(new StyleSpan(Typeface.BOLD), i, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				i = end;
+			}
+		}
+		return title.toString();
 	}
 	
 	@Override

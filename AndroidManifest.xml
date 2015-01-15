@@ -6,85 +6,115 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
-    
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    
-    <permission android:name="com.vrocketz.spotchu.gcm.permission.C2D_MESSAGE"
+
+    <permission
+        android:name="com.vrocketz.spotchu.gcm.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="com.vrocketz.spotchu.gcm.permission.C2D_MESSAGE" />
-    
-    
 
     <application
+        android:name="com.vrocketz.spotchu.SpotchuApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:logo="@drawable/logo"
         android:label="@string/app_name"
-        android:name="com.vrocketz.spotchu.SpotchuApp"
-        android:theme="@style/Theme.Spotchuactionbar"
-         >
-        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id" />
-        <activity android:name="com.vrocketz.spotchu.activity.LoginActivity"
+        android:logo="@drawable/logo"
+        android:theme="@style/Theme.Spotchuactionbar" >
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name="com.vrocketz.spotchu.activity.LoginActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
             "
             <intent-filter>
-            <category android:name="android.intent.category.LAUNCHER" />
-            <action android:name="android.intent.action.MAIN" />
-        	</intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
         </activity>
-        <activity android:name="com.vrocketz.spotchu.activity.MainActivity"
-            android:launchMode="singleTask" 
+        <activity
+            android:name="com.vrocketz.spotchu.activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.vrocketz.spotchu.activity.PostSpotActivity"
+        <activity
+            android:name="com.vrocketz.spotchu.activity.PostSpotActivity"
             android:parentActivityName="com.vrocketz.spotchu.activity.MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.vrocketz.spotchu.activity.MainActivity" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.vrocketz.spotchu.activity.MainActivity" />
         </activity>
-        <activity android:name="com.vrocketz.spotchu.activity.FullScreenSpotActivity"
+        <activity
+            android:name="com.vrocketz.spotchu.activity.FullScreenSpotActivity"
             android:parentActivityName="com.vrocketz.spotchu.activity.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-            	android:value="com.vrocketz.spotchu.activity.MainActivity" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.vrocketz.spotchu.activity.MainActivity" />
         </activity>
-        <activity android:name="com.vrocketz.spotchu.activity.ViewSpot"
+        <activity
+            android:name="com.vrocketz.spotchu.activity.ViewSpot"
             android:parentActivityName="com.vrocketz.spotchu.activity.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-            	android:value="com.vrocketz.spotchu.activity.MainActivity" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.vrocketz.spotchu.activity.MainActivity" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "http://www.spotchu.com/view” -->
+                <data
+                    android:host="www.spotchu.com"
+                    android:pathPrefix="/webview"
+                    android:scheme="http" />
+            </intent-filter>
         </activity>
-        <activity android:name="com.vrocketz.spotchu.activity.Summary"
+        <activity
+            android:name="com.vrocketz.spotchu.activity.Summary"
             android:parentActivityName="com.vrocketz.spotchu.activity.MainActivity"
             android:screenOrientation="portrait" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-            	android:value="com.vrocketz.spotchu.activity.MainActivity" />
-        </activity>
-        <activity android:name="com.vrocketz.spotchu.activity.CommentsActivity"
-            android:parentActivityName="com.vrocketz.spotchu.activity.FullScreenSpotActivity"
-            android:screenOrientation="portrait" >
             <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.vrocketz.spotchu.activity.FullScreenSpotActivity" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.vrocketz.spotchu.activity.MainActivity" />
         </activity>
-        <service android:name="com.vrocketz.spotchu.SpotchuLocationService"></service>
-        <service android:name="com.vrocketz.spotchu.NotificationService"></service>
-        <receiver android:name="com.vrocketz.spotchu.Receiver">
+        <activity
+            android:name="com.vrocketz.spotchu.activity.CommentsActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <service android:name="com.vrocketz.spotchu.SpotchuLocationService" >
+        </service>
+        <service android:name="com.vrocketz.spotchu.NotificationService" >
+        </service>
+
+        <receiver android:name="com.vrocketz.spotchu.Receiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -94,6 +124,7 @@
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="com.vrocketz.spotchu.gcm" />
             </intent-filter>
         </receiver>

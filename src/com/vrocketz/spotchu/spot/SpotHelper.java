@@ -6,6 +6,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
+
+import com.vrocketz.spotchu.R;
+import com.vrocketz.spotchu.helper.Util;
+
 
 public class SpotHelper {
 	
@@ -80,6 +85,28 @@ public class SpotHelper {
 			list.add(getFromJson(arr.getJSONObject(i)));
 		}
 		return list;
+	}
+	
+	public static Intent getShareIntent(String url){
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_SEND);
+		String text = getShareText(url);
+		if (text != null){
+			sendIntent.putExtra(Intent.EXTRA_TEXT, text);
+		}else {
+			sendIntent.putExtra(Intent.EXTRA_TEXT, Util.getApp().getResources().getString(R.string.spot_url_not_found_message));
+		}
+		sendIntent.setType("text/plain");
+		return sendIntent;
+	}
+	
+	private static String getShareText(String url){
+		if (url == null){
+			return null;
+		}
+		StringBuilder share = new StringBuilder();;
+		share.append(Util.getApp().getResources().getString(R.string.spot_url_share_message)).append(" ").append(url);
+		return share.toString();
 	}
 
 }

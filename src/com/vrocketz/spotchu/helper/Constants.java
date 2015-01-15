@@ -38,4 +38,6 @@ public class Constants {
 	public static final String SPOTS = "spots";
 	
 	public static final String SPOT_IMAGE_URI_KEY = "spot_image_uri_key";
+	
+	public static final int MAX_TITLE_SIZE = 50;
 }

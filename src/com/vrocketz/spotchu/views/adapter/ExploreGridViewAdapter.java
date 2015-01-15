@@ -76,8 +76,12 @@ public class ExploreGridViewAdapter extends ArrayAdapter<Spot> {
 		Spot spot = getItem(position);
 		commentCount.setText(String.valueOf(spot.getNoOfComments()));
 		hi5Count.setText(String.valueOf(spot.getNoOfLikes()));
-		ImageAware imageAware = new ImageViewAware(userImg, false);
-		ImageLoader.getInstance().displayImage(spot.getImageUrl(), imageAware);
+		if (spot.getName().equalsIgnoreCase("anonymous")){
+			userImg.setImageResource(R.drawable.default_photo);
+		}else {
+			ImageAware imageAware = new ImageViewAware(userImg, false);
+			ImageLoader.getInstance().displayImage(spot.getImageUrl(), imageAware);
+		}
 		double positionHeight = getPositionRatio(position);
 		picture.setHeightRatio(positionHeight);
 		ImageAware imagePicAware = new ImageViewAware(picture, false);

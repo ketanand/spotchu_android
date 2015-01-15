@@ -36,7 +36,8 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="2dip"
         android:layout_toLeftOf="@+id/lblHi5Count"
-        android:src="@drawable/hi5" />
+        android:src="@drawable/hi5"
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/lblHi5Count"

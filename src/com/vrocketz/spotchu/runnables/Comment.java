@@ -37,6 +37,7 @@ public class Comment implements Runnable{
 		ArrayList<NameValuePair> postData = new ArrayList<NameValuePair>();
 		postData.add(new BasicNameValuePair("spot_id", String.valueOf(spotId)));
 		postData.add(new BasicNameValuePair("comments", text));
+		postData.add(new BasicNameValuePair("userName", Util.getGlobalPreferences().getString(Constants.USER_NAME, "")));
 		try {
 			HttpResponse response = Util.sendPost(URL, postData);
 			String res = Util.convertResponseToString(response);

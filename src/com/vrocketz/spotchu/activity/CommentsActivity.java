@@ -67,10 +67,14 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 	public void onClick(View view) {
 		if (view.getId() == R.id.btnPostComment){
 			String text = mText.getText().toString();
-			hideSoftKeyboard();
-			mText.setText("");
-			new Thread(new Comment(mSpotId, text, mHandler)).start();
-			showPostCommentLoader();
+			if (text.length() > 0){
+				hideSoftKeyboard();
+				mText.setText("");
+				new Thread(new Comment(mSpotId, text, mHandler)).start();
+				showPostCommentLoader();
+			}else {
+				Toast.makeText(this, getResources().getString(R.string.required_comment), Toast.LENGTH_LONG).show();
+			}
 			//TODO : add to adapter in posting state.
 		}else if (view.getId() == R.id.btnLoadMoreComments){
 			new Thread(new GetComments(mHandler, mSpotId, mFrom, mStartTime)).start();

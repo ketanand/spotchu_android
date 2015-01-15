@@ -1,7 +1,6 @@
 package com.vrocketz.spotchu.helper;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,26 +19,21 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.vrocketz.spotchu.SpotchuApp;
-
-
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Environment;
-import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
+import android.text.Html;
+import android.text.Spanned;
 import android.text.format.DateFormat;
-import android.text.style.StyleSpan;
 import android.util.Log;
+
+import com.vrocketz.spotchu.SpotchuApp;
 
 public class Util {
 	
@@ -298,20 +292,20 @@ public class Util {
 		}
 	}
 	
-	public static String boldHashTags(String s){
-		Editable title = new SpannableStringBuilder(s);
-		for (int i = 0; i < s.length(); i++){
-			char c = s.charAt(i);
+	public static Spanned boldHashTags(String s){
+		StringBuilder output = new StringBuilder();
+		String[] words = s.split(" ");
+		for (String word : words){
+			char c = word.charAt(0);
+			String sourceString;
 			if (c == '#'){
-				int end = s.indexOf(" ", i);
-				if (end == -1){
-					end = s.length();
-				}
-				title.setSpan(new StyleSpan(Typeface.BOLD), i, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				i = end;
+				sourceString = " <b>" + word + "</b> "; 
+			}else {
+				sourceString = word;
 			}
+			output.append(sourceString);
 		}
-		return title.toString();
+		return Html.fromHtml(output.toString().trim());
 	}
 	
 	@Override

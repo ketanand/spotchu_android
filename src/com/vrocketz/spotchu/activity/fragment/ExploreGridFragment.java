@@ -165,7 +165,7 @@ public class ExploreGridFragment extends Fragment implements
 	public void onScroll(final AbsListView view, final int firstVisibleItem,
 			final int visibleItemCount, final int totalItemCount) {
 		if (!mHasRequestedMore) {
-			int lastInScreen = firstVisibleItem + visibleItemCount + 4;
+			int lastInScreen = firstVisibleItem + visibleItemCount + 4;//TODO: test this number
 			if (lastInScreen >= totalItemCount) {
 				if (Config.DEBUG)
 					Log.d(Constants.APP_NAME,
@@ -209,8 +209,16 @@ public class ExploreGridFragment extends Fragment implements
 				//mSpots.addAll(spotList);
 				mAdapter.addAll(spotList);
 				mAdapter.notifyDataSetChanged();
-				mGridView.getRefreshableView().setScrollX(mScrollX);
-				mGridView.getRefreshableView().setScrollY(mScrollY);
+				mHandler.postDelayed(new Runnable() {
+					
+					@Override
+					public void run() {
+						mGridView.getRefreshableView().scrollTo(mScrollX, mScrollY);
+						if (Config.DEBUG)
+							Log.d(Constants.APP_NAME,"[ExploreGridFragment] scrolled to "
+											+ mScrollX + "," + mScrollY);
+					}
+				}, 500);
 				//doneLoading();
 			} catch (JSONException e) {
 				e.printStackTrace();

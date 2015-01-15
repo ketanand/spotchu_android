@@ -55,7 +55,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:background="@android:color/transparent"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:layout_margin="10dp" >
 
         <TextView
             android:id="@+id/lblNoOfLike"
@@ -76,19 +77,21 @@
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/btnCommentSpot"
-        android:layout_margin="5dp"
+        android:layout_margin="10dp"
         android:background="@drawable/button_background_transparent"
-        android:src="@drawable/hi5" />
+        android:src="@drawable/hi5_white"
+        android:scaleType="fitCenter" />
 
     <ImageButton
         android:id="@+id/btnCommentSpot"
         android:layout_width="40dp"
         android:layout_height="40dp"
        	android:layout_alignParentBottom="true"
-       	android:layout_margin="5dp"
+       	android:layout_margin="10dp"
        	android:layout_toLeftOf="@+id/btnShareSpot"
         android:background="@drawable/button_background_transparent"
-        android:src="@drawable/comment" />
+        android:src="@drawable/comment"
+        android:scaleType="fitCenter" />
 
     <ImageButton
         android:id="@+id/btnShareSpot"
@@ -96,8 +99,9 @@
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="5dp"
+        android:layout_margin="10dp"
         android:background="@drawable/button_background_transparent"
-        android:src="@android:drawable/ic_menu_share" />
+        android:src="@android:drawable/ic_menu_share"
+        android:scaleType="fitCenter" />
 
 </RelativeLayout>

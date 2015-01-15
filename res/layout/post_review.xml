@@ -107,5 +107,5 @@
 	            android:enabled="true"
 	            android:layout_alignParentBottom="true"
 	            android:background="@drawable/red_button"
-	            style="@style/button_text" />
+	            style="@style/button_text.full" />
 </RelativeLayout>

@@ -27,10 +27,12 @@ public class NotificationService extends IntentService{
 	private static final int NOTIFICATION_SUMMARY_ID = 998;
 	public static final String GCM_MSG_TYPE = "type";
 	public static final String GCM_MSG = "msg";
+	public static final String GCM_TEXT = "text";
 	public static final String SPOT_TITLE = "name";
 	public static final String SPOT_ID = "spotId";
 	public static final String SUMMARY_URL = "url";
-	private int notify_no = 0;
+	private static int new_spot_notify_no = 0;
+	private static int new_comment_notify_no = 0;
 
 	public NotificationService() {
         super(NotificationService.class.getName());
@@ -72,6 +74,8 @@ public class NotificationService extends IntentService{
 	}
 
 	private void sendNotification(String message){
+		if (Config.DEBUG)
+        	Log.d(Constants.APP_NAME, "GCM Send Notification: " + message);
 		// create the notification
         JSONObject msg;
 		try {
@@ -85,6 +89,8 @@ public class NotificationService extends IntentService{
 	private void sendNotificationFromMessage(JSONObject gcm) throws JSONException{
 		NotificationManager mNM = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
 		GCMMessageType type = GCMMessageType.getFromValue(gcm.getInt(GCM_MSG_TYPE));
+		if (Config.DEBUG)
+        	Log.d(Constants.APP_NAME, "GCM Send Notification Type: " + type.getValue());
 		if (type == GCMMessageType.SUMMARY){
 			Intent intent = new Intent(Util.getApp(), Summary.class);
 			intent.putExtra("url", gcm.getJSONObject(GCM_MSG).getString(SUMMARY_URL));
@@ -94,7 +100,7 @@ public class NotificationService extends IntentService{
 		    PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,
 							                 PendingIntent.FLAG_UPDATE_CURRENT
 							             );
-		    String text = getResources().getString(R.string.your_day_today);
+		    String text = gcm.getJSONObject(GCM_MSG).getString(GCM_TEXT);
 		    NotificationCompat.Builder m_notificationBuilder = new NotificationCompat.Builder(this)
 	        .setContentTitle(getText(R.string.app_name))
 	        .setContentText(text)
@@ -104,7 +110,9 @@ public class NotificationService extends IntentService{
 	        .setSmallIcon(R.drawable.ic_launcher);
 		    m_notificationBuilder.setContentIntent(pendingIntent);
 		    mNM.notify(NOTIFICATION_SUMMARY_ID, m_notificationBuilder.build());
-		}else if (type == GCMMessageType.NEW_SPOT){
+		}else if (type == GCMMessageType.NEW_SPOT 
+				|| type == GCMMessageType.NEW_COMMENT 
+				|| type == GCMMessageType.NEW_HI5){
 			int spotId = gcm.getJSONObject(GCM_MSG).getInt(SPOT_ID);
 			Intent intent = new Intent(Util.getApp(), ViewSpot.class);
 			intent.putExtra(SPOT_ID, spotId);
@@ -114,10 +122,7 @@ public class NotificationService extends IntentService{
 		    PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,
 							                 PendingIntent.FLAG_UPDATE_CURRENT
 							             );
-		    StringBuilder textBuilder = new StringBuilder();
-		    textBuilder.append(getResources().getString(R.string.new_spot));
-		    textBuilder.append(gcm.getJSONObject(GCM_MSG).getString(SPOT_TITLE)).append(".");
-		    String text = textBuilder.toString();
+		    String text = gcm.getJSONObject(GCM_MSG).getString(GCM_TEXT);
 		    NotificationCompat.Builder m_notificationBuilder = new NotificationCompat.Builder(this)
 	        .setContentTitle(getText(R.string.app_name))
 	        .setContentText(text)
@@ -127,12 +132,12 @@ public class NotificationService extends IntentService{
 	        .setSmallIcon(R.drawable.ic_launcher);
 		    
 		    m_notificationBuilder.setContentIntent(pendingIntent);
-		    if (notify_no < 9) {
-	            notify_no = notify_no + 1;
+		    if (new_comment_notify_no < 20) {
+		    	new_comment_notify_no = new_comment_notify_no + 1;
 	        } else {
-	            notify_no = 0;
+	        	new_comment_notify_no = 0;
 	        }
-		    mNM.notify(notify_no, m_notificationBuilder.build());
+		    mNM.notify(new_comment_notify_no, m_notificationBuilder.build());
 		}
 	}
 }

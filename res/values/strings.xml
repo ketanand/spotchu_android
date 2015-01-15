@@ -27,6 +27,8 @@
 	<string name="facebook_app_id">775540655859682</string>
 	<string name="logout">Logout</string>
 	<string name="required_desc">You forgot to give your spot a name.</string>
+	<string name="required_comment">Please enter a comment.</string>
+	
 	<string name="setting_anonymous">setting_anonymous</string>
 	<string name="setting_anonymous_title">Post as Anonymous</string>
 	<string name="hi5_v">Hi5 and</string>

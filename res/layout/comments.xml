@@ -62,9 +62,12 @@
 	            android:id="@+id/btnPostComment"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
+	            android:layout_margin="10dp"
 	            android:text="@string/comment"
 	            android:layout_weight=".2"
-	            android:enabled="true" />
+	            android:enabled="true"
+	            android:background="@drawable/red_button"
+	            style="@style/button_text_small" />
 	    
 	    </LinearLayout>
 </RelativeLayout>

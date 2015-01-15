@@ -19,14 +19,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
 import com.handmark.pulltorefresh.library.PullToRefreshStaggeredGridView;
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.activity.FullScreenSpotActivity;
@@ -36,6 +32,7 @@ import com.vrocketz.spotchu.helper.Util;
 import com.vrocketz.spotchu.runnables.GetSpots;
 import com.vrocketz.spotchu.spot.Spot;
 import com.vrocketz.spotchu.spot.SpotHelper;
+import com.vrocketz.spotchu.views.AnimatedGifImageView;
 import com.vrocketz.spotchu.views.adapter.ExploreGridViewAdapter;
 
 public class ExploreGridFragment extends Fragment implements
@@ -46,10 +43,10 @@ public class ExploreGridFragment extends Fragment implements
 	public static final String SAVED_PAGE_NUMBER = "saved_page_number";
 	public static final String SAVED_START_TIME = "saved_start_time";
 	private PullToRefreshStaggeredGridView mGridView;
-	private ProgressBar mProgressBar;
+	//private ProgressBar mProgressBar;
+	private AnimatedGifImageView mLoaderGif;
 	private ImageView mNoInternet;
 	private boolean mHasRequestedMore;
-	private int mScrollX, mScrollY;
 	private ExploreGridViewAdapter mAdapter;
 	private JSONArray mSpotsJson;
 	private ArrayList<Spot> mSpots;
@@ -85,7 +82,9 @@ public class ExploreGridFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.explore, container, false);
 		//if (mGridView != null){
-		mProgressBar  = (ProgressBar)v.findViewById(R.id.progressBarFetchSpot);
+		//mProgressBar  = (ProgressBar)v.findViewById(R.id.progressBarFetchSpot);
+		mLoaderGif = (AnimatedGifImageView) v.findViewById(R.id.gifLoader);
+		mLoaderGif.setAnimatedGif(R.raw.loader,	AnimatedGifImageView.TYPE.FIT_CENTER);
 		mNoInternet = (ImageView)v.findViewById(R.id.imgNoInternet);
 			mGridView = (PullToRefreshStaggeredGridView) v
 					.findViewById(R.id.exploreGridView);
@@ -119,12 +118,12 @@ public class ExploreGridFragment extends Fragment implements
 
 	private void showStartOverlay() {
 		// TODO : create OverLay.
-		mProgressBar.setVisibility(View.VISIBLE);
+		mLoaderGif.setVisibility(View.VISIBLE);
 		mGridView.setVisibility(View.GONE);
 	}
 	
 	private void hideOverlay(){
-		mProgressBar.setVisibility(View.GONE);
+		mLoaderGif.setVisibility(View.GONE);
 		mGridView.setVisibility(View.VISIBLE);
 	}
 
@@ -171,8 +170,6 @@ public class ExploreGridFragment extends Fragment implements
 					Log.d(Constants.APP_NAME,
 							"[ExploreGridFragment] onScroll lastInScreen - so load more");
 				mHasRequestedMore = true;
-				mScrollX = mGridView.getRefreshableView().getScrollX();
-				mScrollY = mGridView.getRefreshableView().getScrollY();
 				getNextPage();
 			}
 		}
@@ -209,16 +206,6 @@ public class ExploreGridFragment extends Fragment implements
 				//mSpots.addAll(spotList);
 				mAdapter.addAll(spotList);
 				mAdapter.notifyDataSetChanged();
-				mHandler.postDelayed(new Runnable() {
-					
-					@Override
-					public void run() {
-						mGridView.getRefreshableView().scrollTo(mScrollX, mScrollY);
-						if (Config.DEBUG)
-							Log.d(Constants.APP_NAME,"[ExploreGridFragment] scrolled to "
-											+ mScrollX + "," + mScrollY);
-					}
-				}, 500);
 				//doneLoading();
 			} catch (JSONException e) {
 				e.printStackTrace();

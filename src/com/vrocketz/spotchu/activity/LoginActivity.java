@@ -131,16 +131,16 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 		
 	private void initSlider() {
 		// detector = new GestureDetector(this, new SwipeGestureDetector());
-		mViewFlipper = (ViewFlipper) this.findViewById(R.id.viewFlipper);
-		/*
+		/*mViewFlipper = (ViewFlipper) this.findViewById(R.id.viewFlipper);
+		
 		 * mViewFlipper.setOnTouchListener(new View.OnTouchListener() {
 		 * 
 		 * @Override public boolean onTouch(final View view, final MotionEvent
 		 * event) { detector.onTouchEvent(event); return true; } });
-		 */
+		 
 		mViewFlipper.setAutoStart(true);
 		mViewFlipper.setFlipInterval(3000);
-		mViewFlipper.startFlipping();
+		mViewFlipper.startFlipping();*/
 	}
 
 	private Session.StatusCallback callback = new Session.StatusCallback() {

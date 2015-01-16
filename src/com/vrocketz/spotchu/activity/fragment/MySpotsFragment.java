@@ -30,6 +30,7 @@ import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
 import com.vrocketz.spotchu.runnables.GetMySpots;
 import com.vrocketz.spotchu.spot.SpotHelper;
+import com.vrocketz.spotchu.views.AnimatedGifImageView;
 import com.vrocketz.spotchu.views.adapter.MySpotsListAdapter;
 
 public class MySpotsFragment extends Fragment{
@@ -39,7 +40,8 @@ public class MySpotsFragment extends Fragment{
 	private JSONArray spots;
 	private ListView mSpotList;
 	private MySpotsListAdapter adapter;
-	private ProgressBar mProgressBar;
+	private AnimatedGifImageView mGifLoader;
+	private ImageView mImgNoInternet;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,11 +64,12 @@ public class MySpotsFragment extends Fragment{
 		mUserId.setText(pref.getString(Constants.USER_NAME, ""));
 		//TODO : show spinner.
 		mSpotList = (ListView) v.findViewById(R.id.lstMySpots);
-		mProgressBar = (ProgressBar) v.findViewById(R.id.progressBarMySpotsLoad);
+		mGifLoader = (AnimatedGifImageView) v.findViewById(R.id.gifLoader);
+		mImgNoInternet = (ImageView) v.findViewById(R.id.imgNoInternet);
 		if (adapter == null){
 			adapter = new MySpotsListAdapter(getActivity());
 		}else {
-			mProgressBar.setVisibility(View.GONE);
+			mGifLoader.setVisibility(View.GONE);
 			mSpotList.setVisibility(View.VISIBLE);
 		}
 		mSpotList.setAdapter(adapter);
@@ -86,13 +89,17 @@ public class MySpotsFragment extends Fragment{
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				mProgressBar.setVisibility(View.GONE);
+				mGifLoader.setVisibility(View.GONE);
 				mSpotList.setVisibility(View.VISIBLE);
 				adapter.notifyDataSetChanged();
 				break;
 			case Constants.SPOTS_FETCH_FAILED:
-				mProgressBar.setVisibility(View.GONE);
-				//TODO : display some oops graphic
+				mGifLoader.setVisibility(View.GONE);
+				Toast.makeText(getActivity(), getResources().getString(R.string.spot_fetch_failed), Toast.LENGTH_LONG).show();
+			case Constants.NO_INTERNET:
+				mImgNoInternet.setVisibility(View.VISIBLE);
+				mGifLoader.setVisibility(View.GONE);
+				
 			}
 		}
 	};

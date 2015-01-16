@@ -9,12 +9,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.vrocketz.spotchu.activity.LoginActivity;
 import com.vrocketz.spotchu.activity.MainActivity;
 import com.vrocketz.spotchu.activity.Summary;
 import com.vrocketz.spotchu.activity.ViewSpot;
@@ -25,6 +27,8 @@ import com.vrocketz.spotchu.helper.Util;
 public class NotificationService extends IntentService{
 	
 	private static final int NOTIFICATION_SUMMARY_ID = 998;
+	private static final int NOTIFICATION_ANNOUNCEMENT_ID = 997;
+	private static final int NOTIFICATION_UPGRADE_ID = 997;
 	public static final String GCM_MSG_TYPE = "type";
 	public static final String GCM_MSG = "msg";
 	public static final String GCM_TEXT = "text";
@@ -138,6 +142,35 @@ public class NotificationService extends IntentService{
 	        	new_comment_notify_no = 0;
 	        }
 		    mNM.notify(new_comment_notify_no, m_notificationBuilder.build());
+		}else if (type == GCMMessageType.ANNOUNCEMENT){
+			Intent intent = new Intent(Util.getApp(), LoginActivity.class);
+		    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+		    String text = gcm.getJSONObject(GCM_MSG).getString(GCM_TEXT);
+		    NotificationCompat.Builder m_notificationBuilder = new NotificationCompat.Builder(this)
+	        .setContentTitle(getText(R.string.app_name))
+	        .setContentText(text)
+	        .setTicker(text)
+	        .setDefaults(Notification.DEFAULT_ALL)
+	        .setAutoCancel(true)
+	        .setSmallIcon(R.drawable.ic_launcher);
+		    m_notificationBuilder.setContentIntent(pendingIntent);
+		    mNM.notify(NOTIFICATION_ANNOUNCEMENT_ID, m_notificationBuilder.build());
+		}else if (type == GCMMessageType.UPGRADE){
+			/*
+			 * Show Dialog for upgrade.
+			 */
+			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.vrocketz.spotchu"));
+			//intent.putExtra(Constants.UPGRADE_AVAILABLE, true);
+		    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+		    String text = gcm.getJSONObject(GCM_MSG).getString(GCM_TEXT);
+		    NotificationCompat.Builder m_notificationBuilder = new NotificationCompat.Builder(this)
+	        .setContentTitle(getText(R.string.app_name))
+	        .setContentText(text)
+	        .setTicker(text)
+	        .setDefaults(Notification.DEFAULT_ALL)
+	        .setAutoCancel(true)
+	        .setSmallIcon(R.drawable.ic_launcher);
+		    m_notificationBuilder.setContentIntent(pendingIntent);
 		}
 	}
 }

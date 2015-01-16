@@ -13,7 +13,7 @@
         android:id="@+id/imgUserProfilePic"
         android:scaleType="centerCrop"
         app:riv_corner_radius="30dip"
-        app:riv_border_width="2dip"
+        app:riv_border_width="0dip"
         app:riv_border_color="#333333"
         app:riv_mutate_background="true"
         app:riv_oval="true"
@@ -42,6 +42,7 @@
 		
 	    <TextView
 		        android:id="@+id/lblCommentTime"
+		        android:layout_below="@+id/lblComment"
 		        android:layout_alignParentBottom="true"
 		        android:layout_toRightOf="@id/imgUserProfilePic"
 		        style="@style/label.small"

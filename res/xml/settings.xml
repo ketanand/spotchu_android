@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:background="@color/white">
+    
+    <Preference android:title="@string/prefs_privacy_policy" >
+	    <intent 
+	        	android:action="android.intent.action.VIEW"
+	            android:data="http://spotchu.com/privacy"
+	    />
+	</Preference>
+	<Preference android:title="@string/prefs_terms" >
+	    <intent 
+	        	android:action="android.intent.action.VIEW"
+	            android:data="http://spotchu.com/terms"
+	    />
+	</Preference>
+	<Preference android:title="@string/prefs_more_info" >
+	    <intent 
+	        	android:action="android.intent.action.VIEW"
+	            android:data="http://spotchu.com"
+	    />
+	</Preference>
+    
+
+</PreferenceScreen>

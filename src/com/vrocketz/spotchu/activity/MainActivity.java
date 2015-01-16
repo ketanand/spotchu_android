@@ -136,6 +136,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	    		clearUser();
 	    		finish();
 	    		return true;
+	    	case R.id.menu_item_settings:
+	    		Intent intent = new Intent(this, SettingsActivity.class);
+	    		startActivity(intent);
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }

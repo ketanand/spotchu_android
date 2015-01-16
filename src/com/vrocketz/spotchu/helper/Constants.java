@@ -12,6 +12,7 @@ public class Constants {
 	public static final String USER_KEY = "user_key";
 	public static final String REGISTRATION_ID = "gcm_registration_id";
 	public static final String APP_VERSION = "app_version";
+	public static final String UPGRADE_AVAILABLE = "upgrade_available";
 	
 	public static final String API_HOST = "http://peesake.spotchu.com/v1/";
 	

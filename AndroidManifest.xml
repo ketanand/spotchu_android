@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vrocketz.spotchu"
-    android:versionCode="5"
-    android:versionName="0.2.4" >
+    android:versionCode="7"
+    android:versionName="0.4" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -106,6 +106,10 @@
         </activity>
         <activity
             android:name="com.vrocketz.spotchu.activity.CommentsActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vrocketz.spotchu.activity.SettingsActivity"
             android:screenOrientation="portrait" >
         </activity>
 

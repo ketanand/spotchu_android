@@ -94,10 +94,6 @@ public class FullScreenSpotAdapter extends PagerAdapter {
 				ImageLoader.getInstance().displayImage(
 						spot.getString("image_url"), imageAwareUserPic);
 			}
-
-			ImageAware imageAwareUserPic = new ImageViewAware(imgUserPic, false);
-			ImageLoader.getInstance().displayImage(spot.getString("image_url"),
-					imageAwareUserPic);
 			btnLike = (ImageButton) viewLayout.findViewById(R.id.btnHi5Spot);
 			boolean hi5ed = false;
 			if (!spot.isNull("selfHi5Id")) {

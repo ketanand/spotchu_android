@@ -30,7 +30,7 @@ public class GetMySpots implements Runnable {
 		StringBuilder url = new StringBuilder(URL);
 		try {
 			if (!Util.isInternetAvailable()){
-				Message msg = mHandler.obtainMessage(Constants.SPOTS_FETCH_FAILED);
+				Message msg = mHandler.obtainMessage(Constants.NO_INTERNET);
 				mHandler.sendMessage(msg);
 			}else {
 				HttpResponse response = Util.sendGet(url.toString());

@@ -12,7 +12,7 @@
 	    app:column_count="@integer/grid_column_count"
 	 /-->
 	 
-	<ProgressBar
+	<!-- ProgressBar
 	        android:id="@+id/progressBarFetchSpot"
 	        style="?android:attr/progressBarStyleLarge"
 	        android:layout_width="wrap_content"
@@ -20,17 +20,27 @@
 	        android:visibility="gone"
 	        android:layout_centerHorizontal="true"
 	        android:layout_centerVertical="true"
-	        android:indeterminateDrawable="@drawable/loader"
-	 /> 
+	 /--> 
+	 
+	  <com.vrocketz.spotchu.views.AnimatedGifImageView
+        android:id="@+id/gifLoader"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:visibility="gone"
+	    android:layout_centerHorizontal="true"
+	    android:layout_centerVertical="true"
+      />
 	        
 	 <ImageView
         android:id="@+id/imgNoInternet"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:scaleType="fitCenter"
         android:visibility="gone"
+        android:layout_centerHorizontal="true"
+	    android:layout_centerVertical="true"
         android:src="@drawable/no_internet"
-    />
+     />
     
     <com.handmark.pulltorefresh.library.PullToRefreshStaggeredGridView
     	android:id="@+id/exploreGridView"

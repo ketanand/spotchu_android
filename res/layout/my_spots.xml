@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@android:color/white" >
     
     <LinearLayout
+        android:id="@+id/layoutTopUserDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:weightSum="1.0"
         android:layout_margin="5dp"
+        android:layout_alignParentTop="true"
 		>
 		
         <!--  ImageView
@@ -26,7 +27,7 @@
         android:id="@+id/imgUserDisplayPic"
         android:scaleType="fitCenter"
         app:riv_corner_radius="30dip"
-        app:riv_border_width="2dip"
+        app:riv_border_width="0dip"
         app:riv_border_color="#333333"
         app:riv_mutate_background="true"
         app:riv_oval="true"
@@ -48,21 +49,30 @@
 	        android:id="@+id/lblOldSpots"
 	        style="@style/label.medium"
 	        android:text="@string/past_activity"
-	        android:layout_gravity="center_horizontal"
+	        android:layout_below="@+id/layoutTopUserDetails"
+	        android:layout_centerHorizontal="true"
 	    >
 	</TextView>
     
 	
-    <ProgressBar
-        android:id="@+id/progressBarMySpotsLoad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="23dp"
-        android:layout_marginTop="20dp"
-        android:indeterminate="false"
-        android:minHeight="50dp"
-        android:minWidth="200dp"
-         />
+    <com.vrocketz.spotchu.views.AnimatedGifImageView
+        android:id="@+id/gifLoader"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+	    android:layout_centerHorizontal="true"
+	    android:layout_centerVertical="true"
+    />
+    
+     <ImageView
+        android:id="@+id/imgNoInternet"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+	    android:layout_centerVertical="true"
+        android:src="@drawable/no_internet"
+     />
     
     <ListView 
         android:id="@+id/lstMySpots"
@@ -72,8 +82,10 @@
 	    android:divider="@android:color/transparent"
   		android:dividerHeight="2px"
 	    android:background="@color/activity_background"
-	    android:clickable="true">
+	    android:clickable="true"
+	    android:layout_alignParentBottom="true"
+	    android:layout_below="@+id/lblOldSpots">
         
     </ListView>
 
-</LinearLayout>
+</RelativeLayout>

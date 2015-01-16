@@ -236,16 +236,17 @@ public class Util {
 	public static String getRegistrationId(){
 		String regId = null;
 		regId =  getGlobalPreferences().getString(Constants.REGISTRATION_ID, null);
-		if (regId == null){
-			return regId;
-		}
+		return regId;
+	}
+	
+	public static boolean wasAppUpgraded(){
 		int registeredVersion = getGlobalPreferences().getInt(Constants.APP_VERSION, Integer.MIN_VALUE);
 	    int currentVersion = getAppVersion(getApp());
 	    if (registeredVersion != currentVersion) {
 	        Log.i(Constants.APP_NAME, "App version changed.");
-	        return null;
+	        return true;
 	    }
-		return regId;
+	    return false;
 	}
 	
 	public static int getOsApiVersion(){

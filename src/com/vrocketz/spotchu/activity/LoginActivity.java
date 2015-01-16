@@ -1,7 +1,6 @@
 package com.vrocketz.spotchu.activity;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -26,8 +25,6 @@ import android.widget.ViewFlipper;
 import com.facebook.AppEventsLogger;
 import com.facebook.Session;
 import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
-import com.facebook.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
@@ -58,7 +55,7 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 	/**
 	 * Facebook Login
 	 */
-	//private UiLifecycleHelper uiHelper;
+	// private UiLifecycleHelper uiHelper;
 
 	/* Client used to interact with Google APIs. */
 	private GoogleApiClient mGoogleApiClient = null;
@@ -90,7 +87,9 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 		String regid = Util.getRegistrationId();
 
 		if (regid == null) {
-			registerInBackground();
+			registerInBackground(false);
+		}else if (Util.wasAppUpgraded()){
+			registerInBackground(true);
 		}
 		// Start location service.
 		Intent intent = new Intent(this, SpotchuLocationService.class);
@@ -115,32 +114,35 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 			}
 
 			// Initialize facebook login UI Helper
-			/*uiHelper = new UiLifecycleHelper(this, callback);
-			uiHelper.onCreate(savedInstanceState);
-			
-			//Initialize FB login button
-			LoginButton authButton = (LoginButton) findViewById(R.id.authButton);
-			authButton.setReadPermissions(Arrays.asList("public_profile", "email"));*/
-			
+			/*
+			 * uiHelper = new UiLifecycleHelper(this, callback);
+			 * uiHelper.onCreate(savedInstanceState);
+			 * 
+			 * //Initialize FB login button LoginButton authButton =
+			 * (LoginButton) findViewById(R.id.authButton);
+			 * authButton.setReadPermissions(Arrays.asList("public_profile",
+			 * "email"));
+			 */
+
 			// Initialize Slider
 			initSlider();
 		}
 
 	}
-	
-		
+
 	private void initSlider() {
 		// detector = new GestureDetector(this, new SwipeGestureDetector());
-		/*mViewFlipper = (ViewFlipper) this.findViewById(R.id.viewFlipper);
-		
+		/*
+		 * mViewFlipper = (ViewFlipper) this.findViewById(R.id.viewFlipper);
+		 * 
 		 * mViewFlipper.setOnTouchListener(new View.OnTouchListener() {
 		 * 
 		 * @Override public boolean onTouch(final View view, final MotionEvent
 		 * event) { detector.onTouchEvent(event); return true; } });
-		 
-		mViewFlipper.setAutoStart(true);
-		mViewFlipper.setFlipInterval(3000);
-		mViewFlipper.startFlipping();*/
+		 * 
+		 * mViewFlipper.setAutoStart(true); mViewFlipper.setFlipInterval(3000);
+		 * mViewFlipper.startFlipping();
+		 */
 	}
 
 	private Session.StatusCallback callback = new Session.StatusCallback() {
@@ -203,7 +205,7 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 			onSessionStateChange(session, session.getState(), null);
 		}
 
-		//uiHelper.onResume();
+		// uiHelper.onResume();
 		AppEventsLogger.activateApp(this);
 	}
 
@@ -241,21 +243,30 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 	 * Resolve google plus sing in error
 	 */
 	private void resolveSignInError() {
-		Log.d("spotchu", "resolveSignInError");
-		if (mConnectionResult.hasResolution()) {
-			try {
-				mIntentInProgress = true;
-				mConnectionResult.startResolutionForResult(this, RC_SIGN_IN);
-				//Show dialog as soon as login button is clicked.
-				mDialog = new ProgressDialog(LoginActivity.this);
-				mDialog.setTitle("Spotchu");
-				mDialog.setMessage("Logging In..");
-				mDialog.show();
-			} catch (SendIntentException e) {
-				mIntentInProgress = false;
-				mGoogleApiClient.connect();
-				mDialog.dismiss();
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "resolveSignInError");
+		if (mConnectionResult != null) {
+			if (mConnectionResult.hasResolution()) {
+				try {
+					mIntentInProgress = true;
+					mConnectionResult
+							.startResolutionForResult(this, RC_SIGN_IN);
+					// Show dialog as soon as login button is clicked.
+					mDialog = new ProgressDialog(LoginActivity.this);
+					mDialog.setTitle("Spotchu");
+					mDialog.setMessage("Logging In..");
+					mDialog.show();
+				} catch (SendIntentException e) {
+					mIntentInProgress = false;
+					mGoogleApiClient.connect();
+					mDialog.dismiss();
+				}
 			}
+		} else {
+			if (Config.DEBUG)
+				Log.d(Constants.APP_NAME, "resolveSignInError connection result is null.");
+			Toast.makeText(this, R.string.no_internet, Toast.LENGTH_LONG)
+					.show();
 		}
 	}
 
@@ -315,6 +326,8 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 				Log.d(Constants.APP_NAME, "login button clicked");
 
 			if (Util.isInternetAvailable()) {
+				if (Config.DEBUG)
+					Log.d(Constants.APP_NAME, "Internet Available resolve SignInError called.");
 				mSignInClicked = true;
 				resolveSignInError();
 			} else {
@@ -325,8 +338,8 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 
 	}
 
-	private void registerInBackground() {
-		new RegisterAppToGCM().execute();
+	private void registerInBackground(boolean upgraded) {
+		new RegisterAppToGCM(upgraded).execute();
 	}
 
 	class SwipeGestureDetector extends SimpleOnGestureListener {
@@ -365,6 +378,16 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 
 	// AsyncTask To Push GCM Registration ID to Server
 	private class RegisterAppToGCM extends AsyncTask<Void, Void, Void> {
+		
+		private boolean upgraded;
+		
+		public RegisterAppToGCM(){
+			upgraded = false;
+		}
+		
+		public RegisterAppToGCM(boolean upgraded){
+			this.upgraded = upgraded;
+		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -374,15 +397,19 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 							.getInstance(getApplicationContext());
 				}
 				String regid = gcm.register(Constants.SENDER_ID);
+				String oldRegId = null;
+				if (upgraded){
+					oldRegId = Util.getGlobalPreferences().getString(Constants.REGISTRATION_ID, null);
+				}
+				int appVer = Util.getAppVersion(getApplicationContext());
 				if (Config.DEBUG)
 					Log.d(Constants.APP_NAME,
 							"Device registered, registration ID=" + regid);
-
-				Api.sendRegistrationIdToBackend(regid);
+				
+				Api.sendRegistrationIdToBackend(regid, appVer, oldRegId);
 
 				Util.setPref(Constants.REGISTRATION_ID, regid);
-				Util.setPref(Constants.APP_VERSION,
-						Util.getAppVersion(getApplicationContext()));
+				Util.setPref(Constants.APP_VERSION,	appVer);
 			} catch (IOException ex) {
 
 			}
@@ -398,10 +425,11 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "Registered user: Pre Execute");
 			super.onPreExecute();
-			/*mDialog = new ProgressDialog(LoginActivity.this);
-			mDialog.setTitle("Spotchu");
-			mDialog.setMessage("Logging In..");
-			mDialog.show();*/
+			/*
+			 * mDialog = new ProgressDialog(LoginActivity.this);
+			 * mDialog.setTitle("Spotchu"); mDialog.setMessage("Logging In..");
+			 * mDialog.show();
+			 */
 		}
 
 		@Override
@@ -416,7 +444,8 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 			super.onPostExecute(result);
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "Registered user:" + result);
-			mDialog.dismiss();
+			if (mDialog != null)
+				mDialog.dismiss();
 			if (result == null) {
 				Toast.makeText(getApplicationContext(),
 						R.string.registration_failed, Toast.LENGTH_LONG).show();

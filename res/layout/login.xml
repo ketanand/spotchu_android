@@ -81,7 +81,7 @@
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
     android:layout_alignParentBottom="true"
-    android:layout_margin="10dp"
+    android:layout_margin="20dp"
     android:text="@string/common_signin_button_text_long" />
 
 

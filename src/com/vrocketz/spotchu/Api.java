@@ -59,11 +59,14 @@ public class Api {
 		return null;
 	}
 	
-	public static void sendRegistrationIdToBackend(String regId){
+	public static void sendRegistrationIdToBackend(String regId,int appVersion, String oldRegId){
 		//TODO : Add Registration URL.
 		String url = Constants.API_HOST + "register";
 		ArrayList<NameValuePair> nameValuePairs = new  ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("registration_id", regId));
+        nameValuePairs.add(new BasicNameValuePair("app_version", String.valueOf(appVersion)));
+        if (oldRegId != null)
+        	nameValuePairs.add(new BasicNameValuePair("old_registration_id", oldRegId));
         try {
 			HttpResponse response = Util.sendPost(url, nameValuePairs);
 			String res = Util.convertResponseToString(response);

@@ -5,7 +5,9 @@ public enum GCMMessageType {
 	SUMMARY(1),
 	NEW_SPOT(2),
 	NEW_COMMENT(3),
-	NEW_HI5(4);
+	NEW_HI5(4),
+	ANNOUNCEMENT(5),
+	UPGRADE(6);
 	
 	private final int value;
 	
@@ -26,6 +28,10 @@ public enum GCMMessageType {
 			return NEW_COMMENT;
 		}else if (val == 4){
 			return NEW_HI5;
+		}else if (val == 5){
+			return ANNOUNCEMENT;
+		}else if (val == 6){
+			return UPGRADE;
 		}
 		return null;
 	}

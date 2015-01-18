@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vrocketz.spotchu"
-    android:versionCode="7"
-    android:versionName="0.4" >
+    android:versionCode="11"
+    android:versionName="0.5" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -117,10 +117,12 @@
         </service>
         <service android:name="com.vrocketz.spotchu.NotificationService" >
         </service>
-
+		<service android:name="com.vrocketz.spotchu.SpotService" >
+        </service>
         <receiver android:name="com.vrocketz.spotchu.Receiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
         <receiver

@@ -5,13 +5,13 @@
     <Preference android:title="@string/prefs_privacy_policy" >
 	    <intent 
 	        	android:action="android.intent.action.VIEW"
-	            android:data="http://spotchu.com/privacy"
+	            android:data="http://spotchu.com/webview/privacy"
 	    />
 	</Preference>
 	<Preference android:title="@string/prefs_terms" >
 	    <intent 
 	        	android:action="android.intent.action.VIEW"
-	            android:data="http://spotchu.com/terms"
+	            android:data="http://spotchu.com/webview/terms"
 	    />
 	</Preference>
 	<Preference android:title="@string/prefs_more_info" >

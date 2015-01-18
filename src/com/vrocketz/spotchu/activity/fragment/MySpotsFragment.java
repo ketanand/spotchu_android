@@ -1,11 +1,15 @@
 package com.vrocketz.spotchu.activity.fragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,17 +34,24 @@ import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
 import com.vrocketz.spotchu.runnables.GetMySpots;
+import com.vrocketz.spotchu.spot.PendingSpotDao;
+import com.vrocketz.spotchu.spot.Spot;
 import com.vrocketz.spotchu.spot.SpotHelper;
+import com.vrocketz.spotchu.spot.SpotSQLiteHelper;
 import com.vrocketz.spotchu.views.AnimatedGifImageView;
 import com.vrocketz.spotchu.views.adapter.MySpotsListAdapter;
+import com.vrocketz.spotchu.views.adapter.PendingSpotListAdapter;
 
 public class MySpotsFragment extends Fragment{
 	
 	private ImageView mDisplayPic;
-	private TextView mUserId;
+	private TextView mUserId, mlblPendingSpots;
 	private JSONArray spots;
 	private ListView mSpotList;
 	private MySpotsListAdapter adapter;
+	private PendingSpotDao mPendingSpotDao;
+	private ListView mPendingSpotList;
+	private PendingSpotListAdapter pendingAdapter;
 	private AnimatedGifImageView mGifLoader;
 	private ImageView mImgNoInternet;
 	
@@ -65,6 +77,7 @@ public class MySpotsFragment extends Fragment{
 		//TODO : show spinner.
 		mSpotList = (ListView) v.findViewById(R.id.lstMySpots);
 		mGifLoader = (AnimatedGifImageView) v.findViewById(R.id.gifLoader);
+		mGifLoader.setAnimatedGif(R.raw.loader,	AnimatedGifImageView.TYPE.FIT_CENTER);
 		mImgNoInternet = (ImageView) v.findViewById(R.id.imgNoInternet);
 		if (adapter == null){
 			adapter = new MySpotsListAdapter(getActivity());
@@ -75,7 +88,27 @@ public class MySpotsFragment extends Fragment{
 		mSpotList.setAdapter(adapter);
 		
 		new Thread(new GetMySpots(mHandler)).start();
+		//Pending listview
+		initPendingSpotList(v);
 		return v;
+	}
+	
+	private void initPendingSpotList(View v){
+		mPendingSpotDao = new PendingSpotDao(getActivity());
+		mPendingSpotDao.open();
+		ArrayList<Spot> spots = (ArrayList<Spot>) mPendingSpotDao.getAllSpots();
+		if (spots.size() > 0){
+			 
+			 
+			  mPendingSpotList = (ListView) v.findViewById(R.id.lstPendingSpots);
+			  pendingAdapter = new PendingSpotListAdapter(getActivity(), spots);
+			  mPendingSpotList.setAdapter(pendingAdapter);
+			  mlblPendingSpots = (TextView) v.findViewById(R.id.lblPendingSpots);
+			  
+			  mPendingSpotList.setVisibility(View.VISIBLE);
+			  mlblPendingSpots.setVisibility(View.VISIBLE);
+		}
+		
 	}
 	
 	private final Handler mHandler = new Handler(){

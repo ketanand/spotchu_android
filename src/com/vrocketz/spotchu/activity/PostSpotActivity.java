@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.NotificationManager;
@@ -49,6 +50,8 @@ import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
 import com.vrocketz.spotchu.runnables.GetAddress;
 import com.vrocketz.spotchu.runnables.PostSpot;
+import com.vrocketz.spotchu.spot.PendingSpotDao;
+import com.vrocketz.spotchu.spot.Spot;
 
 public class PostSpotActivity extends FragmentActivity implements OnClickListener {
 	
@@ -64,8 +67,9 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 	private NotificationManager mNM;
 	private static int NOTIFICATION_ID = 999;
 	private boolean isUpdate;
-	private JSONObject mSpot;
+	private Spot mSpot;
 	private CheckBox mCheck;
+	
 	
 	//Image Effects Variables
 	/*private GLSurfaceView mEffectView;
@@ -195,17 +199,17 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 	
 	private boolean postSpot(){
 		ArrayList<NameValuePair> nameValuePairs = new  ArrayList<NameValuePair>();
-		String desc = mTitle.getText().toString();
+		/*String desc = mTitle.getText().toString();
 		if (desc.length() == 0){
 			Toast.makeText(this, getResources().getString(R.string.required_desc), Toast.LENGTH_LONG).show();
 			return false;
-		}
-		nameValuePairs.add(new BasicNameValuePair("desc", desc));
-		nameValuePairs.add(new BasicNameValuePair("tags", Util.getTagsFromTitle(mTitle.getText().toString())));
-		nameValuePairs.add(new BasicNameValuePair("goanonymous", String.valueOf(mCheck.isChecked())));
+		}*/
+		nameValuePairs.add(new BasicNameValuePair("desc", mSpot.getDesc()));
+		nameValuePairs.add(new BasicNameValuePair("tags", mSpot.getTag()));
+		nameValuePairs.add(new BasicNameValuePair("goanonymous", String.valueOf(mSpot.getIsAnonymous())));
 		if (mLocation != null){
-			nameValuePairs.add(new BasicNameValuePair("locationLong", String.valueOf(mLocation.getLongitude())));
-			nameValuePairs.add(new BasicNameValuePair("locationLati", String.valueOf(mLocation.getLatitude())));
+			nameValuePairs.add(new BasicNameValuePair("locationLong", mSpot.getLocationLong()));
+			nameValuePairs.add(new BasicNameValuePair("locationLati", mSpot.getLocationLati()));
 		}/*if (mCurrentEffect != R.id.btnNoEffect){
 			//TODO : figure out a way to save the modified image
 			try {
@@ -223,7 +227,7 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 				e.printStackTrace();
 			}
 		}*/
-		PostSpot instance = new PostSpot(imageFilePath, mHandler, nameValuePairs);
+		PostSpot instance = new PostSpot(mSpot, mHandler, nameValuePairs);
 		Thread t = new Thread(instance);
 		t.start();
 		if (Config.DEBUG)
@@ -234,11 +238,46 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		return true;
 	}
 	
+	private Spot createPendingSpot(){
+		PendingSpotDao dao = new PendingSpotDao(this);
+		dao.open();
+		Spot spot = new Spot();
+		String desc = mTitle.getText().toString();
+		if (desc.length() == 0){
+			Toast.makeText(this, getResources().getString(R.string.required_desc), Toast.LENGTH_LONG).show();
+			return null;
+		}
+		spot.setDesc(desc);
+		spot.setTag( Util.getTagsFromTitle(mTitle.getText().toString()));
+		spot.setIsAnonymous(mCheck.isChecked());
+		if (mLocation != null){
+			spot.setLocationLong(String.valueOf(mLocation.getLongitude()));
+			spot.setLocationLati(String.valueOf(mLocation.getLatitude()));
+		}
+		spot.setImg(imageFilePath);
+		spot.setCreatedAt(Util.getTimeInMilliseconds() / 1000);
+		spot.setStatus(Spot.Status.PENDING);
+		long id;
+		try{
+			id = dao.createSpot(spot);
+		} finally{
+			dao.close();
+		}
+		return spot;
+	}
+	
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()){
 		case R.id.btnOk:
-			postSpot();
+			mSpot = createPendingSpot();
+			if (mSpot != null){
+				postSpot();
+			}else {
+				if (Config.DEBUG)
+					Log.d(Constants.APP_NAME, "[CreateSpot] NULL.");
+				//TODO : tell user;
+			}
 			break;
 		/*case R.id.btnNoEffect:
 			mImageView.setImageBitmap(mImage);
@@ -309,11 +348,26 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 					
 				case Constants.SPOT_POSTED:
 					updateNotification(R.string.spot_posted);
+					Integer id = (Integer) msg.obj;
+					PendingSpotDao dao = new PendingSpotDao(Util.getApp());
+					dao.open();
+					dao.deleteSpotById(id);
+					dao.close();
 					finish();
 					break;
 					
 				case Constants.SPOT_POST_FAILED:
 					updateNotification(R.string.spot_post_failed);
+					Spot spot = (Spot) msg.obj;
+					PendingSpotDao spotDao = new PendingSpotDao(Util.getApp());
+					spotDao.open();
+					spot.setStatus(Spot.Status.FAILED);
+					spotDao.UpdateSpot(spot);
+					spotDao.close();
+					finish();
+					break;
+				case Constants.NO_INTERNET:
+					updateNotification(R.string.spot_post_failed_no_internet);
 					finish();
 					break;
 			}

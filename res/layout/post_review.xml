@@ -35,7 +35,7 @@
         android:layout_margin="10dp"
         android:layout_below="@+id/chkAnonymous"
         android:layout_centerHorizontal="true"
-        android:maxLength="100"
+        android:maxLength="160"
         android:inputType="text"
     	android:singleLine="true"
         android:imeOptions="actionDone"

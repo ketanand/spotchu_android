@@ -85,7 +85,7 @@ public class ViewSpot extends Activity {
 		ImageLoader.getInstance().displayImage(spot.getImg(), imageAware);
 
 		lblTitle = (TextView) this.findViewById(R.id.lblSpotTitle);
-		lblTitle.setText(spot.getDesc());
+		lblTitle.setText(Util.boldHashTags(spot.getDesc()));
 		lblUserName = (TextView) this.findViewById(R.id.lblUserName);
 		String userName = spot.getName();
 		lblUserName.setText(userName);

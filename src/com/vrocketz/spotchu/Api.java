@@ -18,7 +18,7 @@ import android.util.Log;
 
 public class Api {
 	
-	public static String registerUser(User user){
+	public static String registerUser(User user, int appVer){
 		String url = Constants.API_HOST + "login";
 		ArrayList<NameValuePair> nameValuePairs = new  ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("name",user.getName()));
@@ -27,6 +27,7 @@ public class Api {
         nameValuePairs.add(new BasicNameValuePair("profile_url",user.getProfileUrl()));
         nameValuePairs.add(new BasicNameValuePair("profile_type", user.getType().toString()));
         nameValuePairs.add(new BasicNameValuePair("regId", Util.getRegistrationId()));
+        nameValuePairs.add(new BasicNameValuePair("app_version", String.valueOf(appVer)));
         try {
 			String res = Util.convertResponseToString((Util.sendPost(url, nameValuePairs)));
 			if (res != null){
@@ -77,6 +78,21 @@ public class Api {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static boolean logoutUser(){
+		String url = Constants.API_HOST + "logout";
+		boolean ret = true;
+		try {
+			Util.sendGet(url);
+		} catch (ClientProtocolException e) {
+			ret = false;
+			e.printStackTrace();
+		} catch (IOException e) {
+			ret = false;
+			e.printStackTrace();
+		}
+		return ret;
 	}
 
 }

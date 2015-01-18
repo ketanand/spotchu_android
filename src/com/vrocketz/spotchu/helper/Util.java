@@ -300,11 +300,11 @@ public class Util {
 			char c = word.charAt(0);
 			String sourceString;
 			if (c == '#'){
-				sourceString = " <b>" + word + "</b> "; 
+				sourceString = "<b>" + word + "</b>"; 
 			}else {
 				sourceString = word;
 			}
-			output.append(sourceString);
+			output.append(sourceString).append(" ");
 		}
 		return Html.fromHtml(output.toString().trim());
 	}

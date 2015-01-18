@@ -7,7 +7,8 @@
     <string name="app_incompatible">Play Services not found, Please install to use Spotchu.</string>
 	<string name="spot_being_uploaded">Spot upload in progress.</string>
 	<string name="spot_posted">Spot posted successfully.</string>
-	<string name="spot_post_failed">Post failed. Click here to try again.</string>
+	<string name="spot_post_failed">Post failed. Dont\'t worry, We will try after sometime.</string>
+	<string name="spot_post_failed_no_internet">Oops No Internet, We will try when its back :)</string>
 	<string name="spot_fetch_failed">Oops Failed to load Spots :(</string>
 	<string name="close">Close</string>
 	<string name="hi5">Hi5</string>
@@ -18,7 +19,8 @@
 	<string name="enter_title">Enter Title</string>
 	<string name="spot_url_not_found_message">Hey Chekout this cool spot @ http://spotchu.com</string>
 	<string name="spot_url_share_message">Hey Chekout this cool spot @ </string>
-	<string name="past_activity">Past Activity</string>
+	<string name="past_activity">Live Spots</string>
+	<string name="pending_activity">Pending Spots</string>
 	<string name="my_spots">My Spots</string>
 	<string name="explore">Explore</string>
 	<string name="share_via">Share via..</string>
@@ -27,6 +29,9 @@
 	<string name="new_spot">Just spotted near you, </string>
 	<string name="facebook_app_id">775540655859682</string>
 	<string name="logout">Logout</string>
+	<string name="logout_failed">Logout Failed :(</string>
+	<string name="logout_msg">Logging Out..</string>
+	<string name="login_msg">Logging In...</string>
 	<string name="required_desc">You forgot to give your spot a name.</string>
 	<string name="required_comment">Please enter a comment.</string>
 	
@@ -38,5 +43,5 @@
 	<string name="settings">Settings</string>
 	<string name="prefs_terms">Terms Of Use</string>
 	<string name="prefs_more_info">More Information</string>
-	
+	<string name="view_more">View More</string>
 </resources>

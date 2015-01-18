@@ -1,5 +1,7 @@
 package com.vrocketz.spotchu.spot;
 
+import com.vrocketz.spotchu.GCMMessageType;
+
 public class Spot {
 
 	private Integer id;
@@ -22,6 +24,9 @@ public class Spot {
 	private String profileType;
 	private String imageUrl;
 	private Integer selfHi5Id;
+	
+	private Boolean isAnonymous;
+	private Status status;
 	
 	/**
 	* 
@@ -381,6 +386,50 @@ public class Spot {
 	*/
 	public void setSelfHi5Id(Integer selfHi5Id) {
 	this.selfHi5Id = selfHi5Id;
+	}
+	
+	public void setIsAnonymous(boolean val){
+		isAnonymous = val;
+	}
+	
+	public boolean getIsAnonymous(){
+		return isAnonymous;
+	}
+	
+	public void setStatus(Spot.Status status){
+		this.status = status;
+	}
+	
+	public Status getStatus(){
+		return this.status;
+	}
+	
+	public static enum Status {
+		
+		PENDING(1),
+		POSTED(2),
+		FAILED(3);
+		
+		private final int value;
+		
+		Status(int val){
+			this.value = val;
+		}
+		
+		public int getValue(){
+			return value;
+		}
+		
+		public static Status getFromValue(int val){
+			if (val == 1){
+				return PENDING;
+			}else if (val == 2){
+				return POSTED;
+			}else if (val == 3){
+				return FAILED;
+			}
+			return null;
+		}
 	}
 
 }

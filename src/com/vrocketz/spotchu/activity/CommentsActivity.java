@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,14 +26,15 @@ import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
 import com.vrocketz.spotchu.runnables.Comment;
 import com.vrocketz.spotchu.runnables.GetComments;
+import com.vrocketz.spotchu.views.AnimatedGifImageView;
 import com.vrocketz.spotchu.views.adapter.CommentsListAdapter;
 
 public class CommentsActivity extends FragmentActivity implements OnClickListener {
 	
 	EditText mText;
 	ListView mCommentsList;
-	ImageButton mLoadMore;
-	ProgressBar mProgressBar;
+	Button mLoadMore;
+	AnimatedGifImageView mGifLoader;
 	ProgressBar mPostProgressBar;
 	int mSpotId;
 	private CommentsListAdapter mAdapter;
@@ -55,11 +55,13 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		Button btnComment = (Button)findViewById(R.id.btnPostComment);
 		btnComment.setOnClickListener(this);
-		mProgressBar = (ProgressBar)findViewById(R.id.progressBarFetchComment);
+		mGifLoader = (AnimatedGifImageView)findViewById(R.id.gifLoader);
+		mGifLoader.setAnimatedGif(R.raw.loader,	AnimatedGifImageView.TYPE.FIT_CENTER);
 		mPostProgressBar = (ProgressBar)findViewById(R.id.progressBarPostComment);
 		mText = (EditText)findViewById(R.id.txtComment);
 		mCommentsList = (ListView)findViewById(R.id.lstSpotComments);
-		mLoadMore = (ImageButton)findViewById(R.id.btnLoadMoreComments);
+		mLoadMore = (Button)findViewById(R.id.btnLoadMoreComments);
+		mLoadMore.setOnClickListener(this);
 		fetchCompleteComments();
 	}
 
@@ -77,6 +79,7 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 			}
 			//TODO : add to adapter in posting state.
 		}else if (view.getId() == R.id.btnLoadMoreComments){
+			mLoadMore.setVisibility(View.GONE);
 			new Thread(new GetComments(mHandler, mSpotId, mFrom, mStartTime)).start();
 		}
 	}
@@ -149,7 +152,8 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	private void handleFailure(){
-		Toast.makeText(this, getResources().getString(R.string.operation_failed), Toast.LENGTH_LONG).show(); 
+		Toast.makeText(this, getResources().getString(R.string.operation_failed), Toast.LENGTH_LONG).show();
+		mGifLoader.setVisibility(View.GONE);
 	}
 	
 	private void onLoadMoreItems(JSONArray newComments) {
@@ -168,9 +172,10 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 						", datasize:" + newComments.length() + ", Adapter size:" + mAdapter.getCount());
 			// notify the adapter that we can update now
 	        mAdapter.notifyDataSetChanged();
+	        mCommentsList.setSelection(mAdapter.getCount() - mFrom - 1);
 		}
 		if (newComments.length() != 0){
-			mFrom += mComments.length();
+			mFrom += newComments.length();
 		}
     }
 	
@@ -178,8 +183,9 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 		mAdapter = new CommentsListAdapter(this, mComments);
 		mCommentsList.setAdapter(mAdapter);
 		mCommentsList.setVisibility(View.VISIBLE);
-		mProgressBar.setVisibility(View.GONE);
+		mGifLoader.setVisibility(View.GONE);
 		hidePostCommentLoader();
+		mCommentsList.setSelection(mAdapter.getCount() - 1);
 	}
 
 }

@@ -49,7 +49,8 @@ public class CommentsListAdapter extends BaseAdapter {
 	@Override
 	public Object getItem(int pos) {
 		try {
-			return mComments.get(pos);
+			int position = getCount() - 1 - pos;
+			return mComments.get(position);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -77,9 +78,9 @@ public class CommentsListAdapter extends BaseAdapter {
 			view = convertView;
 			holder = (ViewHolder)view.getTag();
 		}
-		
+		int position = getCount() - 1 - pos;
 		try {
-			JSONObject comment = (JSONObject) mComments.get(pos);
+			JSONObject comment = (JSONObject) mComments.get(position);
 		    ImageAware imageAware = new ImageViewAware(holder.img, false);
 		    ImageLoader.getInstance().displayImage(comment.getString("user_dp"), imageAware);
 			holder.userName.setText(comment.getString("user_name"));

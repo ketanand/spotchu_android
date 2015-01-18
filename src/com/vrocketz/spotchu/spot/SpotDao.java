@@ -59,6 +59,12 @@ public class SpotDao {
 	    cursor.close();
 	    return newSpot;
 	  }
+	  
+	  public long createSpot(Spot spot) throws JSONException {
+		    ContentValues values = getValuesFromSpot(spot);
+		    long insertId = database.insert(SpotSQLiteHelper.TABLE_SPOTS, null, values);
+		    return insertId;
+	  }
 
 	  public void deleteSpot(Spot spot) {
 	    long id = spot.getId();
@@ -144,6 +150,30 @@ public class SpotDao {
 		  values.put(SpotSQLiteHelper.COLUMN_PROFILE_URL, spot.getString(SpotHelper.SPOT_PROFILE_URL));
 		  values.put(SpotSQLiteHelper.COLUMN_PROFILE_TYPE, spot.getString(SpotHelper.SPOT_PROFILE_TYPE));
 		  values.put(SpotSQLiteHelper.COLUMN_USER_IMG, spot.getString(SpotHelper.SPOT_USERPIC));
+		  return values;
+	  }
+	  
+	  private ContentValues getValuesFromSpot(Spot spot) throws JSONException{
+		  ContentValues values = new ContentValues();
+		  values.put(SpotSQLiteHelper.COLUMN_ID, spot.getId());
+		  values.put(SpotSQLiteHelper.COLUMN_USERID, spot.getUserId());
+		  values.put(SpotSQLiteHelper.COLUMN_TAG, spot.getTag());
+		  values.put(SpotSQLiteHelper.COLUMN_SCALE, spot.getScale());
+		  values.put(SpotSQLiteHelper.COLUMN_LONG, spot.getLocationLong());
+		  values.put(SpotSQLiteHelper.COLUMN_LAT, spot.getLocationLati());
+		  values.put(SpotSQLiteHelper.COLUMN_CITY, spot.getCity());
+		  values.put(SpotSQLiteHelper.COLUMN_LOCALITY, spot.getLocality());
+		  values.put(SpotSQLiteHelper.COLUMN_IMG, spot.getImg());
+		  values.put(SpotSQLiteHelper.COLUMN_URL, spot.getUrl());
+		  values.put(SpotSQLiteHelper.COLUMN_DESC, spot.getDesc());
+		  values.put(SpotSQLiteHelper.COLUMN_CREATED_AT, spot.getCreatedAt());
+		  values.put(SpotSQLiteHelper.COLUMN_MODIFIED_AT, spot.getModifiedAt());
+		  values.put(SpotSQLiteHelper.COLUMN_NO_OF_LIKES, spot.getNoOfLikes());
+		  values.put(SpotSQLiteHelper.COLUMN_NO_OF_COMMENTS, spot.getNoOfComments());
+		  values.put(SpotSQLiteHelper.COLUMN_USER_NAME, spot.getName());
+		  values.put(SpotSQLiteHelper.COLUMN_PROFILE_URL, spot.getProfileUrl());
+		  values.put(SpotSQLiteHelper.COLUMN_PROFILE_TYPE, spot.getProfileType());
+		  values.put(SpotSQLiteHelper.COLUMN_USER_IMG, spot.getImageUrl());
 		  return values;
 	  }
 	  

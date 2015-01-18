@@ -32,6 +32,8 @@ public class Constants {
 	public static final int COMMENT_POST_FAILED = 10;
 	public static final int SPOT_DELETED = 11;
 	public static final int SPOT_DELETE_FAILED = 12;
+	public static final int LOGOUT_SUCCESSGFUL = 13;
+	public static final int LOGOUT_FAILED = 14;
 	
 	//Intent data keys
 	public static final String SPOT_ID = "spot_id";

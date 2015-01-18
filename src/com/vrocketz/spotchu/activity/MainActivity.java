@@ -2,7 +2,10 @@ package com.vrocketz.spotchu.activity;
 
 import java.io.File;
 
+import org.json.JSONArray;
+
 import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.content.Intent;
@@ -10,6 +13,8 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -22,6 +27,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
+import com.vrocketz.spotchu.Api;
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.activity.fragment.ExploreGridFragment;
 import com.vrocketz.spotchu.activity.fragment.MySpotsFragment;
@@ -30,6 +36,7 @@ import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.UserHelper;
 import com.vrocketz.spotchu.helper.Util;
+import com.vrocketz.spotchu.runnables.Logout;
 
 public class MainActivity extends FragmentActivity implements OnClickListener{
 	
@@ -38,6 +45,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	private String imageFilePath;
 	/* Client used to interact with Google APIs. */
 	private GoogleApiClient mGoogleApiClient = null;
+	
+	private ProgressDialog mDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +134,39 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	    return super.onCreateOptionsMenu(menu);
 	}
 	
+	private Handler mHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			final int what = msg.what;
+			switch (what) {
+			case Constants.NO_INTERNET:
+				hideLogoutDialog();
+				handleFailure(Constants.NO_INTERNET);
+				break;
+			case Constants.LOGOUT_FAILED:
+				hideLogoutDialog();
+				handleFailure(Constants.LOGOUT_FAILED);
+				break;
+			case Constants.LOGOUT_SUCCESSGFUL:
+				startLoginActivity();
+				finish();
+				break;
+			}
+		}
+
+	};
+	
+	private void handleFailure(int type){
+		switch(type){
+		case Constants.LOGOUT_FAILED:
+			Toast.makeText(this, getResources().getString(R.string.logout_failed), Toast.LENGTH_LONG).show();
+			break;
+		case Constants.NO_INTERNET:
+			Toast.makeText(this, R.string.no_internet, Toast.LENGTH_LONG)
+			.show();
+			break;
+		}
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    // Handle presses on the action bar items
@@ -133,8 +175,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	    		openCameraApp();
 	    		return true;
 	    	case R.id.menu_item_logout:
+	    		displayLogoutDialog();
 	    		clearUser();
-	    		finish();
 	    		return true;
 	    	case R.id.menu_item_settings:
 	    		Intent intent = new Intent(this, SettingsActivity.class);
@@ -144,24 +186,43 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	    }
 	}
 	
+	private void displayLogoutDialog(){
+		mDialog = new ProgressDialog(this);
+		mDialog.setTitle(Constants.APP_NAME);
+		mDialog.setMessage(getResources().getString(R.string.logout_msg));
+		mDialog.setCancelable(false);
+		mDialog.show();
+	}
+	
+	private void hideLogoutDialog(){
+		if (mDialog != null)
+			mDialog.dismiss();
+	}
+	
 	private void clearUser(){
 		Util.setPref(Constants.USER_LOGGED_IN, false);
 		Util.setPref(Constants.USER_EMAIL, null);
 		Util.setPref(Constants.USER_NAME, null);
-		logoutFromGoogle();
-		startLoginActivity();
+		if (logoutFromGoogle()){
+			new Thread(new Logout(mHandler)).start();
+		}else {
+			hideLogoutDialog();
+			handleFailure(Constants.LOGOUT_FAILED);
+		}
 	}
 	
-	private void logoutFromGoogle(){
+	private boolean logoutFromGoogle(){
 		if (mGoogleApiClient.isConnected()) {
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "[Main Activity] Signing Out of Google.");
 		      Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
 		      mGoogleApiClient.disconnect();
 		      mGoogleApiClient.connect();
+		      return true;
 		}else {
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "[Main Activity] Client Disconnected.");
+			return false;
 		}
 	}
 	

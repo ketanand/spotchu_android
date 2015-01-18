@@ -253,8 +253,9 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 							.startResolutionForResult(this, RC_SIGN_IN);
 					// Show dialog as soon as login button is clicked.
 					mDialog = new ProgressDialog(LoginActivity.this);
-					mDialog.setTitle("Spotchu");
-					mDialog.setMessage("Logging In..");
+					mDialog.setTitle(Constants.APP_NAME);
+					mDialog.setMessage(getResources().getString(R.string.login_msg));
+					mDialog.setCancelable(false);
 					mDialog.show();
 				} catch (SendIntentException e) {
 					mIntentInProgress = false;
@@ -265,7 +266,7 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 		} else {
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "resolveSignInError connection result is null.");
-			Toast.makeText(this, R.string.no_internet, Toast.LENGTH_LONG)
+			Toast.makeText(this, R.string.operation_failed, Toast.LENGTH_LONG)
 					.show();
 		}
 	}
@@ -306,7 +307,7 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 						personGooglePlusProfile);
 				User user = new User(User.Type.GOOGLE, email, personName,
 						personPhoto.getUrl(), personGooglePlusProfile);
-				new RegisterUser().execute(user);
+				new RegisterUser(Util.getAppVersion(this)).execute(user);
 			}
 			e.commit();
 		}
@@ -420,6 +421,13 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 
 	private class RegisterUser extends AsyncTask<User, Void, String> {
 
+		int appVer;
+		
+		public RegisterUser(int ver){
+			appVer = ver;
+			
+		}
+		
 		@Override
 		protected void onPreExecute() {
 			if (Config.DEBUG)
@@ -436,7 +444,7 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 		protected String doInBackground(User... params) {
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "Registered user: Do In BackGround");
-			return Api.registerUser(params[0]);
+			return Api.registerUser(params[0], appVer);
 		}
 
 		@Override

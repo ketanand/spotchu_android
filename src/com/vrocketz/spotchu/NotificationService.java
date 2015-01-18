@@ -171,6 +171,7 @@ public class NotificationService extends IntentService{
 	        .setAutoCancel(true)
 	        .setSmallIcon(R.drawable.ic_launcher);
 		    m_notificationBuilder.setContentIntent(pendingIntent);
+		    mNM.notify(NOTIFICATION_UPGRADE_ID, m_notificationBuilder.build());
 		}
 	}
 }

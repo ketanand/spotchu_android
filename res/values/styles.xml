@@ -69,6 +69,10 @@
         <item name="android:shadowRadius">2</item>
     </style>
     
+    <style name="button_text_small.full">
+        <item name="android:layout_width">fill_parent</item>
+    </style>
+    
     <style name="button_text.full">
         <item name="android:layout_width">fill_parent</item>
     </style>

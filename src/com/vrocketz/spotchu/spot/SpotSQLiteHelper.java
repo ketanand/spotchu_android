@@ -7,7 +7,11 @@ import android.util.Log;
 
 public class SpotSQLiteHelper extends SQLiteOpenHelper {
 
+	//Tables
 	public static final String TABLE_SPOTS = "spots";
+	public static final String TABLE_PENDING_SPOTS = "pending_spots";
+	
+	//Columms 
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_USERID = "user_id";
 	public static final String COLUMN_TAG = "tag";
@@ -27,13 +31,15 @@ public class SpotSQLiteHelper extends SQLiteOpenHelper {
 	public static final String COLUMN_PROFILE_URL = "user_profile_url";
 	public static final String COLUMN_PROFILE_TYPE = "user_profile_type";
 	public static final String COLUMN_USER_IMG = "user_img";
+	public static final String COLUMN_GO_ANONYMOUS = "goanonymous";
+	public static final String COLUMN_SPOT_STATUS = "status";
 	
 
 	private static final String DATABASE_NAME = "spotchu.db";
 	private static final int DATABASE_VERSION = 1;
 	
 	// Database creation sql statement
-	private static final String DATABASE_CREATE = "create table "
+	private static final String CREATE_TABLE_SPOT = "create table "
 	      + TABLE_SPOTS + "(" 
 		  			+ COLUMN_ID + " integer primary key, " 
 		  			+ COLUMN_USERID + " integer not null, " 
@@ -53,8 +59,23 @@ public class SpotSQLiteHelper extends SQLiteOpenHelper {
 		  			+ COLUMN_USER_NAME + " text, "
 		  			+ COLUMN_PROFILE_URL + " text, "
 		  			+ COLUMN_PROFILE_TYPE + " text, "
-		  			+ COLUMN_USER_IMG + " text, "
+		  			+ COLUMN_USER_IMG + " text "
 		  			+ ");";
+	
+	private static final String CREATE_TABLE_PENDING_SPOT = "create table "
+		      + TABLE_PENDING_SPOTS + "(" 
+			  			+ COLUMN_ID + " integer primary key autoincrement, " 
+			  			+ COLUMN_TAG + " text, "
+			  			+ COLUMN_LONG + " text, "
+			  			+ COLUMN_LAT + " text, "
+			  			+ COLUMN_IMG + " text, "
+			  			+ COLUMN_DESC + " text, "
+			  			+ COLUMN_GO_ANONYMOUS + " text, "
+			  			+ COLUMN_CREATED_AT + " integer, "
+			  			+ COLUMN_SPOT_STATUS + " integer "
+			  			+ ");";
+	
+	
 
 	
 	public SpotSQLiteHelper(Context context) {
@@ -63,7 +84,8 @@ public class SpotSQLiteHelper extends SQLiteOpenHelper {
 	
 	@Override
 	public void onCreate(SQLiteDatabase database) {
-		database.execSQL(DATABASE_CREATE);
+		database.execSQL(CREATE_TABLE_SPOT);
+		database.execSQL(CREATE_TABLE_PENDING_SPOT);
 	}
 
 	@Override
@@ -72,6 +94,7 @@ public class SpotSQLiteHelper extends SQLiteOpenHelper {
 		        "Upgrading database from version " + oldVersion + " to "
 		            + newVersion + ", which will destroy all old data");
 		    db.execSQL("DROP TABLE IF EXISTS " + TABLE_SPOTS);
+		    db.execSQL("DROP TABLE IF EXISTS " + TABLE_PENDING_SPOTS);
 		    onCreate(db);
 
 	}

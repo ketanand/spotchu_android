@@ -7,8 +7,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.vrocketz.spotchu.R;
+import com.vrocketz.spotchu.helper.Config;
+import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
 
 
@@ -34,6 +39,9 @@ public class SpotHelper {
 	public static final String SPOT_USERNAME = "name";
 	public static final String SPOT_USERPIC = "image_url";
 	public static final String SPOT_HI5_ID = "selfHi5Id";
+	
+	private final static int IMG_WIDTH = 1200;
+	private final static int IMG_HEIGHT = 800;
 	
 	
 	public static Spot getFromJson(JSONObject spotJson) throws JSONException{
@@ -107,6 +115,40 @@ public class SpotHelper {
 		StringBuilder share = new StringBuilder();;
 		share.append(Util.getApp().getResources().getString(R.string.spot_url_share_message)).append(" ").append(url);
 		return share.toString();
+	}
+	
+	/*
+	 * Get Bitmap Image from saved image Uri
+	 */
+	public static Bitmap getImageBitmap(String path) {
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "image path for decoding:" + path);
+		BitmapFactory.decodeFile(path, options);
+		// Calculate inSampleSize, Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		options.inPreferredConfig = Bitmap.Config.RGB_565;
+		int inSampleSize = 1;
+
+		if (height > IMG_HEIGHT) {
+			inSampleSize = Math.round((float) height / (float) IMG_HEIGHT);
+		}
+		int expectedWidth = width / inSampleSize;
+
+		if (expectedWidth > IMG_WIDTH) {
+			// if(Math.round((float)width / (float)reqWidth) > inSampleSize) //
+			// If bigger SampSize..
+			inSampleSize = Math.round((float) width / (float) IMG_WIDTH);
+		}
+
+		options.inSampleSize = inSampleSize;
+
+		// Decode bitmap with inSampleSize set
+		options.inJustDecodeBounds = false;
+
+		return BitmapFactory.decodeFile(path, options);
 	}
 
 }

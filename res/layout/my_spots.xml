@@ -46,10 +46,32 @@
     </LinearLayout>
     
     <TextView
+	        android:id="@+id/lblPendingSpots"
+	        style="@style/label.medium"
+	        android:text="@string/pending_activity"
+	        android:layout_below="@+id/layoutTopUserDetails"
+	        android:layout_centerHorizontal="true"
+	        android:visibility="gone"
+	    >
+	</TextView>
+    
+    <ListView 
+        android:id="@+id/lstPendingSpots"
+        android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:visibility="gone"
+	    android:divider="@android:color/transparent"
+  		android:dividerHeight="2px"
+	    android:background="@color/activity_background"
+	    android:clickable="true"
+	    android:layout_below="@+id/lblPendingSpots"
+    />
+    
+    <TextView
 	        android:id="@+id/lblOldSpots"
 	        style="@style/label.medium"
 	        android:text="@string/past_activity"
-	        android:layout_below="@+id/layoutTopUserDetails"
+	        android:layout_below="@+id/lstPendingSpots"
 	        android:layout_centerHorizontal="true"
 	    >
 	</TextView>
@@ -70,7 +92,7 @@
         android:scaleType="fitCenter"
         android:visibility="gone"
         android:layout_centerHorizontal="true"
-	    android:layout_centerVertical="true"
+	    android:layout_below="@+id/lblOldSpots"
         android:src="@drawable/no_internet"
      />
     

@@ -37,6 +37,7 @@ import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.UserHelper;
 import com.vrocketz.spotchu.helper.Util;
 import com.vrocketz.spotchu.runnables.Logout;
+import com.vrocketz.spotchu.spot.PendingSpotDao;
 
 public class MainActivity extends FragmentActivity implements OnClickListener{
 	
@@ -203,12 +204,20 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		Util.setPref(Constants.USER_LOGGED_IN, false);
 		Util.setPref(Constants.USER_EMAIL, null);
 		Util.setPref(Constants.USER_NAME, null);
+		clearUserDb();
 		if (logoutFromGoogle()){
 			new Thread(new Logout(mHandler)).start();
 		}else {
 			hideLogoutDialog();
 			handleFailure(Constants.LOGOUT_FAILED);
 		}
+	}
+	
+	private void clearUserDb(){
+		PendingSpotDao dao = new PendingSpotDao(this);
+		dao.open();
+		dao.deleteAllSpots();
+		dao.close();
 	}
 	
 	private boolean logoutFromGoogle(){

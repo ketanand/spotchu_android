@@ -1,15 +1,14 @@
 package com.vrocketz.spotchu;
 
-import com.vrocketz.spotchu.helper.Config;
-import com.vrocketz.spotchu.helper.Constants;
-import com.vrocketz.spotchu.helper.Util;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Log;
+
+import com.vrocketz.spotchu.helper.Config;
+import com.vrocketz.spotchu.helper.Constants;
+import com.vrocketz.spotchu.helper.Util;
 
 public class Receiver extends BroadcastReceiver {
 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -18,16 +17,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.imageaware.ImageAware;
-import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
-import com.vrocketz.spotchu.NotificationService;
 import com.vrocketz.spotchu.R;
-import com.vrocketz.spotchu.activity.ViewSpot;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
-import com.vrocketz.spotchu.runnables.DeleteSpot;
 import com.vrocketz.spotchu.spot.PendingSpotDao;
 import com.vrocketz.spotchu.spot.Spot;
 

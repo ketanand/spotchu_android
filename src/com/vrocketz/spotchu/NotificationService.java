@@ -17,7 +17,6 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.vrocketz.spotchu.activity.LoginActivity;
-import com.vrocketz.spotchu.activity.MainActivity;
 import com.vrocketz.spotchu.activity.Summary;
 import com.vrocketz.spotchu.activity.ViewSpot;
 import com.vrocketz.spotchu.helper.Config;

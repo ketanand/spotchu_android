@@ -121,7 +121,14 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 					if (Config.DEBUG)
 						Log.d(Constants.APP_NAME, "[PostSpotActivity] Done Button Clicked , action id " + actionId);
 					if (actionId == EditorInfo.IME_ACTION_DONE) {
-						postSpot();
+						mSpot = createPendingSpot();
+						if (mSpot != null){
+							postSpot();
+						}else {
+							if (Config.DEBUG)
+								Log.d(Constants.APP_NAME, "[CreateSpot] NULL.");
+							//TODO : tell user;
+						}
 	                    return true;
 	                }
 	                return false;
@@ -359,11 +366,13 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 				case Constants.SPOT_POST_FAILED:
 					updateNotification(R.string.spot_post_failed);
 					Spot spot = (Spot) msg.obj;
-					PendingSpotDao spotDao = new PendingSpotDao(Util.getApp());
-					spotDao.open();
-					spot.setStatus(Spot.Status.FAILED);
-					spotDao.UpdateSpot(spot);
-					spotDao.close();
+					if (spot != null){
+						PendingSpotDao spotDao = new PendingSpotDao(Util.getApp());
+						spotDao.open();
+						spot.setStatus(Spot.Status.FAILED);
+						spotDao.UpdateSpot(spot);
+						spotDao.close();
+					}
 					finish();
 					break;
 				case Constants.NO_INTERNET:

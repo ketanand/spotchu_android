@@ -52,6 +52,7 @@ public class PostSpot implements Runnable {
 		if (Config.DEBUG)
 			Log.d(Constants.APP_NAME, "Encoded image: " + image_str);
 		nameValuePairs.add(new BasicNameValuePair("imagerawdata", image_str));
+		nameValuePairs.add(new BasicNameValuePair("deviceCreatedAt", String.valueOf(spot.getCreatedAt())));
 
 		try {
 			if (Util.isInternetAvailable()) {
@@ -81,6 +82,7 @@ public class PostSpot implements Runnable {
 		} catch (ClientProtocolException e) {
 			Message msg = handler.obtainMessage(Constants.SPOT_POST_FAILED, spot);
 			handler.sendMessage(msg);
+			//TODO: add object in failed case, to be picked later.
 			e.printStackTrace();
 		} catch (IOException e) {
 			Message msg = handler.obtainMessage(Constants.SPOT_POST_FAILED, spot);

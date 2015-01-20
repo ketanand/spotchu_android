@@ -86,7 +86,7 @@ public class SpotService extends IntentService {
 		if (Config.DEBUG)
 			Log.d(Constants.APP_NAME, "Encoded image: " + image_str);
 		nameValuePairs.add(new BasicNameValuePair("imagerawdata", image_str));
-
+		nameValuePairs.add(new BasicNameValuePair("deviceCreatedAt", String.valueOf(spot.getCreatedAt())));
 		try {
 			if (Util.isInternetAvailable()) {
 

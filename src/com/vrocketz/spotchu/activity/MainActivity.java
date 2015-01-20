@@ -148,6 +148,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 				handleFailure(Constants.LOGOUT_FAILED);
 				break;
 			case Constants.LOGOUT_SUCCESSGFUL:
+				Util.setPref(Constants.USER_LOGGED_IN, false);
+				Util.setPref(Constants.USER_EMAIL, null);
+				Util.setPref(Constants.USER_NAME, null);
+				clearUserDb();
 				startLoginActivity();
 				finish();
 				break;
@@ -201,10 +205,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	}
 	
 	private void clearUser(){
-		Util.setPref(Constants.USER_LOGGED_IN, false);
-		Util.setPref(Constants.USER_EMAIL, null);
-		Util.setPref(Constants.USER_NAME, null);
-		clearUserDb();
 		if (logoutFromGoogle()){
 			new Thread(new Logout(mHandler)).start();
 		}else {

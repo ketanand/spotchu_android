@@ -260,7 +260,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		 }
 	}
 	
-	private void openCameraApp(){
+	public void openCameraApp(){
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		
 	    fileUri = getOutputMediaFileUri(); // create a file to save the image

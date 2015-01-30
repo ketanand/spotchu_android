@@ -12,6 +12,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -39,11 +40,12 @@ import com.vrocketz.spotchu.Api;
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.SpotchuLocationService;
 import com.vrocketz.spotchu.User;
+import com.vrocketz.spotchu.activity.fragment.FaceBookFragment;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
 
-public class LoginActivity extends Activity implements ConnectionCallbacks,
+public class LoginActivity extends FragmentActivity implements ConnectionCallbacks,
 		OnConnectionFailedListener, OnClickListener {
 
 	private static final int SWIPE_MIN_DISTANCE = 120;
@@ -52,11 +54,8 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 	private GestureDetector detector;
 	private Context mContext;
 
-	/**
-	 * Facebook Login
-	 */
-	// private UiLifecycleHelper uiHelper;
-
+	private FaceBookFragment fbFragment;
+	
 	/* Client used to interact with Google APIs. */
 	private GoogleApiClient mGoogleApiClient = null;
 	/* Request code used to invoke sign in user interactions. */
@@ -113,16 +112,18 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 				button.setSize(SignInButton.SIZE_WIDE);
 			}
 
-			// Initialize facebook login UI Helper
-			/*
-			 * uiHelper = new UiLifecycleHelper(this, callback);
-			 * uiHelper.onCreate(savedInstanceState);
-			 * 
-			 * //Initialize FB login button LoginButton authButton =
-			 * (LoginButton) findViewById(R.id.authButton);
-			 * authButton.setReadPermissions(Arrays.asList("public_profile",
-			 * "email"));
-			 */
+			/*if (savedInstanceState == null) {
+		        // Add the fragment on initial activity setup
+		        fbFragment = new FaceBookFragment();
+		        getSupportFragmentManager()
+		        .beginTransaction()
+		        .add(android.R.id.content, fbFragment)
+		        .commit();
+		    } else {
+		        // Or set the fragment from restored state info
+		    	fbFragment = (FaceBookFragment) getSupportFragmentManager()
+		        .findFragmentById(android.R.id.content);
+		    }*/
 
 			// Initialize Slider
 			initSlider();
@@ -143,25 +144,6 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 		 * mViewFlipper.setAutoStart(true); mViewFlipper.setFlipInterval(3000);
 		 * mViewFlipper.startFlipping();
 		 */
-	}
-
-	private Session.StatusCallback callback = new Session.StatusCallback() {
-		@Override
-		public void call(Session session, SessionState state,
-				Exception exception) {
-			onSessionStateChange(session, state, exception);
-		}
-	};
-
-	private void onSessionStateChange(Session session, SessionState state,
-			Exception exception) {
-		if (state.isOpened()) {
-			Log.d(Constants.APP_NAME, "Logged in...");
-			// TODO : register user to spotchu.
-			// startMainActivity();
-		} else if (state.isClosed()) {
-			Log.d(Constants.APP_NAME, "Logged out...");
-		}
 	}
 
 	private boolean checkPlayServices() {
@@ -200,20 +182,11 @@ public class LoginActivity extends Activity implements ConnectionCallbacks,
 					.show();
 			finish();
 		}
-		Session session = Session.getActiveSession();
-		if (session != null && (session.isOpened() || session.isClosed())) {
-			onSessionStateChange(session, session.getState(), null);
-		}
-
-		// uiHelper.onResume();
-		AppEventsLogger.activateApp(this);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		// Logs 'app deactivate' App Event.
-		AppEventsLogger.deactivateApp(this);
 	}
 
 	protected void onStop() {

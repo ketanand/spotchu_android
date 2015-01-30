@@ -295,8 +295,10 @@ public class Util {
 	
 	public static Spanned boldHashTags(String s){
 		StringBuilder output = new StringBuilder();
-		String[] words = s.split(" ");
+		String[] words = s.trim().split(" ");
 		for (String word : words){
+			if (word.length() == 0 )
+				continue;
 			char c = word.charAt(0);
 			String sourceString;
 			if (c == '#'){

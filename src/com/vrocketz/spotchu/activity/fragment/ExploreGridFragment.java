@@ -186,6 +186,10 @@ public class ExploreGridFragment extends Fragment implements
 					Log.d(Constants.APP_NAME,
 							"[ExploreGridFragment] onLoadMoreItems. Adapter Null"
 									+ ", data size:" + newSpots.length());
+				if (Config.DEBUG)
+					if (mSpots == null)
+					Log.d(Constants.APP_NAME,
+							"[ExploreGridFragment] onLoadMoreItems. mSpots Null");
 				initGridView(mSpots);
 			} catch (JSONException e) {
 				e.printStackTrace();

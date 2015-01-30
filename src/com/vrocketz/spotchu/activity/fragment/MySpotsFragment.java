@@ -1,5 +1,6 @@
 package com.vrocketz.spotchu.activity.fragment;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -30,6 +33,7 @@ import android.widget.Toast;
 
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.activity.FullScreenSpotActivity;
+import com.vrocketz.spotchu.activity.MainActivity;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
@@ -54,6 +58,7 @@ public class MySpotsFragment extends Fragment{
 	private PendingSpotListAdapter pendingAdapter;
 	private AnimatedGifImageView mGifLoader;
 	private ImageView mImgNoInternet;
+	private Button mGetStarted;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,15 @@ public class MySpotsFragment extends Fragment{
 		mSpotList = (ListView) v.findViewById(R.id.lstMySpots);
 		mGifLoader = (AnimatedGifImageView) v.findViewById(R.id.gifLoader);
 		mGifLoader.setAnimatedGif(R.raw.loader,	AnimatedGifImageView.TYPE.FIT_CENTER);
+		mGetStarted = (Button)v.findViewById(R.id.btnGetStarted);
+		mGetStarted.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				MainActivity a = ((MainActivity) getActivity());
+				a.openCameraApp();
+			}
+		});
 		mImgNoInternet = (ImageView) v.findViewById(R.id.imgNoInternet);
 		if (adapter == null){
 			adapter = new MySpotsListAdapter(getActivity());
@@ -118,13 +132,17 @@ public class MySpotsFragment extends Fragment{
 			case Constants.SPOTS_FETCHED:
 				spots = (JSONArray) msg.obj;
 				try {
-					adapter.setSpots(SpotHelper.getFromJsonArray(spots));
+					if (spots.length() == 0){
+						mGetStarted.setVisibility(View.VISIBLE);
+					}else {
+						adapter.setSpots(SpotHelper.getFromJsonArray(spots));
+						mSpotList.setVisibility(View.VISIBLE);
+						adapter.notifyDataSetChanged();
+					}	
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 				mGifLoader.setVisibility(View.GONE);
-				mSpotList.setVisibility(View.VISIBLE);
-				adapter.notifyDataSetChanged();
 				break;
 			case Constants.SPOTS_FETCH_FAILED:
 				mGifLoader.setVisibility(View.GONE);

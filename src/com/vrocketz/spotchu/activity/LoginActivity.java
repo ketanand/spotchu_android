@@ -1,6 +1,8 @@
 package com.vrocketz.spotchu.activity;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -9,10 +11,15 @@ import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -77,6 +84,24 @@ public class LoginActivity extends FragmentActivity implements ConnectionCallbac
 		super.onCreate(savedInstanceState);
 		mContext = this;
 		mPref = Util.getGlobalPreferences();
+		
+		//Facebook key hash log starts
+		 try {
+		        PackageInfo info = getPackageManager().getPackageInfo(
+		                "com.vrocketz.spotchu", 
+		                PackageManager.GET_SIGNATURES);
+		        for (Signature signature : info.signatures) {
+		            MessageDigest md = MessageDigest.getInstance("SHA");
+		            md.update(signature.toByteArray());
+		            Log.d(Constants.APP_NAME, "KeyHash:" + Base64.encodeToString(md.digest(), Base64.DEFAULT));
+		            }
+		    } catch (NameNotFoundException e) {
+
+		    } catch (NoSuchAlgorithmException e) {
+
+		    }
+		//Facebook key hash log ends 
+		 
 		if (!checkPlayServices()) {
 			Toast.makeText(this, R.string.app_incompatible, Toast.LENGTH_LONG)
 					.show();
@@ -94,14 +119,14 @@ public class LoginActivity extends FragmentActivity implements ConnectionCallbac
 		Intent intent = new Intent(this, SpotchuLocationService.class);
 		startService(intent);
 		if (mPref.getBoolean(Constants.USER_LOGGED_IN, false)) {
-			Log.d("spotchu", "User Logged in, taking to Spotchu Home.");
+			Log.d(Constants.APP_NAME, "User Logged in, taking to Spotchu Home.");
 			startMainActivity();
 			finish();
 		} else {
 			setContentView(R.layout.login);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 				if (Config.DEBUG)
-					Log.d("spotchu", "On Version greated than GingerBread");
+					Log.d(Constants.APP_NAME, "On Version greated than GingerBread");
 				mGoogleApiClient = new GoogleApiClient.Builder(this)
 						.addConnectionCallbacks(this)
 						.addOnConnectionFailedListener(this).addApi(Plus.API)
@@ -199,7 +224,7 @@ public class LoginActivity extends FragmentActivity implements ConnectionCallbac
 
 	protected void onActivityResult(int requestCode, int responseCode,
 			Intent intent) {
-		Log.d("spotchu", "OnActivityResult, result code" + requestCode);
+		Log.d(Constants.APP_NAME, "OnActivityResult, result code" + requestCode);
 		if (requestCode == RC_SIGN_IN) {
 			if (responseCode != RESULT_OK) {
 				mSignInClicked = false;
@@ -209,6 +234,8 @@ public class LoginActivity extends FragmentActivity implements ConnectionCallbac
 			if (!mGoogleApiClient.isConnecting()) {
 				mGoogleApiClient.connect();
 			}
+		} else {
+			super.onActivityResult(requestCode, responseCode, intent);
 		}
 	}
 
@@ -246,9 +273,11 @@ public class LoginActivity extends FragmentActivity implements ConnectionCallbac
 
 	@Override
 	public void onConnectionFailed(ConnectionResult result) {
-		Log.d("spotchu", "OnConnectionFailed");
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "OnConnectionFailed");
 		if (!mIntentInProgress) {
-			Log.d("spotchu", "OnConnectionFailed: Intent not progressing");
+			if (Config.DEBUG)
+				Log.d(Constants.APP_NAME, "OnConnectionFailed: Intent not progressing");
 			mConnectionResult = result;
 			if (mSignInClicked) {
 				// The user has already clicked 'sign-in' so we attempt to
@@ -278,6 +307,7 @@ public class LoginActivity extends FragmentActivity implements ConnectionCallbac
 				e.putString(Constants.USER_NAME, personName);
 				e.putString(Constants.GPLUS_PROFILE_URL,
 						personGooglePlusProfile);
+				e.putString(Constants.USER_TYPE, User.Type.GOOGLE.toString());
 				User user = new User(User.Type.GOOGLE, email, personName,
 						personPhoto.getUrl(), personGooglePlusProfile);
 				new RegisterUser(Util.getAppVersion(this)).execute(user);
@@ -293,7 +323,8 @@ public class LoginActivity extends FragmentActivity implements ConnectionCallbac
 
 	@Override
 	public void onClick(View v) {
-		Log.d("Spotchu", "OnClick, view ID:" + v.getId());
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "OnClick, view ID:" + v.getId());
 		if (v.getId() == R.id.sign_in_button
 				&& !mGoogleApiClient.isConnecting()) {
 			if (Config.DEBUG)

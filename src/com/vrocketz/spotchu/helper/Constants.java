@@ -8,6 +8,8 @@ public class Constants {
 	public static final String USER_EMAIL = "user_email";
 	public static final String USER_NAME = "user_name";
 	public static final String GPLUS_PROFILE_URL = "user_gplus_profile_url";
+	public static final String FB_PROFILE_URL = "user_fb_profile_url";
+	public static final String USER_TYPE = "user_type";
 	public static final String APP_NAME = "Spotchu";
 	public static final String USER_KEY = "user_key";
 	public static final String REGISTRATION_ID = "gcm_registration_id";

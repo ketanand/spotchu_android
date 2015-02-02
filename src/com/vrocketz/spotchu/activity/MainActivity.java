@@ -24,11 +24,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
+import com.facebook.Session;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.vrocketz.spotchu.Api;
 import com.vrocketz.spotchu.R;
+import com.vrocketz.spotchu.User;
 import com.vrocketz.spotchu.activity.fragment.ExploreGridFragment;
 import com.vrocketz.spotchu.activity.fragment.MySpotsFragment;
 import com.vrocketz.spotchu.activity.fragment.TabListner;
@@ -48,6 +50,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	private GoogleApiClient mGoogleApiClient = null;
 	
 	private ProgressDialog mDialog;
+	private User.Type userType;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +83,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	    if (getIntent().getBooleanExtra("postSpot", false)){
 	    	actionBar.selectTab(tab);
 	    }
-	    initGoogleAPIClient();
+	    userType = User.Type.valueOf(Util.getGlobalPreferences().getString(Constants.USER_TYPE, "").toUpperCase());
+	    if (userType == User.Type.GOOGLE){
+	    	initGoogleAPIClient();
+	    }
 	}
 	
 	@Override
@@ -151,6 +157,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 				Util.setPref(Constants.USER_LOGGED_IN, false);
 				Util.setPref(Constants.USER_EMAIL, null);
 				Util.setPref(Constants.USER_NAME, null);
+				Util.setPref(Constants.USER_TYPE, null);
 				clearUserDb();
 				startLoginActivity();
 				finish();
@@ -205,12 +212,37 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	}
 	
 	private void clearUser(){
-		if (logoutFromGoogle()){
-			new Thread(new Logout(mHandler)).start();
+		if (userType == User.Type.GOOGLE){
+			if (logoutFromGoogle()){
+				new Thread(new Logout(mHandler)).start();
+			}else {
+				hideLogoutDialog();
+				handleFailure(Constants.LOGOUT_FAILED);
+			}
+		}else if (userType == User.Type.FACEBOOK){
+			if (logoutFromFacebook()){
+				new Thread(new Logout(mHandler)).start();
+			}else {
+				hideLogoutDialog();
+				handleFailure(Constants.LOGOUT_FAILED);
+			}
 		}else {
 			hideLogoutDialog();
 			handleFailure(Constants.LOGOUT_FAILED);
 		}
+	}
+	
+	private boolean logoutFromFacebook(){;
+		Session session = Session.getActiveSession();
+		if (session != null){
+			if (Config.DEBUG)
+				Log.d(Constants.APP_NAME, "[Main Activity] Logout from Facebook");
+			session.closeAndClearTokenInformation();
+			return true;
+		}
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "[Main Activity] Facebook Session is null");
+		return false;
 	}
 	
 	private void clearUserDb(){

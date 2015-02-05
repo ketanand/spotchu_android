@@ -7,7 +7,8 @@ public enum GCMMessageType {
 	NEW_COMMENT(3),
 	NEW_HI5(4),
 	ANNOUNCEMENT(5),
-	UPGRADE(6);
+	UPGRADE(6),
+	FOLLOW(7);
 	
 	private final int value;
 	
@@ -32,6 +33,8 @@ public enum GCMMessageType {
 			return ANNOUNCEMENT;
 		}else if (val == 6){
 			return UPGRADE;
+		}else if (val == 7){
+			return FOLLOW;
 		}
 		return null;
 	}

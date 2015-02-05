@@ -15,7 +15,6 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -52,7 +51,7 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 			this.finish();
 		}
 		setContentView(R.layout.comments);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().hide();
 		Button btnComment = (Button)findViewById(R.id.btnPostComment);
 		btnComment.setOnClickListener(this);
 		mGifLoader = (AnimatedGifImageView)findViewById(R.id.gifLoader);
@@ -63,6 +62,13 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 		mLoadMore = (Button)findViewById(R.id.btnLoadMoreComments);
 		mLoadMore.setOnClickListener(this);
 		fetchCompleteComments();
+		overridePendingTransition(R.anim.bottom_in, R.anim.top_out);
+	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
 	}
 
 	@Override

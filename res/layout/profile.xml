@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white" >
+
+    <LinearLayout
+        android:id="@+id/layoutTopUserDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        android:weightSum="1.0" >
+
+        <com.vrocketz.spotchu.views.RoundedImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/imgUserDisplayPic"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitCenter"
+            app:riv_border_color="#333333"
+            app:riv_border_width="0dip"
+            app:riv_corner_radius="30dip"
+            app:riv_mutate_background="true"
+            app:riv_oval="true" />
+
+        <TextView
+            android:id="@+id/lblUserName"
+            style="@style/label.medium"
+            android:layout_gravity="center_horizontal" >
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutFollowers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/layoutfollowing"
+        android:layout_alignParentTop="true"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        android:weightSum="1.0" >
+
+        <TextView
+            android:id="@+id/lblFollowers"
+            style="@style/label.medium"
+            android:layout_margin="5dp"
+            android:text="24"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/lblFollowersTitle"
+            style="@style/label.small"
+            android:text="@string/followers"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutfollowing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        android:weightSum="1.0" >
+
+        <TextView
+            android:id="@+id/lblFollowing"
+            style="@style/label.medium"
+            android:layout_margin="5dp"
+            android:text="32"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/lblFollowingTitle"
+            style="@style/label.small"
+            android:text="@string/following"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+    
+    <ProgressBar
+	        android:id="@+id/progressBarFollow"
+	        style="?android:attr/progressBarStyleLarge"
+	        android:layout_width="20dp"
+	        android:layout_height="20dp"
+	        android:layout_margin="5dp"
+	        android:layout_toLeftOf="@+id/btnFollow"
+	        android:layout_below="@+id/layoutfollowing"
+	        android:visibility="gone" />
+
+    <Button
+	            android:id="@+id/btnFollow"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_margin="5dp"
+	            android:padding="10dp"
+	            android:text="@string/follow"
+	            android:enabled="false"
+	            android:background="@drawable/white_button_red_border"
+	            style="@style/button_text_medium"
+	           	android:textColor="#EC523F"
+	            android:layout_alignParentRight="true"
+	            android:layout_below="@+id/layoutfollowing"
+	/>
+    
+    <View
+        android:id="@+id/divider"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/btnFollow"
+        android:background="@android:color/darker_gray"
+        android:layout_margin="5dp" />
+
+
+    <TextView
+        android:id="@+id/lblOldSpots"
+        style="@style/label.medium"
+        android:layout_below="@+id/divider"
+        android:layout_centerHorizontal="true"
+        android:text="@string/past_activity"
+        android:textStyle="bold"
+        android:layout_margin="5dp"
+        android:visibility="gone" >
+    </TextView>
+
+    <com.vrocketz.spotchu.views.AnimatedGifImageView
+        android:id="@+id/gifLoader"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
+    <ImageView
+        android:id="@+id/imgNoInternet"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/lblOldSpots"
+        android:layout_centerHorizontal="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/no_internet"
+        android:visibility="gone" />
+    
+    <ImageView
+        android:id="@+id/imgNoSpots"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/lblOldSpots"
+        android:layout_centerHorizontal="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/no_internet"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/lstMySpots"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/lblOldSpots"
+        android:background="@color/activity_background"
+        android:clickable="true"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="2px"
+        android:visibility="gone" >
+    </ListView>
+
+</RelativeLayout>

@@ -112,6 +112,10 @@
             android:name="com.vrocketz.spotchu.activity.SettingsActivity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.vrocketz.spotchu.activity.ProfileActivity"
+            android:screenOrientation="portrait" >
+        </activity>
         <activity android:name="com.facebook.LoginActivity" ></activity>
 
         <service android:name="com.vrocketz.spotchu.SpotchuLocationService" >

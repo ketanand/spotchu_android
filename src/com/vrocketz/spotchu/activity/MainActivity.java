@@ -2,12 +2,10 @@ package com.vrocketz.spotchu.activity;
 
 import java.io.File;
 
-import org.json.JSONArray;
-
 import android.app.ActionBar;
-import android.app.ProgressDialog;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -25,18 +23,16 @@ import android.view.View.OnClickListener;
 import android.widget.Toast;
 
 import com.facebook.Session;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
-import com.vrocketz.spotchu.Api;
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.User;
 import com.vrocketz.spotchu.activity.fragment.ExploreGridFragment;
+import com.vrocketz.spotchu.activity.fragment.MyCircleFragment;
 import com.vrocketz.spotchu.activity.fragment.MySpotsFragment;
 import com.vrocketz.spotchu.activity.fragment.TabListner;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
-import com.vrocketz.spotchu.helper.UserHelper;
 import com.vrocketz.spotchu.helper.Util;
 import com.vrocketz.spotchu.runnables.Logout;
 import com.vrocketz.spotchu.spot.PendingSpotDao;
@@ -68,10 +64,16 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	    actionBar.addTab(tab);
 
 	    tab = actionBar.newTab()
-	                   .setText(R.string.my_spots)
+	                   .setText(R.string.profile)
 	                   .setTabListener(new TabListner<MySpotsFragment>(
-	                           this, "my_spots", MySpotsFragment.class));
+	                           this, "profile", MySpotsFragment.class));
 	    actionBar.addTab(tab);
+	    
+	    /*tab = actionBar.newTab()
+	    				.setText(R.string.my_circle)
+	    				.setTabListener(new TabListner<MyCircleFragment>(this, "my_circle", MyCircleFragment.class));
+	    actionBar.addTab(tab);*/
+	    
 	    if (savedInstanceState != null){
 		    imageFilePath = savedInstanceState.getString(Constants.SPOT_IMAGE_URI_KEY, null);
 		    if (imageFilePath != null){

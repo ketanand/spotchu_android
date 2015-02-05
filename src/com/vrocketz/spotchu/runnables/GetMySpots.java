@@ -17,23 +17,35 @@ import com.vrocketz.spotchu.helper.Util;
 
 public class GetMySpots implements Runnable {
 
-	private static String END_POINT = "spots";
-	private static String URL = Constants.API_HOST + END_POINT;
+	private static String END_POINT_MYSPOTS = "spots";
+	private static String URL_MYSPOTS = Constants.API_HOST + END_POINT_MYSPOTS;
+	private static String END_POINT_SPOTS = "user/spots/";
+	private static String URL_SPOTS = Constants.API_HOST + END_POINT_SPOTS;
 	private Handler mHandler;
+	private Integer mUserId;
+	private StringBuilder mUrl;
 	
 	public GetMySpots (Handler handler){
 		mHandler = handler;
+		mUserId = null;
+		mUrl = new StringBuilder(URL_MYSPOTS);
+	}
+	
+	public GetMySpots (Handler handler, Integer userId){
+		mHandler = handler;
+		mUserId = userId;
+		mUrl = new StringBuilder(URL_SPOTS);
+		mUrl.append(mUserId);
 	}
 	
 	@Override
 	public void run() {
-		StringBuilder url = new StringBuilder(URL);
 		try {
 			if (!Util.isInternetAvailable()){
 				Message msg = mHandler.obtainMessage(Constants.NO_INTERNET);
 				mHandler.sendMessage(msg);
 			}else {
-				HttpResponse response = Util.sendGet(url.toString());
+				HttpResponse response = Util.sendGet(mUrl.toString());
 				String res = Util.convertResponseToString(response);
 				if (Config.DEBUG)
 					Log.d(Constants.APP_NAME, "[GetSpots] response : " + res);

@@ -7,6 +7,8 @@ public class Constants {
 	public static final String USER_LOGGED_IN = "user_logged_in";
 	public static final String USER_EMAIL = "user_email";
 	public static final String USER_NAME = "user_name";
+	public static final String USER_ID = "user_id";
+	public static final String USER_IMG_URL = "user_img";
 	public static final String GPLUS_PROFILE_URL = "user_gplus_profile_url";
 	public static final String FB_PROFILE_URL = "user_fb_profile_url";
 	public static final String USER_TYPE = "user_type";
@@ -22,6 +24,8 @@ public class Constants {
 	public static final int IMAGE_TYPE_PROFILE = 2;
 	public static final int IMAGE_CACHE = 3;
 	
+	
+	//Handler Messages
 	public static final int ADDRESS_RESOLVED = 1;
 	public static final int SPOT_POSTED = 2;
 	public static final int SPOT_POST_FAILED = 3;
@@ -36,6 +40,10 @@ public class Constants {
 	public static final int SPOT_DELETE_FAILED = 12;
 	public static final int LOGOUT_SUCCESSGFUL = 13;
 	public static final int LOGOUT_FAILED = 14;
+	public static final int USER_FOLLOWED = 15;
+	public static final int USER_FOLLOW_FAILED = 16;
+	public static final int USER_META_FETCHED = 17;
+	public static final int USER_META_FAILED = 18;
 	
 	//Intent data keys
 	public static final String SPOT_ID = "spot_id";

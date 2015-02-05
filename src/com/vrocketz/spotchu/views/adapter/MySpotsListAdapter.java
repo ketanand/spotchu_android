@@ -40,12 +40,14 @@ public class MySpotsListAdapter extends BaseAdapter{
 	private LayoutInflater mLayoutInflater;
 	private Context context;
 	private Animation mAnim;
+	private boolean mShowDelete;
 	
 	public MySpotsListAdapter(Context c){
 		context = c;
 		mLayoutInflater = LayoutInflater.from(c);
 		mSpots = new ArrayList<Spot>();
 		mAnim = AnimationUtils.loadAnimation(context, R.anim.fade_out);
+		mShowDelete = true;
 	}
 	
 	public MySpotsListAdapter(Context c, ArrayList<Spot> spots){
@@ -53,6 +55,7 @@ public class MySpotsListAdapter extends BaseAdapter{
 		context = c;
 		mLayoutInflater = LayoutInflater.from(c);
 		mAnim = AnimationUtils.loadAnimation(context, R.anim.fade_out);
+		mShowDelete = true;
 	}
 	
 	public void setSpots(ArrayList<Spot> spots){
@@ -62,6 +65,10 @@ public class MySpotsListAdapter extends BaseAdapter{
 	@Override
 	public int getCount() {
 		return mSpots.size();
+	}
+	
+	public void showDelete(boolean val){
+		mShowDelete = val;
 	}
 
 	@Override
@@ -112,7 +119,10 @@ public class MySpotsListAdapter extends BaseAdapter{
 			holder.time.setText(Util.getPrintableTimeFormat(spot.getCreatedAt()));
 			holder.hi5Count.setText(String.valueOf(spot.getNoOfLikes()));
 			holder.commentCount.setText(String.valueOf(spot.getNoOfComments()));
-			setDeleteOnClickListner(holder.delete, view, pos, this);
+			if (mShowDelete)
+				setDeleteOnClickListner(holder.delete, view, pos, this);
+			else 
+				holder.delete.setVisibility(View.GONE);
 			holder.img.setOnClickListener(new View.OnClickListener() {
 				
 				@Override

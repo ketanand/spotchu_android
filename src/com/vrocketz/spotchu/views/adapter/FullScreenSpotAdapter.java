@@ -29,6 +29,7 @@ import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.activity.CommentsActivity;
+import com.vrocketz.spotchu.activity.ProfileActivity;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
@@ -82,8 +83,9 @@ public class FullScreenSpotAdapter extends PagerAdapter {
 			lblTitle = (TextView) viewLayout.findViewById(R.id.lblSpotTitle);
 			lblTitle.setText(Util.boldHashTags(spot.getString("desc")));
 			lblUserName = (TextView) viewLayout.findViewById(R.id.lblUserName);
-			String userName = spot.getString("name");
+			final String userName = spot.getString("name");
 			lblUserName.setText(userName);
+			
 			// Init User Images.
 			imgUserPic = (ImageView) viewLayout.findViewById(R.id.imgUserPic);
 			if (userName.equalsIgnoreCase("anonymous")) {
@@ -93,7 +95,28 @@ public class FullScreenSpotAdapter extends PagerAdapter {
 						false);
 				ImageLoader.getInstance().displayImage(
 						spot.getString("image_url"), imageAwareUserPic);
+				
+				imgUserPic.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View view) {
+						
+						Integer userId = null; 
+						String imgUrl = null;
+						try {
+							userId = spot.getInt("user_id");
+							imgUrl = spot.getString("image_url");
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						openProfilePage(userId, userName, imgUrl);
+						
+					}
+				});
 			}
+			
+			//Init hi5 Button
 			btnLike = (ImageButton) viewLayout.findViewById(R.id.btnHi5Spot);
 			boolean hi5ed = false;
 			if (!spot.isNull("selfHi5Id")) {
@@ -101,10 +124,14 @@ public class FullScreenSpotAdapter extends PagerAdapter {
 						R.drawable.hi5_trans_red));
 				hi5ed = true;
 			}
+			
 			final boolean hi5edFinal = hi5ed;
+			
 			btnComment = (ImageButton) viewLayout
 					.findViewById(R.id.btnCommentSpot);
+			
 			btnShare = (ImageButton) viewLayout.findViewById(R.id.btnShareSpot);
+			
 			// like button click event
 			btnLike.setOnClickListener(new View.OnClickListener() {
 
@@ -126,6 +153,7 @@ public class FullScreenSpotAdapter extends PagerAdapter {
 				}
 
 			});
+			
 			btnComment.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -135,6 +163,7 @@ public class FullScreenSpotAdapter extends PagerAdapter {
 					activity.startActivity(i);
 				}
 			});
+			
 			btnShare.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -176,6 +205,14 @@ public class FullScreenSpotAdapter extends PagerAdapter {
 	public void destroyItem(ViewGroup container, int position, Object object) {
 		((ViewPager) container).removeView((RelativeLayout) object);
 	}
-
+	
+	private void openProfilePage(Integer userId, String name, String userPic){
+		Intent intent = new Intent(activity, ProfileActivity.class);
+		intent.putExtra(Constants.USER_NAME, name);
+		intent.putExtra(Constants.USER_ID, userId);
+		intent.putExtra(Constants.USER_IMG_URL, userPic);
+		activity.startActivity(intent);
+	}
+	
 	
 }

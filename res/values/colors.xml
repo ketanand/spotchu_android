@@ -2,6 +2,7 @@
 <resources>
     
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
     <color name="theme_color">#EC523F</color>
     <color name="activity_background">#DBDBDB</color> <!-- Grey -->
     

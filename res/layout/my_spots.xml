@@ -3,125 +3,175 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white" >
-    
+
     <LinearLayout
         android:id="@+id/layoutTopUserDetails"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:weightSum="1.0"
-        android:layout_margin="5dp"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-		>
-		
-        <!--  ImageView
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        android:weightSum="1.0" >
+
+        <!--
+        ImageView
         android:id="@+id/imgUserDisplayPic"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:scaleType="fitCenter"
         android:layout_margin="10dp"
-        android:layout_weight=".3" /-->
-        
+        android:layout_weight=".3" /
+        -->
+
         <com.vrocketz.spotchu.views.RoundedImageView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/imgUserDisplayPic"
-        android:scaleType="fitCenter"
-        app:riv_corner_radius="30dip"
-        app:riv_border_width="0dip"
-        app:riv_border_color="#333333"
-        app:riv_mutate_background="true"
-        app:riv_oval="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="60dp"
-        android:layout_height="60dp" />
-    
-	    <TextView
-	        android:id="@+id/lblUserId"
-	        android:layout_gravity="center_horizontal"
-	        style="@style/label.large"
-	    >
-	    </TextView>
-		
-    
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/imgUserDisplayPic"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitCenter"
+            app:riv_border_color="#333333"
+            app:riv_border_width="0dip"
+            app:riv_corner_radius="30dip"
+            app:riv_mutate_background="true"
+            app:riv_oval="true" />
+
+        <TextView
+            android:id="@+id/lblUserId"
+            style="@style/label.medium"
+            android:layout_gravity="center_horizontal" >
+        </TextView>
     </LinearLayout>
-    
+
+    <LinearLayout
+        android:id="@+id/layoutFollowers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/layoutfollowing"
+        android:layout_alignParentTop="true"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        android:weightSum="1.0" >
+
+        <TextView
+            android:id="@+id/lblFollowers"
+            style="@style/label.medium"
+            android:layout_margin="5dp"
+            android:text="24"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/lblFollowersTitle"
+            style="@style/label.small"
+            android:text="Followers"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutfollowing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        android:weightSum="1.0" >
+
+        <TextView
+            android:id="@+id/lblFollowing"
+            style="@style/label.medium"
+            android:layout_margin="5dp"
+            android:text="32"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/lblFollowingTitle"
+            style="@style/label.small"
+            android:text="Following"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/layoutTopUserDetails"
+        android:background="@android:color/darker_gray"
+        android:layout_margin="5dp" />
+
     <TextView
-	        android:id="@+id/lblPendingSpots"
-	        style="@style/label.medium"
-	        android:text="@string/pending_activity"
-	        android:layout_below="@+id/layoutTopUserDetails"
-	        android:layout_centerHorizontal="true"
-	        android:visibility="gone"
-	    >
-	</TextView>
-    
-    <ListView 
+        android:id="@+id/lblPendingSpots"
+        style="@style/label.medium"
+        android:layout_below="@+id/layoutTopUserDetails"
+        android:layout_centerHorizontal="true"
+        android:text="@string/pending_activity"
+        android:visibility="gone" >
+    </TextView>
+
+    <ListView
         android:id="@+id/lstPendingSpots"
         android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:visibility="gone"
-	    android:divider="@android:color/transparent"
-  		android:dividerHeight="2px"
-	    android:background="@color/activity_background"
-	    android:clickable="true"
-	    android:layout_below="@+id/lblPendingSpots"
-    />
-    
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lblPendingSpots"
+        android:background="@color/activity_background"
+        android:clickable="true"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="2px"
+        android:visibility="gone" />
+
     <TextView
-	        android:id="@+id/lblOldSpots"
-	        style="@style/label.medium"
-	        android:text="@string/past_activity"
-	        android:layout_below="@+id/lstPendingSpots"
-	        android:layout_centerHorizontal="true"
-	    >
-	</TextView>
-    
-	
+        android:id="@+id/lblOldSpots"
+        style="@style/label.medium"
+        android:layout_below="@+id/lstPendingSpots"
+        android:layout_centerHorizontal="true"
+        android:text="@string/past_activity"
+        android:textStyle="bold"
+        android:layout_margin="5dp" >
+    </TextView>
+
     <com.vrocketz.spotchu.views.AnimatedGifImageView
         android:id="@+id/gifLoader"
         android:layout_width="40dp"
         android:layout_height="40dp"
-	    android:layout_centerHorizontal="true"
-	    android:layout_centerVertical="true"
-    />
-    
-     <ImageView
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
+    <ImageView
         android:id="@+id/imgNoInternet"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:scaleType="fitCenter"
-        android:visibility="gone"
+        android:layout_below="@+id/lblOldSpots"
         android:layout_centerHorizontal="true"
-	    android:layout_below="@+id/lblOldSpots"
+        android:scaleType="fitCenter"
         android:src="@drawable/no_internet"
-     />
-     
-     <Button
-	            android:id="@+id/btnGetStarted"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_margin="10dp"
-	            android:text="@string/get_started"
-	            android:enabled="true"
-	            android:visibility="gone"
-	            android:background="@drawable/red_button"
-	            style="@style/button_text"
-	            android:layout_centerHorizontal="true"
-	            android:layout_centerVertical="true"
-	 />
-    
-    <ListView 
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btnGetStarted"
+        style="@style/button_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:background="@drawable/red_button"
+        android:enabled="true"
+        android:text="@string/get_started"
+        android:visibility="gone" />
+
+    <ListView
         android:id="@+id/lstMySpots"
         android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:visibility="gone"
-	    android:divider="@android:color/transparent"
-  		android:dividerHeight="2px"
-	    android:background="@color/activity_background"
-	    android:clickable="true"
-	    android:layout_alignParentBottom="true"
-	    android:layout_below="@+id/lblOldSpots">
-        
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/lblOldSpots"
+        android:background="@color/activity_background"
+        android:clickable="true"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="2px"
+        android:visibility="gone" >
     </ListView>
 
 </RelativeLayout>

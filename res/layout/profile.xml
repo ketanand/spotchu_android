@@ -48,7 +48,6 @@
             android:id="@+id/lblFollowers"
             style="@style/label.medium"
             android:layout_margin="5dp"
-            android:text="24"
             android:textStyle="bold"
             android:layout_gravity="center_horizontal" />
 
@@ -73,7 +72,6 @@
             android:id="@+id/lblFollowing"
             style="@style/label.medium"
             android:layout_margin="5dp"
-            android:text="32"
             android:textStyle="bold"
             android:layout_gravity="center_horizontal" />
 

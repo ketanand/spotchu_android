@@ -2,10 +2,17 @@ package com.vrocketz.spotchu.views.adapter;
 
 import java.util.ArrayList;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.imageaware.ImageAware;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
+import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.spot.Spot;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MyCircleAdapter extends RecyclerView.Adapter<MyCircleAdapter.ViewHolder>{
@@ -18,28 +25,48 @@ public class MyCircleAdapter extends RecyclerView.Adapter<MyCircleAdapter.ViewHo
 	
 	public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView mTextView;
-        public ViewHolder(TextView v) {
+		public ImageView mSpotImg, mUserImg;
+        public TextView mTxtHi5 , mTxtComment;
+        public ViewHolder(View v) {
             super(v);
-            mTextView = v;
+            mSpotImg = (ImageView) v.findViewById(R.id.cardImage);
+            mUserImg = (ImageView) v.findViewById(R.id.imgUser);
+            mTxtHi5 = (TextView) v.findViewById(R.id.lblHi5Count);
+            mTxtComment = (TextView) v.findViewById(R.id.lblCommentCount);
         }
     }
 
 	@Override
 	public int getItemCount() {
 		// TODO Auto-generated method stub
-		return 0;
+		return mSpots.size();
 	}
 
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
-		// TODO Auto-generated method stub
-		
+		Spot spot = mSpots.get(position);
+		holder.mTxtComment.setText(String.valueOf(spot.getNoOfComments()));
+		holder.mTxtHi5.setText(String.valueOf(spot.getNoOfLikes()));
+		if (spot.getName().equalsIgnoreCase("anonymous")){
+			holder.mUserImg.setImageResource(R.drawable.default_photo);
+		}else {
+			ImageAware imageAware = new ImageViewAware(holder.mUserImg, false);
+			ImageLoader.getInstance().displayImage(spot.getImageUrl(), imageAware);
+		}
+		ImageAware imagePicAware = new ImageViewAware(holder.mSpotImg, false);
+		ImageLoader.getInstance().displayImage(spot.getImg(), imagePicAware);
 	}
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		// TODO Auto-generated method stub
-		return null;
+		View itemView = LayoutInflater.from(parent.getContext())
+				.inflate(R.layout.my_circle_list_item, parent, false);
+		return new ViewHolder(itemView);
+	}
+	
+	public void addAll(ArrayList<Spot> spots){
+		for(Spot spot : spots){
+			mSpots.add(spot);
+		}
 	}
 }

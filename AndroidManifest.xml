@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vrocketz.spotchu"
-    android:versionCode="17"
-    android:versionName="0.7.1" >
+    android:versionCode="18"
+    android:versionName="0.8.0" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -19,6 +19,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <permission
         android:name="com.vrocketz.spotchu.gcm.permission.C2D_MESSAGE"
@@ -89,9 +90,9 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "http://www.spotchu.com/view” -->
+                <!-- Accepts URIs that begin with "http://spotchu.com/webview” -->
                 <data
-                    android:host="www.spotchu.com"
+                    android:host="spotchu.com"
                     android:pathPrefix="/webview"
                     android:scheme="http" />
             </intent-filter>

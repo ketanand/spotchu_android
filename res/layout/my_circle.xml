@@ -2,32 +2,74 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
+
     <com.vrocketz.spotchu.views.AnimatedGifImageView
         android:id="@+id/gifLoader"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:visibility="gone"
-	    android:layout_centerHorizontal="true"
-	    android:layout_centerVertical="true"
-      />
-	        
-	 <ImageView
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone" />
+
+    <ImageView
         android:id="@+id/imgNoInternet"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:scaleType="fitCenter"
-        android:visibility="gone"
         android:layout_centerHorizontal="true"
-	    android:layout_centerVertical="true"
+        android:layout_centerVertical="true"
+        android:scaleType="fitCenter"
         android:src="@drawable/no_internet"
-     />
-    
+        android:visibility="gone" />
+
     <android.support.v7.widget.RecyclerView
-    android:id="@+id/myCircleRecyclerView"
-    android:scrollbars="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
-    
+        android:id="@+id/myCircleRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
+
+    <LinearLayout
+        android:id="@+id/layoutPopularUsers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/lblPopularUsers"
+            style="@style/label.medium"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:text="@string/start_following"
+             >
+        </TextView>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_margin="5dp"
+            android:background="@android:color/darker_gray" />
+
+        <ListView
+            android:id="@+id/lstPopularUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/activity_background"
+            android:clickable="true"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="2dp" >
+        </ListView>
+
+        <Button
+            android:id="@+id/btnDone"
+            style="@style/button_text.full"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/red_button"
+            android:enabled="true"
+            android:text="@string/done" />
+    </LinearLayout>
 
 </RelativeLayout>

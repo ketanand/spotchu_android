@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -38,6 +39,7 @@ import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
 import com.vrocketz.spotchu.runnables.GetMySpots;
+import com.vrocketz.spotchu.runnables.GetUserMeta;
 import com.vrocketz.spotchu.spot.PendingSpotDao;
 import com.vrocketz.spotchu.spot.Spot;
 import com.vrocketz.spotchu.spot.SpotHelper;
@@ -49,7 +51,7 @@ import com.vrocketz.spotchu.views.adapter.PendingSpotListAdapter;
 public class MySpotsFragment extends Fragment{
 	
 	private ImageView mDisplayPic;
-	private TextView mUserId, mlblPendingSpots;
+	private TextView mUserId, mlblPendingSpots, mTxtFollowers, mTxtFollowing;
 	private JSONArray spots;
 	private ListView mSpotList;
 	private MySpotsListAdapter adapter;
@@ -79,6 +81,8 @@ public class MySpotsFragment extends Fragment{
 		mDisplayPic.setImageURI(uri);
 		mUserId = (TextView)v.findViewById(R.id.lblUserId);
 		mUserId.setText(pref.getString(Constants.USER_NAME, ""));
+		mTxtFollowers = (TextView)v.findViewById(R.id.lblFollowers);
+		mTxtFollowing = (TextView)v.findViewById(R.id.lblFollowing);
 		//TODO : show spinner.
 		mSpotList = (ListView) v.findViewById(R.id.lstMySpots);
 		mGifLoader = (AnimatedGifImageView) v.findViewById(R.id.gifLoader);
@@ -89,7 +93,7 @@ public class MySpotsFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				MainActivity a = ((MainActivity) getActivity());
-				a.openCameraApp();
+				a.selectImage();
 			}
 		});
 		mImgNoInternet = (ImageView) v.findViewById(R.id.imgNoInternet);
@@ -102,6 +106,7 @@ public class MySpotsFragment extends Fragment{
 		mSpotList.setAdapter(adapter);
 		
 		new Thread(new GetMySpots(mHandler)).start();
+		new Thread(new GetUserMeta(mHandler, 0)).start();
 		//Pending listview
 		initPendingSpotList(v);
 		return v;
@@ -144,6 +149,10 @@ public class MySpotsFragment extends Fragment{
 				}
 				mGifLoader.setVisibility(View.GONE);
 				break;
+			case Constants.USER_META_FETCHED:
+				JSONObject meta = (JSONObject)msg.obj;
+				updateUserInfo(meta);
+				break;	
 			case Constants.SPOTS_FETCH_FAILED:
 				mGifLoader.setVisibility(View.GONE);
 				Toast.makeText(getActivity(), getResources().getString(R.string.spot_fetch_failed), Toast.LENGTH_LONG).show();
@@ -154,5 +163,14 @@ public class MySpotsFragment extends Fragment{
 			}
 		}
 	};
+	
+	private void updateUserInfo(JSONObject meta){
+		try {
+			mTxtFollowers.setText(meta.getString("followers"));
+			mTxtFollowing.setText(meta.getString("following"));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

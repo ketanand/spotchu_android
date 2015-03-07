@@ -19,26 +19,36 @@ public class GetSpots implements Runnable {
 
 	private static String END_POINT = "spots/";
 	private static String URL = Constants.API_HOST + END_POINT;
+	private static String END_POINT_MYCIRCLE = "followSpots/";
+	private static String URL_MYCIRCLE = Constants.API_HOST + END_POINT_MYCIRCLE;
 	private Handler mHandler;
 	private Integer mLast;
 	private Long mTimestamp;
+	private StringBuilder urlBuilder;
 	
 	public GetSpots (Handler handler, Integer last, Long time){
 		mHandler = handler;
 		mLast = last;
 		mTimestamp = time;
+		urlBuilder = new StringBuilder(URL);
+	}
+	
+	public GetSpots (Handler handler, Integer last, Long time, boolean myCircle){
+		mHandler = handler;
+		mLast = last;
+		mTimestamp = time;
+		urlBuilder = new StringBuilder(URL_MYCIRCLE);
 	}
 	
 	@Override
 	public void run() {
-		StringBuilder url = new StringBuilder(URL);
-		url.append(mTimestamp).append("/").append(mLast);
+		urlBuilder.append(mTimestamp).append("/").append(mLast);
 		try {
 			if (!Util.isInternetAvailable()){
 				Message msg = mHandler.obtainMessage(Constants.SPOTS_FETCH_FAILED);
 				mHandler.sendMessage(msg);
 			}else {
-				HttpResponse response = Util.sendGet(url.toString());
+				HttpResponse response = Util.sendGet(urlBuilder.toString());
 				String res = Util.convertResponseToString(response);
 				if (Config.DEBUG)
 					Log.d(Constants.APP_NAME, "[GetSpots] response : " + res);

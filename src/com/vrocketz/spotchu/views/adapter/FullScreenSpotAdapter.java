@@ -95,8 +95,7 @@ public class FullScreenSpotAdapter extends PagerAdapter {
 						false);
 				ImageLoader.getInstance().displayImage(
 						spot.getString("image_url"), imageAwareUserPic);
-				
-				imgUserPic.setOnClickListener(new View.OnClickListener() {
+				View.OnClickListener clickListener = new View.OnClickListener() {
 					
 					@Override
 					public void onClick(View view) {
@@ -113,7 +112,9 @@ public class FullScreenSpotAdapter extends PagerAdapter {
 						openProfilePage(userId, userName, imgUrl);
 						
 					}
-				});
+				};
+				imgUserPic.setOnClickListener(clickListener);
+				lblUserName.setOnClickListener(clickListener);
 			}
 			
 			//Init hi5 Button

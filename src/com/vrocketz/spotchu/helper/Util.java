@@ -19,8 +19,11 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
@@ -33,12 +36,15 @@ import android.text.Spanned;
 import android.text.format.DateFormat;
 import android.util.Log;
 
+import com.vrocketz.spotchu.Receiver;
 import com.vrocketz.spotchu.SpotchuApp;
 
 public class Util {
 	
 	private static Context applicationContext;
 	private static SpotchuApp mApp;
+	// Restart service every 30 min
+	private static final long REPEAT_TIME = 1000 * 60 * 30;
 	
 	public static void setApp(SpotchuApp app){
 		mApp = app;
@@ -274,7 +280,9 @@ public class Util {
 			if (c == '#'){
 				found = true;
 				if (tags.length() > 0){
-					tags.append(" ");
+					tags.append(" #");
+				}else {
+					tags.append("#");
 				}
 			}else if (c == ' '){
 				found = false;
@@ -309,6 +317,21 @@ public class Util {
 			output.append(sourceString).append(" ");
 		}
 		return Html.fromHtml(output.toString().trim());
+	}
+	
+	public static void scheduleServiceCheckBroadCast(Context context){
+		AlarmManager alarm = (AlarmManager) context
+			    .getSystemService(Context.ALARM_SERVICE);
+		Intent i = new Intent(context, Receiver.class);
+		PendingIntent pending = PendingIntent.getBroadcast(context, 0, i,
+			    PendingIntent.FLAG_CANCEL_CURRENT);
+		Calendar cal = Calendar.getInstance();
+		// Start 30 min after boot completed
+		cal.add(Calendar.MINUTE, 30);
+		// Fetch every 30 min
+		// InexactRepeating allows Android to optimize the energy consumption
+		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
+				REPEAT_TIME, REPEAT_TIME, pending);
 	}
 	
 	@Override

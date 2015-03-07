@@ -35,6 +35,17 @@
             app:riv_corner_radius="30dip"
             app:riv_mutate_background="true"
             app:riv_oval="true" />
+        
+        <TextView
+		        android:id="@+id/lblSpotTags"
+		        android:layout_alignParentBottom="false"
+		        android:layout_below="@+id/cardImage"
+		        android:layout_toRightOf="@+id/imgUser"
+		        style="@style/label.small"
+		        android:layout_margin="5dp"
+		        android:textStyle="bold"
+		>
+		</TextView>
 
         <ImageView
             android:id="@+id/imgHi5"

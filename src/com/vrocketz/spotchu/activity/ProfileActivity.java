@@ -75,6 +75,7 @@ public class ProfileActivity extends FragmentActivity implements View.OnClickLis
 		
 		//Follow Button
 		mBtnFollow = (Button) findViewById(R.id.btnFollow);
+		mBtnFollow.setVisibility(View.GONE);
 		mBtnFollow.setOnClickListener(this);
 		
 		mProgressFollow = (ProgressBar) findViewById(R.id.progressBarFollow);
@@ -141,6 +142,7 @@ public class ProfileActivity extends FragmentActivity implements View.OnClickLis
 		if (Config.DEBUG)
 			Log.d(Constants.APP_NAME, "[Profile] UpdateFollowButton : " + isFollowed);
 		mBtnFollow.setEnabled(true);
+		mBtnFollow.setVisibility(View.VISIBLE);
 		mProgressFollow.setVisibility(View.GONE);
 		if (isFollowed){
 			mBtnFollow.setBackgroundResource(R.drawable.red_button);

@@ -1,5 +1,7 @@
 package com.vrocketz.spotchu.activity;
 
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -7,9 +9,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.TaskStackBuilder;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.TextWatcher;
@@ -50,7 +54,24 @@ public class ViewSpot extends Activity {
 		context = this;
 		mProgressBar = (ProgressBar) findViewById(R.id.progressBarFetchSpot);
 		mProgressBar.setVisibility(View.VISIBLE);
-		int id = getIntent().getIntExtra(NotificationService.SPOT_ID, 0);
+		Intent intent = getIntent();
+		String action = intent.getAction();
+		Uri uri = intent.getData();
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "[ViewSpot] action:" + action + ", uri: " + uri);
+		int id = 0;
+		if (action != null && action.equals(Intent.ACTION_VIEW)){
+			List<String> path = uri.getPathSegments();
+			if (Config.DEBUG)
+				Log.d(Constants.APP_NAME, "[ViewSpot] path:" + path.get(2));
+			if (path.size() > 1) {
+				id = Integer.parseInt(path.get(2));
+			}
+			TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		    stackBuilder.addParentStack(ViewSpot.class);
+		}else {
+			id = getIntent().getIntExtra(NotificationService.SPOT_ID, 0);
+		}	
 		new Thread(new GetSpotById(mHandler, id)).start();
 	}
 
@@ -87,7 +108,7 @@ public class ViewSpot extends Activity {
 		lblTitle = (TextView) this.findViewById(R.id.lblSpotTitle);
 		lblTitle.setText(Util.boldHashTags(spot.getDesc()));
 		lblUserName = (TextView) this.findViewById(R.id.lblUserName);
-		String userName = spot.getName();
+		final String userName = spot.getName();
 		lblUserName.setText(userName);
 		// Init User Images.
 		imgUserPic = (ImageView) this.findViewById(R.id.imgUserPic);
@@ -99,6 +120,19 @@ public class ViewSpot extends Activity {
 			ImageAware imageAwareUserPic = new ImageViewAware(imgUserPic, false);
 			ImageLoader.getInstance().displayImage(spot.getImageUrl(),
 					imageAwareUserPic);
+			View.OnClickListener clickListener = new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View view) {
+					
+					Integer userId = spot.getUserId(); 
+					String imgUrl = spot.getImageUrl();
+					openProfilePage(userId, userName, imgUrl);
+					
+				}
+			};
+			imgUserPic.setOnClickListener(clickListener);
+			lblUserName.setOnClickListener(clickListener);
 		}
 		btnLike = (ImageButton) this.findViewById(R.id.btnHi5Spot);
 		boolean hi5ed = false;
@@ -159,5 +193,14 @@ public class ViewSpot extends Activity {
 		lblNoOfLikes.setText(likes + " "
 				+ getResources().getString(R.string.hi5_v));
 	}
+	
+	private void openProfilePage(Integer userId, String name, String userPic){
+		Intent intent = new Intent(this, ProfileActivity.class);
+		intent.putExtra(Constants.USER_NAME, name);
+		intent.putExtra(Constants.USER_ID, userId);
+		intent.putExtra(Constants.USER_IMG_URL, userPic);
+		startActivity(intent);
+	}
+	
 
 }

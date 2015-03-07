@@ -17,26 +17,36 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.activity.FullScreenSpotActivity;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
+import com.vrocketz.spotchu.runnables.GetPopularUsers;
 import com.vrocketz.spotchu.runnables.GetSpots;
 import com.vrocketz.spotchu.spot.Spot;
 import com.vrocketz.spotchu.spot.SpotHelper;
 import com.vrocketz.spotchu.views.AnimatedGifImageView;
 import com.vrocketz.spotchu.views.adapter.ExploreGridViewAdapter;
 import com.vrocketz.spotchu.views.adapter.MyCircleAdapter;
+import com.vrocketz.spotchu.views.adapter.PopularUserListAdapter;
 
 public class MyCircleFragment extends Fragment {
 
 	private RecyclerView mRecyclerView;
 	private RecyclerView.Adapter mAdapter;
 	private RecyclerView.LayoutManager mLayoutManager;
+	private ListView mPopularUsersList;
+	private PopularUserListAdapter mPopularUsersAdapter;
+	private LinearLayout mPopularUserLayout;
+	private Button mBtnDone;
 	private ArrayList<Spot> mSpots;
 	private JSONArray mSpotsJson;
 	private Integer mFrom;
@@ -65,9 +75,16 @@ public class MyCircleFragment extends Fragment {
 
 		if (mAdapter != null) {
 			mRecyclerView.setAdapter(mAdapter);
+			if (mSpots.size() == 0){
+				mFrom = 0;
+				mStartTime = Util.getTimeInMilliseconds();
+				showStartOverlay();
+				getNextPage();
+			}
 		} else {
 			mFrom = 0;
 			mStartTime = Util.getTimeInMilliseconds();
+			showStartOverlay();
 			getNextPage();
 		}
 		mRecyclerView.setOnScrollListener(mScrollListener);
@@ -82,6 +99,10 @@ public class MyCircleFragment extends Fragment {
 			    })
 			);
 		
+		//Init Popular User layout references.
+		mPopularUserLayout = (LinearLayout) v.findViewById(R.id.layoutPopularUsers);
+		mPopularUsersList = (ListView) v.findViewById(R.id.lstPopularUsers);
+		mBtnDone = (Button) v.findViewById(R.id.btnDone);
 		return v;
 	}
 	
@@ -121,7 +142,7 @@ public class MyCircleFragment extends Fragment {
 		if (Config.DEBUG)
 			Log.d(Constants.APP_NAME, "[ExploreGridFragment] getNext From : "
 					+ mFrom);
-		new Thread(new GetSpots(mHandler, mFrom, mStartTime)).start();
+		new Thread(new GetSpots(mHandler, mFrom, mStartTime, true)).start();
 	}
 	
 	private void refershSpots() {
@@ -146,7 +167,12 @@ public class MyCircleFragment extends Fragment {
 					if (mSpots == null)
 					Log.d(Constants.APP_NAME,
 							"[MyCircleFragment] onLoadMoreItems. mSpots Null");
-				initRecyclerView(mSpots);
+				if (newSpots.length() == 0){
+					//Show popular users to follow.
+					new Thread(new GetPopularUsers(mHandler)).start();
+				}else {
+					initRecyclerView(mSpots);
+				}	
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -181,6 +207,24 @@ public class MyCircleFragment extends Fragment {
 		mRecyclerView.setAdapter(mAdapter);
 	}
 	
+	private void initPopularUserLayout(JSONArray users){
+		
+		mPopularUsersAdapter = new PopularUserListAdapter(getActivity(), users);
+		mPopularUsersList.setAdapter(mPopularUsersAdapter);
+		mPopularUserLayout.setVisibility(View.VISIBLE);
+		mLoaderGif.setVisibility(View.GONE);
+		mBtnDone.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View view) {
+				mPopularUserLayout.setVisibility(View.GONE);
+				showStartOverlay();
+				refershSpots();
+			}
+			
+		});
+	}
+	
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			final int what = msg.what;
@@ -189,6 +233,10 @@ public class MyCircleFragment extends Fragment {
 				onLoadMoreItems((JSONArray) msg.obj);
 				hideOverlay();
 				break;
+			case Constants.USERS_FETCHED:
+				initPopularUserLayout((JSONArray) msg.obj);
+				break;
+			case Constants.USERS_FETCH_FAILED:	
 			case Constants.SPOTS_FETCH_FAILED:
 				handleFailure();
 				break;

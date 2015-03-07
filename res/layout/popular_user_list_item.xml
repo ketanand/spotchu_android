@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp"
+    android:background="@android:color/white"
+    android:layout_margin="5dp"
+>
+
+    	<com.vrocketz.spotchu.views.RoundedImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/imgUserProfilePic"
+        android:scaleType="centerCrop"
+        app:riv_corner_radius="30dip"
+        app:riv_border_width="0dip"
+        app:riv_border_color="#333333"
+        app:riv_mutate_background="true"
+        app:riv_oval="true"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="6dp" />
+    	
+	    <TextView
+		        android:id="@+id/lblUserName"
+		        android:layout_alignParentTop="true"
+		        android:layout_toRightOf="@id/imgUserProfilePic"
+		        style="@style/label.medium"
+		        android:textStyle="bold"
+		>
+		</TextView>
+		
+	    <ProgressBar
+	        android:id="@+id/progressBarFollow"
+	        style="?android:attr/progressBarStyleLarge"
+	        android:layout_width="20dp"
+	        android:layout_height="20dp"
+	        android:layout_margin="5dp"
+	        android:layout_toLeftOf="@+id/btnFollow"
+	        android:visibility="gone" />
+		
+		<Button
+	            android:id="@+id/btnFollow"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_margin="5dp"
+	            android:padding="10dp"
+	            android:text="@string/follow"
+	            android:background="@drawable/white_button_red_border"
+	            style="@style/button_text_medium"
+	           	android:textColor="#EC523F"
+	            android:layout_alignParentRight="true"
+		/>
+</RelativeLayout>

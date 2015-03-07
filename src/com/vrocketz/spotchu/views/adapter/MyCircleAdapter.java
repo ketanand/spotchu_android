@@ -6,6 +6,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.vrocketz.spotchu.R;
+import com.vrocketz.spotchu.helper.Util;
 import com.vrocketz.spotchu.spot.Spot;
 
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 public class MyCircleAdapter extends RecyclerView.Adapter<MyCircleAdapter.ViewHolder>{
 	
 	private ArrayList<Spot> mSpots;
+	public static final Integer MAX_TAG_COUNT = 2;
 	
 	public MyCircleAdapter(ArrayList<Spot> spots){
 		mSpots = spots;
@@ -26,13 +28,14 @@ public class MyCircleAdapter extends RecyclerView.Adapter<MyCircleAdapter.ViewHo
 	public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
 		public ImageView mSpotImg, mUserImg;
-        public TextView mTxtHi5 , mTxtComment;
+        public TextView mTxtHi5 , mTxtComment, mTxtTags;
         public ViewHolder(View v) {
             super(v);
             mSpotImg = (ImageView) v.findViewById(R.id.cardImage);
             mUserImg = (ImageView) v.findViewById(R.id.imgUser);
             mTxtHi5 = (TextView) v.findViewById(R.id.lblHi5Count);
             mTxtComment = (TextView) v.findViewById(R.id.lblCommentCount);
+            mTxtTags = (TextView) v.findViewById(R.id.lblSpotTags);
         }
     }
 
@@ -55,6 +58,13 @@ public class MyCircleAdapter extends RecyclerView.Adapter<MyCircleAdapter.ViewHo
 		}
 		ImageAware imagePicAware = new ImageViewAware(holder.mSpotImg, false);
 		ImageLoader.getInstance().displayImage(spot.getImg(), imagePicAware);
+		String tags = Util.getTagsFromTitle(spot.getDesc());
+		String[] tagsArr = tags.split(" ");
+		StringBuilder sb = new StringBuilder();
+		for (int i=0; i < tagsArr.length && i < MAX_TAG_COUNT; i++){
+			sb.append(tagsArr[i]).append(" ");
+		}
+		holder.mTxtTags.setText(Util.boldHashTags(sb.toString()));
 	}
 
 	@Override

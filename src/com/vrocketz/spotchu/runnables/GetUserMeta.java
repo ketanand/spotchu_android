@@ -1,10 +1,6 @@
 package com.vrocketz.spotchu.runnables;
 
-import java.util.ArrayList;
-
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import android.os.Handler;

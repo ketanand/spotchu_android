@@ -130,6 +130,8 @@ GooglePlayServicesClient.OnConnectionFailedListener, LocationListener {
 		if (Config.DEBUG)
 			Log.d(Constants.APP_NAME, "[LocationService] OnLocationChanged.");
 		mCurrentLocation = location;
+		//TODO : save latlong in user pref and use alarm manager to send data every 1 hour
+
 		if (Geocoder.isPresent()){
 			new GetAddressTask(this).execute(mCurrentLocation);
 		}else {

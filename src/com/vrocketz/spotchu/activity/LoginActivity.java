@@ -118,6 +118,7 @@ public class LoginActivity extends FragmentActivity implements ConnectionCallbac
 		// Start location service.
 		Intent intent = new Intent(this, SpotchuLocationService.class);
 		startService(intent);
+		Util.scheduleServiceCheckBroadCast(this);
 		if (mPref.getBoolean(Constants.USER_LOGGED_IN, false)) {
 			Log.d(Constants.APP_NAME, "User Logged in, taking to Spotchu Home.");
 			startMainActivity();

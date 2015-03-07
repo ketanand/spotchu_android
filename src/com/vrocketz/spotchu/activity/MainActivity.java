@@ -64,18 +64,18 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 		Tab tab = actionBar
 				.newTab()
-				.setText(R.string.my_circle)
-				.setTabListener(
-						new TabListner<MyCircleFragment>(this, "my_circle",
-								MyCircleFragment.class));
-		actionBar.addTab(tab);
-
-		tab = actionBar
-				.newTab()
 				.setText(R.string.explore)
 				.setTabListener(
 						new TabListner<ExploreGridFragment>(this, "explore",
 								ExploreGridFragment.class));
+		actionBar.addTab(tab);
+		
+		tab = actionBar
+				.newTab()
+				.setText(R.string.my_circle)
+				.setTabListener(
+						new TabListner<MyCircleFragment>(this, "my_circle",
+								MyCircleFragment.class));
 		actionBar.addTab(tab);
 
 		tab = actionBar
@@ -99,7 +99,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			actionBar.selectTab(tab);
 		}
 		userType = User.Type.valueOf(Util.getGlobalPreferences()
-				.getString(Constants.USER_TYPE, "").toUpperCase());
+				.getString(Constants.USER_TYPE, "Google").toUpperCase());
 		if (userType == User.Type.GOOGLE) {
 			initGoogleAPIClient();
 		}
@@ -360,7 +360,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				SELECT_FILE_ACTIVITY_REQUEST_CODE);
 	}
 
-	private void selectImage() {
+	public void selectImage() {
 		final CharSequence[] items = { "Take Photo", "Choose from Library",
 				"Cancel" };
 

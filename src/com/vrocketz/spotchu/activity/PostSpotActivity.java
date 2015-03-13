@@ -1,6 +1,8 @@
 package com.vrocketz.spotchu.activity;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -95,6 +97,11 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		//Create location client
 		setContentView(R.layout.post_review);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		Intent intent = getIntent();
+	    String action = intent.getAction();
+	    String type = intent.getType();
+	    
 		//Set listeners for buttons
 		mButton = (Button)findViewById(R.id.btnOk);
 		mButton.setOnClickListener(this);
@@ -143,9 +150,19 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		if (isUpdate = getIntent().getBooleanExtra("isUpdate", false)){
 			//TODO integrate update spot API
 		}else {
-			imageFilePath = getIntent().getStringExtra("PREVIEW_IMAGE");
-			Uri uri = Uri.fromFile(new File(imageFilePath));
-			mImageView.setImageURI(uri);
+			if (Intent.ACTION_SEND.equals(action) && type != null) {
+		        if (type.startsWith("image/")) {
+		        	Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+		            if (imageUri != null) {
+		            	mImageView.setImageURI(imageUri);
+		            	imageFilePath = Util.getPathFromUri(imageUri, this);
+		            }
+		        }
+		    }else {
+				imageFilePath = intent.getStringExtra("PREVIEW_IMAGE");
+				Uri uri = Uri.fromFile(new File(imageFilePath));
+				mImageView.setImageURI(uri);
+		    }
 		}
 		/*imageFilePath = getIntent().getStringExtra("PREVIEW_IMAGE");
 		mImage = BitmapFactory.decodeFile(imageFilePath);
@@ -267,7 +284,10 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		long id;
 		try{
 			id = dao.createSpot(spot);
+			spot.setId(id);
 		} finally{
+			if (Config.DEBUG)
+				Log.d(Constants.APP_NAME, "[PostSpot] Pending Spot Size: " + dao.getAllSpots().size());
 			dao.close();
 		}
 		return spot;
@@ -355,10 +375,12 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 					
 				case Constants.SPOT_POSTED:
 					updateNotification(R.string.spot_posted);
-					Integer id = (Integer) msg.obj;
+					Long id = (Long) msg.obj;
 					PendingSpotDao dao = new PendingSpotDao(Util.getApp());
 					dao.open();
 					dao.deleteSpotById(id);
+					if (Config.DEBUG)
+						Log.d(Constants.APP_NAME, "[PostSpot] Pending Spot Size After post: " + dao.getAllSpots().size());
 					dao.close();
 					finish();
 					break;

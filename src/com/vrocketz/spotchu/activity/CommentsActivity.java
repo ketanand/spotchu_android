@@ -35,7 +35,7 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 	Button mLoadMore;
 	AnimatedGifImageView mGifLoader;
 	ProgressBar mPostProgressBar;
-	int mSpotId;
+	Long mSpotId;
 	private CommentsListAdapter mAdapter;
     private JSONArray mComments;
     private Integer mFrom;
@@ -44,7 +44,7 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
-		mSpotId = getIntent().getIntExtra("spot", -1);
+		mSpotId = getIntent().getLongExtra("spot", -1);
 		if (mSpotId == -1){
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "[Comments Activity] id : " + mSpotId);

@@ -20,11 +20,11 @@ public class GetComments implements Runnable {
 	private static String END_POINT = "spots/comments/";
 	private static String URL = Constants.API_HOST + END_POINT;
 	private Handler mHandler;
-	private Integer mSpotId;
+	private Long mSpotId;
 	private Integer mLast;
 	private Long mTimestamp;
 	
-	public GetComments (Handler handler, Integer spotId, Integer last, Long time){
+	public GetComments (Handler handler, Long spotId, Integer last, Long time){
 		mHandler = handler;
 		mSpotId = spotId;
 		mLast = last;

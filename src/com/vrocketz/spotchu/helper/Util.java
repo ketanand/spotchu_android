@@ -19,6 +19,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.PendingIntent;
@@ -28,9 +29,12 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore.MediaColumns;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.format.DateFormat;
@@ -333,6 +337,15 @@ public class Util {
 		alarm.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
 				REPEAT_TIME, REPEAT_TIME, pending);
 	}
+	
+	public static String getPathFromUri(Uri uri, Activity activity) {
+        String[] projection = { MediaColumns.DATA };
+        Cursor cursor = activity
+                .managedQuery(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaColumns.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
 	
 	@Override
 	protected void finalize() throws Throwable {

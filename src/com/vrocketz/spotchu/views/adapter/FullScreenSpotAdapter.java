@@ -72,7 +72,7 @@ public class FullScreenSpotAdapter extends PagerAdapter {
 				container, false);
 		try {
 			final JSONObject spot = mSpots.getJSONObject(position);
-			final int spotId = spot.getInt("id");
+			final Long spotId = spot.getLong("id");
 			// Init main Image
 			imgDisplay = (ImageView) viewLayout.findViewById(R.id.imgDisplay);
 			ImageAware imageAware = new ImageViewAware(imgDisplay, false);

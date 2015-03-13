@@ -20,13 +20,13 @@ import android.util.Log;
 
 public class Comment implements Runnable{
 	
-	int spotId;
+	Long spotId;
 	String text;
 	private Handler mHandler;
 	private static String END_POINT = "spots/comments";
 	private static String URL = Constants.API_HOST + END_POINT;
 	
-	public Comment(int id, String text, Handler handler){
+	public Comment(Long id, String text, Handler handler){
 		spotId = id;
 		this.text = text;
 		mHandler = handler;

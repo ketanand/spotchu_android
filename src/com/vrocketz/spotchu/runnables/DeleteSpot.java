@@ -19,10 +19,10 @@ public class DeleteSpot implements Runnable {
 	
 	private static String END_POINT = "spots/";
 	private static String URL = Constants.API_HOST + END_POINT;
-	private Integer mSpotId;
+	private Long mSpotId;
 	private Handler mHandler;
 	
-	public DeleteSpot(Handler handler, Integer id){
+	public DeleteSpot(Handler handler, Long id){
 		mSpotId= id;
 		mHandler = handler;
 	}

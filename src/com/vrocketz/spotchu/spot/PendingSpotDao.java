@@ -6,11 +6,15 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.vrocketz.spotchu.helper.Config;
+import com.vrocketz.spotchu.helper.Constants;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class PendingSpotDao {
 	private SQLiteDatabase database;
@@ -43,14 +47,15 @@ public class PendingSpotDao {
 	}
 
 	public void deleteSpot(Spot spot) {
-		long id = spot.getId();
-		database.delete(SpotSQLiteHelper.TABLE_PENDING_SPOTS,
-				SpotSQLiteHelper.COLUMN_ID + " = " + id, null);
+		Long id = spot.getId();
+		deleteSpotById(id);
 	}
 
-	public void deleteSpotById(Integer id) {
-		database.delete(SpotSQLiteHelper.TABLE_PENDING_SPOTS,
+	public void deleteSpotById(Long id) {
+		int ret = database.delete(SpotSQLiteHelper.TABLE_PENDING_SPOTS,
 				SpotSQLiteHelper.COLUMN_ID + " = " + id, null);
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "[PendingSpotDao] Rows deleted : " + ret);
 	}
 
 	public boolean deleteAllSpots() {
@@ -143,7 +148,7 @@ public class PendingSpotDao {
 
 	private Spot cursorToSpot(Cursor cursor) {
 		Spot spot = new Spot();
-		spot.setId(cursor.getInt(0));
+		spot.setId(cursor.getLong(0));
 		spot.setTag(cursor.getString(1));
 		spot.setLocationLong(cursor.getString(2));
 		spot.setLocationLati(cursor.getString(3));

@@ -59,18 +59,18 @@ public class ViewSpot extends Activity {
 		Uri uri = intent.getData();
 		if (Config.DEBUG)
 			Log.d(Constants.APP_NAME, "[ViewSpot] action:" + action + ", uri: " + uri);
-		int id = 0;
+		Long id = 0L;
 		if (action != null && action.equals(Intent.ACTION_VIEW)){
 			List<String> path = uri.getPathSegments();
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "[ViewSpot] path:" + path.get(2));
 			if (path.size() > 1) {
-				id = Integer.parseInt(path.get(2));
+				id = Long.parseLong(path.get(2));
 			}
 			TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		    stackBuilder.addParentStack(ViewSpot.class);
 		}else {
-			id = getIntent().getIntExtra(NotificationService.SPOT_ID, 0);
+			id = getIntent().getLongExtra(NotificationService.SPOT_ID, 0);
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "[ViewSpot] id:" + id);
 		}	

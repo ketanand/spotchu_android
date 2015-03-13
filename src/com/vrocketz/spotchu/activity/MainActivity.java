@@ -316,7 +316,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 			} else if (requestCode == SELECT_FILE_ACTIVITY_REQUEST_CODE) {
 				Uri selectedImageUri = data.getData();
-				String imgPath = getPath(selectedImageUri, MainActivity.this);
+				String imgPath = Util.getPathFromUri(selectedImageUri, MainActivity.this);
 				if (Config.DEBUG)
 					Log.d(Constants.APP_NAME,
 							"[MainActivity] OnActivtyResult Image From Galery : "
@@ -332,15 +332,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		}
 	}
 	
-	public String getPath(Uri uri, Activity activity) {
-        String[] projection = { MediaColumns.DATA };
-        Cursor cursor = activity
-                .managedQuery(uri, projection, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaColumns.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
-
 	public void openCameraApp() {
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 

@@ -21,7 +21,7 @@ public class GetSpotById implements Runnable{
 	private Handler mHandler;
 	private String spotId;
 	
-	public GetSpotById(Handler handler, Integer id){
+	public GetSpotById(Handler handler, Long id){
 		mHandler = handler;
 		spotId = String.valueOf(id);
 	}

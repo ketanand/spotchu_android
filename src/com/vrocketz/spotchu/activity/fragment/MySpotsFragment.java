@@ -136,7 +136,7 @@ public class MySpotsFragment extends Fragment implements OnClickListener {
 			mPendingSpotList.setVisibility(View.VISIBLE);
 			mlblPendingSpots.setVisibility(View.VISIBLE);
 		}
-
+		mPendingSpotDao.close();
 	}
 
 	private final Handler mHandler = new Handler() {

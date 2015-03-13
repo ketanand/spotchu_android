@@ -4,7 +4,7 @@ import com.vrocketz.spotchu.GCMMessageType;
 
 public class Spot {
 
-	private Integer id;
+	private Long id;
 	private Integer userId;
 	private String tag;
 	private Integer scale;
@@ -33,7 +33,7 @@ public class Spot {
 	* @return
 	* The id
 	*/
-	public Integer getId() {
+	public Long getId() {
 	return id;
 	}
 	
@@ -42,7 +42,7 @@ public class Spot {
 	* @param id
 	* The id
 	*/
-	public void setId(Integer id) {
+	public void setId(Long id) {
 	this.id = id;
 	}
 	

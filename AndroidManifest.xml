@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vrocketz.spotchu"
-    android:versionCode="19"
-    android:versionName="0.8.1" >
+    android:versionCode="20"
+    android:versionName="0.8.2" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -66,6 +66,11 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.vrocketz.spotchu.activity.MainActivity" />
+            <intent-filter>
+		        <action android:name="android.intent.action.SEND" />
+		        <category android:name="android.intent.category.DEFAULT" />
+		        <data android:mimeType="image/*" />
+		    </intent-filter>
         </activity>
         <activity
             android:name="com.vrocketz.spotchu.activity.FullScreenSpotActivity"

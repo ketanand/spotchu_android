@@ -118,7 +118,7 @@ public class NotificationService extends IntentService{
 		}else if (type == GCMMessageType.NEW_SPOT 
 				|| type == GCMMessageType.NEW_COMMENT 
 				|| type == GCMMessageType.NEW_HI5){
-			int spotId = gcm.getJSONObject(GCM_MSG).getInt(SPOT_ID);
+			Long spotId = gcm.getJSONObject(GCM_MSG).getLong(SPOT_ID);
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "[Notification] type:" + type.toString() + ", id: " +  spotId);
 			Intent intent = new Intent(Util.getApp(), ViewSpot.class);

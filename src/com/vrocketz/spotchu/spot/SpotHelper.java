@@ -46,7 +46,7 @@ public class SpotHelper {
 	
 	public static Spot getFromJson(JSONObject spotJson) throws JSONException{
 		Spot spot = new Spot();
-		spot.setId(spotJson.getInt(SPOT_ID));
+		spot.setId(spotJson.getLong(SPOT_ID));
 		spot.setUserId(spotJson.getInt(SPOT_USER_ID));
 		if (!spotJson.isNull(SPOT_TAG)){
 			spot.setTag(spotJson.getString(SPOT_TAG));
@@ -147,7 +147,6 @@ public class SpotHelper {
 
 		// Decode bitmap with inSampleSize set
 		options.inJustDecodeBounds = false;
-
 		return BitmapFactory.decodeFile(path, options);
 	}
 

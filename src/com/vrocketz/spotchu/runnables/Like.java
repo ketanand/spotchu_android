@@ -17,12 +17,12 @@ import com.vrocketz.spotchu.helper.Util;
 
 public class Like implements Runnable{
 	
-	int spotId;
+	Long spotId;
 	private Handler mHandler;
 	private static String END_POINT = "spots/hi5";
 	private static String URL = Constants.API_HOST + END_POINT;
 	
-	public Like (int id, Handler handler){
+	public Like (Long id, Handler handler){
 		spotId = id;
 		mHandler = handler;
 	}

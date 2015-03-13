@@ -19,10 +19,10 @@ public class RegisterUser extends AsyncTask<User, Void, String> {
 	Activity activity;
 	ProgressDialog mDialog;
 	
-	public RegisterUser(int ver, Activity c){
+	public RegisterUser(int ver, Activity c, ProgressDialog dialog){
 		appVer = ver;
 		activity = c;
-		
+		mDialog = dialog;
 	}
 	
 	@Override
@@ -30,11 +30,6 @@ public class RegisterUser extends AsyncTask<User, Void, String> {
 		if (Config.DEBUG)
 			Log.d(Constants.APP_NAME, "Registered user: Pre Execute");
 		super.onPreExecute();
-		
-		mDialog = new ProgressDialog(activity);
-		mDialog.setTitle(Constants.APP_NAME); mDialog.setMessage("Logging In..");
-		mDialog.show();
-		 
 	}
 
 	@Override

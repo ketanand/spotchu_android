@@ -251,7 +251,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private boolean logoutFromFacebook() {
-		;
 		Session session = Session.getActiveSession();
 		if (session != null) {
 			if (Config.DEBUG)
@@ -259,11 +258,17 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 						"[Main Activity] Logout from Facebook");
 			session.closeAndClearTokenInformation();
 			return true;
-		}
-		if (Config.DEBUG)
-			Log.d(Constants.APP_NAME,
-					"[Main Activity] Facebook Session is null");
-		return false;
+		}else {
+			if (Config.DEBUG)
+				Log.d(Constants.APP_NAME,
+						"[Main Activity] Facebook Session is null");
+	        session = new Session(this);
+	        Session.setActiveSession(session);
+	        session.closeAndClearTokenInformation();
+	            //clear your preferences if saved
+	        return true;
+	    }
+
 	}
 
 	private void clearUserDb() {

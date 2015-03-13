@@ -17,6 +17,7 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.vrocketz.spotchu.activity.LoginActivity;
+import com.vrocketz.spotchu.activity.ProfileActivity;
 import com.vrocketz.spotchu.activity.Summary;
 import com.vrocketz.spotchu.activity.ViewSpot;
 import com.vrocketz.spotchu.helper.Config;
@@ -36,6 +37,7 @@ public class NotificationService extends IntentService{
 	public static final String SUMMARY_URL = "url";
 	private static int new_spot_notify_no = 0;
 	private static int new_comment_notify_no = 0;
+	private static int new_follow_notify_no = 0;
 
 	public NotificationService() {
         super(NotificationService.class.getName());
@@ -100,7 +102,7 @@ public class NotificationService extends IntentService{
 	        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		    stackBuilder.addParentStack(Summary.class);
 		    stackBuilder.addNextIntent(intent);
-		    PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,
+		    PendingIntent pendingIntent = stackBuilder.getPendingIntent(NOTIFICATION_SUMMARY_ID,
 							                 PendingIntent.FLAG_UPDATE_CURRENT
 							             );
 		    String text = gcm.getJSONObject(GCM_MSG).getString(GCM_TEXT);
@@ -117,12 +119,19 @@ public class NotificationService extends IntentService{
 				|| type == GCMMessageType.NEW_COMMENT 
 				|| type == GCMMessageType.NEW_HI5){
 			int spotId = gcm.getJSONObject(GCM_MSG).getInt(SPOT_ID);
+			if (Config.DEBUG)
+				Log.d(Constants.APP_NAME, "[Notification] type:" + type.toString() + ", id: " +  spotId);
 			Intent intent = new Intent(Util.getApp(), ViewSpot.class);
 			intent.putExtra(SPOT_ID, spotId);
 	        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		    stackBuilder.addParentStack(ViewSpot.class);
 		    stackBuilder.addNextIntent(intent);
-		    PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,
+		    if (new_comment_notify_no < 20) {
+		    	new_comment_notify_no = new_comment_notify_no + 1;
+	        } else {
+	        	new_comment_notify_no = 0;
+	        }
+		    PendingIntent pendingIntent = stackBuilder.getPendingIntent(new_comment_notify_no,
 							                 PendingIntent.FLAG_UPDATE_CURRENT
 							             );
 		    String text = gcm.getJSONObject(GCM_MSG).getString(GCM_TEXT);
@@ -135,11 +144,6 @@ public class NotificationService extends IntentService{
 	        .setSmallIcon(R.drawable.ic_launcher);
 		    
 		    m_notificationBuilder.setContentIntent(pendingIntent);
-		    if (new_comment_notify_no < 20) {
-		    	new_comment_notify_no = new_comment_notify_no + 1;
-	        } else {
-	        	new_comment_notify_no = 0;
-	        }
 		    mNM.notify(new_comment_notify_no, m_notificationBuilder.build());
 		}else if (type == GCMMessageType.ANNOUNCEMENT){
 			Intent intent = new Intent(Util.getApp(), LoginActivity.class);
@@ -171,6 +175,34 @@ public class NotificationService extends IntentService{
 	        .setSmallIcon(R.drawable.ic_launcher);
 		    m_notificationBuilder.setContentIntent(pendingIntent);
 		    mNM.notify(NOTIFICATION_UPGRADE_ID, m_notificationBuilder.build());
+		}else if (type == GCMMessageType.FOLLOW){
+			int userId = gcm.getJSONObject(GCM_MSG).getInt(Constants.USER_ID);
+			Intent intent = new Intent(Util.getApp(), ProfileActivity.class);
+			intent.putExtra(Constants.USER_ID, userId);
+			intent.putExtra(Constants.USER_NAME, gcm.getJSONObject(GCM_MSG).getString(Constants.USER_NAME));
+			intent.putExtra(Constants.USER_IMG_URL, gcm.getJSONObject(GCM_MSG).getString(Constants.USER_IMG_URL));
+	        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		    stackBuilder.addParentStack(ProfileActivity.class);
+		    stackBuilder.addNextIntent(intent);
+		    if (new_follow_notify_no < 10) {
+		    	new_follow_notify_no = new_follow_notify_no + 1;
+	        } else {
+	        	new_follow_notify_no = 0;
+	        }
+		    PendingIntent pendingIntent = stackBuilder.getPendingIntent(new_follow_notify_no,
+							                 PendingIntent.FLAG_UPDATE_CURRENT
+							             );
+		    String text = gcm.getJSONObject(GCM_MSG).getString(GCM_TEXT);
+		    NotificationCompat.Builder m_notificationBuilder = new NotificationCompat.Builder(this)
+	        .setContentTitle(getText(R.string.app_name))
+	        .setContentText(text)
+	        .setTicker(text)
+	        .setDefaults(Notification.DEFAULT_ALL)
+	        .setAutoCancel(true)
+	        .setSmallIcon(R.drawable.ic_launcher);
+		    
+		    m_notificationBuilder.setContentIntent(pendingIntent);
+		    mNM.notify(new_follow_notify_no, m_notificationBuilder.build());
 		}
 	}
 }

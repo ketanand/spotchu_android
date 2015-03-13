@@ -86,7 +86,7 @@ public class LoginActivity extends FragmentActivity implements ConnectionCallbac
 		mPref = Util.getGlobalPreferences();
 		
 		//Facebook key hash log starts
-		 try {
+		 /*try {
 		        PackageInfo info = getPackageManager().getPackageInfo(
 		                "com.vrocketz.spotchu", 
 		                PackageManager.GET_SIGNATURES);
@@ -99,7 +99,7 @@ public class LoginActivity extends FragmentActivity implements ConnectionCallbac
 
 		    } catch (NoSuchAlgorithmException e) {
 
-		    }
+		    }*/
 		//Facebook key hash log ends 
 		 
 		if (!checkPlayServices()) {
@@ -225,7 +225,8 @@ public class LoginActivity extends FragmentActivity implements ConnectionCallbac
 
 	protected void onActivityResult(int requestCode, int responseCode,
 			Intent intent) {
-		Log.d(Constants.APP_NAME, "OnActivityResult, result code" + requestCode);
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "[Login Activity] OnActivityResult, result code" + requestCode);
 		if (requestCode == RC_SIGN_IN) {
 			if (responseCode != RESULT_OK) {
 				mSignInClicked = false;
@@ -261,7 +262,10 @@ public class LoginActivity extends FragmentActivity implements ConnectionCallbac
 				} catch (SendIntentException e) {
 					mIntentInProgress = false;
 					mGoogleApiClient.connect();
-					mDialog.dismiss();
+					if (mDialog != null){
+						if (mDialog.isShowing())
+						mDialog.dismiss();
+					}
 				}
 			}
 		} else {

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vrocketz.spotchu"
-    android:versionCode="18"
-    android:versionName="0.8.0" >
+    android:versionCode="19"
+    android:versionName="0.8.1" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -115,6 +115,14 @@
         </activity>
         <activity
             android:name="com.vrocketz.spotchu.activity.ProfileActivity"
+            android:parentActivityName="com.vrocketz.spotchu.activity.MainActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.vrocketz.spotchu.activity.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.vrocketz.spotchu.activity.FollowFollowingActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity android:name="com.facebook.LoginActivity" ></activity>

@@ -46,6 +46,8 @@ public class Constants {
 	public static final int USER_META_FAILED = 18;
 	public static final int USERS_FETCHED = 19;
 	public static final int USERS_FETCH_FAILED = 20;
+	public static final int USER_FOLLOWERS_FETCHED = 21;
+	public static final int USER_FOLLOWERS_FAILED = 22;
 	
 	//Intent data keys
 	public static final String SPOT_ID = "spot_id";

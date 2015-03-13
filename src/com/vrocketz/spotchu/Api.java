@@ -32,8 +32,10 @@ public class Api {
 			String res = Util.convertResponseToString((Util.sendPost(url, nameValuePairs)));
 			if (res != null){
 				JSONObject json = new JSONObject(res);
+				if (Config.DEBUG)
+					Log.d(Constants.APP_NAME, "[Login Response: ]" + json);
 				if (!json.getBoolean("error")){
-					//Util.setPref(Constants.USER_KEY, json.getString("key"));
+					Util.setPref(Constants.USER_ID, json.getString(Constants.USER_ID));
 					return user.getEmail();
 				}else {
 					if (Config.DEBUG)

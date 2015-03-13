@@ -43,7 +43,7 @@ public class ExploreGridFragment extends Fragment implements
 	public static final String SAVED_PAGE_NUMBER = "saved_page_number";
 	public static final String SAVED_START_TIME = "saved_start_time";
 	private PullToRefreshStaggeredGridView mGridView;
-	//private ProgressBar mProgressBar;
+	// private ProgressBar mProgressBar;
 	private AnimatedGifImageView mLoaderGif;
 	private ImageView mNoInternet;
 	private boolean mHasRequestedMore;
@@ -52,24 +52,24 @@ public class ExploreGridFragment extends Fragment implements
 	private ArrayList<Spot> mSpots;
 	private Integer mFrom;
 	private long mStartTime;
-	
-	/*private StaggeredGridView.OnLoadMoreListener loadMoreListener = new StaggeredGridView.OnLoadMoreListener() {
 
-	    @Override
-	    public boolean onLoadMore() {
-	        //loading.setVisibility(View.VISIBLE);
-	        // load more data from internet (not in the UI thread)
-	    	if (Config.DEBUG)
-	    		Log.d(Constants.APP_NAME, "[Staggered Grid View] on Load more");
-	    	getNextPage();
-	        return true; // true if you have more data to load, false you dont have more data to load 
-	    }
-	};*/
-	
-	/*private void doneLoading() {
-	    mGridView.getRefreshableView().loadMoreCompleated();
-	    //loading.setVisibility(View.GONE);
-	}*/
+	/*
+	 * private StaggeredGridView.OnLoadMoreListener loadMoreListener = new
+	 * StaggeredGridView.OnLoadMoreListener() {
+	 * 
+	 * @Override public boolean onLoadMore() {
+	 * //loading.setVisibility(View.VISIBLE); // load more data from internet
+	 * (not in the UI thread) if (Config.DEBUG) Log.d(Constants.APP_NAME,
+	 * "[Staggered Grid View] on Load more"); getNextPage(); return true; //
+	 * true if you have more data to load, false you dont have more data to load
+	 * } };
+	 */
+
+	/*
+	 * private void doneLoading() {
+	 * mGridView.getRefreshableView().loadMoreCompleated();
+	 * //loading.setVisibility(View.GONE); }
+	 */
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -81,25 +81,27 @@ public class ExploreGridFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.explore, container, false);
-		//if (mGridView != null){
-		//mProgressBar  = (ProgressBar)v.findViewById(R.id.progressBarFetchSpot);
+		// if (mGridView != null){
+		// mProgressBar =
+		// (ProgressBar)v.findViewById(R.id.progressBarFetchSpot);
 		mLoaderGif = (AnimatedGifImageView) v.findViewById(R.id.gifLoader);
-		mLoaderGif.setAnimatedGif(R.raw.loader,	AnimatedGifImageView.TYPE.FIT_CENTER);
-		mNoInternet = (ImageView)v.findViewById(R.id.imgNoInternet);
-			mGridView = (PullToRefreshStaggeredGridView) v
-					.findViewById(R.id.exploreGridView);
-			mGridView
-					.setOnRefreshListener(new OnRefreshListener<StaggeredGridView>() {
-						@Override
-						public void onRefresh(
-								PullToRefreshBase<StaggeredGridView> refreshView) {
-							if (Config.DEBUG)
-								Log.d(Constants.APP_NAME,
-										"[ExploreGridFragment] gridview Refreshed. ");
-							refershSpots();
-						}
-					});
-		//}
+		mLoaderGif.setAnimatedGif(R.raw.loader,
+				AnimatedGifImageView.TYPE.FIT_CENTER);
+		mNoInternet = (ImageView) v.findViewById(R.id.imgNoInternet);
+		mGridView = (PullToRefreshStaggeredGridView) v
+				.findViewById(R.id.exploreGridView);
+		mGridView
+				.setOnRefreshListener(new OnRefreshListener<StaggeredGridView>() {
+					@Override
+					public void onRefresh(
+							PullToRefreshBase<StaggeredGridView> refreshView) {
+						if (Config.DEBUG)
+							Log.d(Constants.APP_NAME,
+									"[ExploreGridFragment] gridview Refreshed. ");
+						refershSpots();
+					}
+				});
+		// }
 		if (Config.DEBUG)
 			Log.d(Constants.APP_NAME, "[ExploreGridFragment] onCreateView ");
 		if (mAdapter != null) {
@@ -112,7 +114,7 @@ public class ExploreGridFragment extends Fragment implements
 		}
 		mGridView.getRefreshableView().setOnScrollListener(this);
 		mGridView.getRefreshableView().setOnItemClickListener(this);
-		//mGridView.getRefreshableView().setOnLoadMoreListener(loadMoreListener);
+		// mGridView.getRefreshableView().setOnLoadMoreListener(loadMoreListener);
 		return v;
 	}
 
@@ -121,8 +123,8 @@ public class ExploreGridFragment extends Fragment implements
 		mLoaderGif.setVisibility(View.VISIBLE);
 		mGridView.setVisibility(View.GONE);
 	}
-	
-	private void hideOverlay(){
+
+	private void hideOverlay() {
 		mLoaderGif.setVisibility(View.GONE);
 		mGridView.setVisibility(View.VISIBLE);
 	}
@@ -164,7 +166,10 @@ public class ExploreGridFragment extends Fragment implements
 	public void onScroll(final AbsListView view, final int firstVisibleItem,
 			final int visibleItemCount, final int totalItemCount) {
 		if (!mHasRequestedMore) {
-			int lastInScreen = firstVisibleItem + visibleItemCount + 4;//TODO: test this number
+			int lastInScreen = firstVisibleItem + visibleItemCount + 4;// TODO:
+																		// test
+																		// this
+																		// number
 			if (lastInScreen >= totalItemCount) {
 				if (Config.DEBUG)
 					Log.d(Constants.APP_NAME,
@@ -186,31 +191,37 @@ public class ExploreGridFragment extends Fragment implements
 					Log.d(Constants.APP_NAME,
 							"[ExploreGridFragment] onLoadMoreItems. Adapter Null"
 									+ ", data size:" + newSpots.length());
-				if (Config.DEBUG)
-					if (mSpots == null)
-					Log.d(Constants.APP_NAME,
-							"[ExploreGridFragment] onLoadMoreItems. mSpots Null");
-				initGridView(mSpots);
+				if (mSpots == null) {
+					if (Config.DEBUG)
+						Log.d(Constants.APP_NAME,
+								"[ExploreGridFragment] onLoadMoreItems. mSpots Null");
+				} else {
+					if (mSpots.size() > 0)
+						initGridView(mSpots);
+				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		} else {
 			try {
-				if (Config.DEBUG)
-					Log.d(Constants.APP_NAME,
-							"[ExploreGridFragment] onLoadMoreItems. Adapter Notified"
-									+ ", datasize:" + newSpots.length()
-									+ ", Adapter size:" + mAdapter.getCount());
-				// notify the adapter that we can update now
-				for (int i = 0; i < newSpots.length(); i++) {
-					mSpotsJson.put(newSpots.get(i));
+				if (newSpots.length() != 0) {
+					if (Config.DEBUG)
+						Log.d(Constants.APP_NAME,
+								"[ExploreGridFragment] onLoadMoreItems. Adapter Notified"
+										+ ", datasize:" + newSpots.length()
+										+ ", Adapter size:"
+										+ mAdapter.getCount());
+					// notify the adapter that we can update now
+					for (int i = 0; i < newSpots.length(); i++) {
+						mSpotsJson.put(newSpots.get(i));
+					}
+					ArrayList<Spot> spotList = SpotHelper
+							.getFromJsonArray(newSpots);
+					// mSpots.addAll(spotList);
+					mAdapter.addAll(spotList);
+					mAdapter.notifyDataSetChanged();
 				}
-				ArrayList<Spot> spotList = SpotHelper
-						.getFromJsonArray(newSpots);
-				//mSpots.addAll(spotList);
-				mAdapter.addAll(spotList);
-				mAdapter.notifyDataSetChanged();
-				//doneLoading();
+				// doneLoading();
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

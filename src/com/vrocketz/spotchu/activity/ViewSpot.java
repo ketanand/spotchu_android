@@ -71,6 +71,8 @@ public class ViewSpot extends Activity {
 		    stackBuilder.addParentStack(ViewSpot.class);
 		}else {
 			id = getIntent().getIntExtra(NotificationService.SPOT_ID, 0);
+			if (Config.DEBUG)
+				Log.d(Constants.APP_NAME, "[ViewSpot] id:" + id);
 		}	
 		new Thread(new GetSpotById(mHandler, id)).start();
 	}

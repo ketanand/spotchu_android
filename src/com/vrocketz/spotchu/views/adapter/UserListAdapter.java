@@ -7,10 +7,11 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,28 +22,28 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.vrocketz.spotchu.R;
+import com.vrocketz.spotchu.activity.FollowFollowingActivity;
+import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
+import com.vrocketz.spotchu.helper.Util;
 import com.vrocketz.spotchu.runnables.Follow;
 
-public class PopularUserListAdapter extends BaseAdapter{
+public class UserListAdapter extends BaseAdapter{
 	
 	private JSONArray mUsers;
 	private LayoutInflater mLayoutInflater;
 	private Context context;
+	private Integer mRequestType;
+	private int mCurrentUserId;
 	
-	public PopularUserListAdapter(Context c, JSONArray users){
+	public UserListAdapter(Context c, JSONArray users, Integer requestType){
 		mUsers = users;
 		context = c;
 		mLayoutInflater = LayoutInflater.from(c);
-		for (int i = 0; i < mUsers.length(); i++){
-			JSONObject user;
-			try {
-				user = mUsers.getJSONObject(i);
-				user.put("followed", false);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
+		mRequestType = requestType;
+		mCurrentUserId = Integer.parseInt(Util.getGlobalPreferences().getString(Constants.USER_ID, "-1"));
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "[UserListAdapter] current User id :" + mCurrentUserId);
 	}
 
 	@Override
@@ -84,10 +85,10 @@ public class PopularUserListAdapter extends BaseAdapter{
 		try {
 			final JSONObject user = (JSONObject) mUsers.get(position);
 		    ImageAware imageAware = new ImageViewAware(holder.userDP, false);
-		    ImageLoader.getInstance().displayImage(user.getString("userImg"), imageAware);
-		    final String name = user.getString("userName");
+		    ImageLoader.getInstance().displayImage(user.getString("image_url"), imageAware);
+		    final String name = user.getString("name");
 			holder.userName.setText(name);
-			if (user.getBoolean("followed")){
+			if (user.getInt("selfFollowing") == 1){
 				holder.btnFollow.setBackgroundResource(R.drawable.red_button);
 				String text = "- " + context.getResources().getString(R.string.following);
 				holder.btnFollow.setText(text);
@@ -99,24 +100,45 @@ public class PopularUserListAdapter extends BaseAdapter{
 				holder.btnFollow.setTextColor(context.getResources().getColor(R.color.theme_color));
 			}
 			holder.progressFollow.setVisibility(View.GONE);
-			holder.btnFollow.setEnabled(true);
-			holder.btnFollow.setOnClickListener(new OnClickListener(){
-
-				@Override
-				public void onClick(View v) {
-					v.setEnabled(false);
-					v.setBackgroundResource(R.drawable.white_button_grey_border);
-					holder.btnFollow.setTextColor(context.getResources().getColor(R.color.activity_background));
-					holder.progressFollow.setVisibility(View.VISIBLE);
-					try {
-						followUser(user.getInt("userId"), name);
-						user.put("followed", !user.getBoolean("followed"));
-					} catch (JSONException e) {
-						e.printStackTrace();
+			
+			int user_id = 0;
+			if (mRequestType == FollowFollowingActivity.FOLLOWERS)
+				user_id = user.getInt("follower_id");
+			else if (mRequestType == FollowFollowingActivity.FOLLOWING)
+				user_id = user.getInt("user_id");
+			final int userId = user_id;
+			if (Config.DEBUG)
+				Log.d(Constants.APP_NAME, "[UserListAdapter] User id :" + userId + ", current:" +mCurrentUserId
+						+ ", name:" + name);
+			if (mCurrentUserId != userId){
+				holder.btnFollow.setVisibility(View.VISIBLE);
+				holder.btnFollow.setEnabled(true);
+				holder.btnFollow.setOnClickListener(new OnClickListener(){
+	
+					@Override
+					public void onClick(View v) {
+						v.setEnabled(false);
+						v.setBackgroundResource(R.drawable.white_button_grey_border);
+						holder.btnFollow.setTextColor(context.getResources().getColor(R.color.activity_background));
+						holder.progressFollow.setVisibility(View.VISIBLE);
+						try {
+							followUser(userId, name);
+							if (user.getInt("selfFollowing") == 1){
+								user.put("selfFollowing", 0);
+							}else {
+								user.put("selfFollowing", 1);
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
 					}
-				}
-				
-			});
+					
+				});
+			}else {
+				holder.btnFollow.setVisibility(View.GONE);
+				if (Config.DEBUG)
+					Log.d(Constants.APP_NAME, "[UserListAdapter] button hidden, name:" + name);
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -148,5 +170,7 @@ public class PopularUserListAdapter extends BaseAdapter{
 		public Button btnFollow;
 		public ProgressBar progressFollow;
 	}
+
+
 
 }

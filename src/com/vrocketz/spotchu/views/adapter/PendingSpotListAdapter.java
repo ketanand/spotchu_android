@@ -17,6 +17,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.imageaware.ImageAware;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
@@ -88,7 +91,8 @@ public class PendingSpotListAdapter extends BaseAdapter {
 		}
 		
 			final Spot spot =  mSpots.get(pos);
-		    holder.img.setImageURI(Uri.parse(spot.getImg()));
+			ImageAware imageAware = new ImageViewAware(holder.img, false);
+			ImageLoader.getInstance().displayImage(spot.getImg(), imageAware);
 		    String desc = spot.getDesc();
 		    if (desc.length() > Constants.MAX_TITLE_SIZE){
 		    	StringBuilder s = new StringBuilder(desc.subSequence(0, Constants.MAX_TITLE_SIZE));

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -28,6 +29,7 @@ import com.facebook.widget.LoginButton;
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.RegisterUser;
 import com.vrocketz.spotchu.User;
+import com.vrocketz.spotchu.activity.LoginActivity;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
@@ -36,6 +38,7 @@ public class FaceBookFragment extends Fragment {
 
 	private UiLifecycleHelper uiHelper;
 	private boolean mRequestInProgress;
+	private ProgressDialog mDialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,6 +90,8 @@ public class FaceBookFragment extends Fragment {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "[Facebook Fragment] OnActivityResult, result code" + requestCode);
 		super.onActivityResult(requestCode, resultCode, data);
 		uiHelper.onActivityResult(requestCode, resultCode, data);
 	}
@@ -115,7 +120,7 @@ public class FaceBookFragment extends Fragment {
 			SessionState state, Exception exception) {
 		if (state.isOpened()) {
 			if (Config.DEBUG)
-				Log.d(Constants.APP_NAME, "Logged in...");
+				Log.d(Constants.APP_NAME, "[FB Fragment] onSessionStateChanged : Logged in...");
 			final SharedPreferences pref = Util.getGlobalPreferences();
 			if (!pref.getBoolean(Constants.USER_LOGGED_IN, false)) {
 				if (!mRequestInProgress) {
@@ -182,7 +187,7 @@ public class FaceBookFragment extends Fragment {
 																url, null);
 														new RegisterUser(
 																Util.getAppVersion(getActivity()),
-																getActivity())
+																getActivity(), mDialog)
 																.execute(user);
 														e.commit();
 													}
@@ -194,12 +199,19 @@ public class FaceBookFragment extends Fragment {
 							});
 					request.executeAsync();
 					mRequestInProgress = true;
+					mDialog = new ProgressDialog(getActivity());
+					mDialog.setTitle(Constants.APP_NAME);
+					mDialog.setMessage(getResources().getString(R.string.login_msg));
+					mDialog.setCancelable(false);
+					mDialog.show();
 				}
 			}
 		} else if (state.isClosed()) {
-			Log.d(Constants.APP_NAME, "Logged out...");
+			if (Config.DEBUG)
+				Log.d(Constants.APP_NAME, "[FB Fragment] onSessionStateChanged :  Logged out...");
 		} else {
-			Log.d(Constants.APP_NAME, state.name());
+			if (Config.DEBUG)
+				Log.d(Constants.APP_NAME, "[FB Fragment] onSessionStateChanged : " + state.name());
 		}
 	}
 

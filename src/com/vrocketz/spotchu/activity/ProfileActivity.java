@@ -36,7 +36,7 @@ import com.vrocketz.spotchu.views.adapter.MySpotsListAdapter;
 public class ProfileActivity extends FragmentActivity implements View.OnClickListener{
 	
 	private ImageView mUserPic, mNoSpots, mNoInternet;
-	private TextView mTxtUserName, mTxtFollowers, mTxtFollowing, mTxtLiveSpots;
+	private TextView mTxtUserName, mTxtFollowers, mTxtFollowing, mTxtLiveSpots, mLblFollowers, mLblFollowing;
 	private Integer mUserId;
 	private String mUserName;
 	private boolean mIsFollowed;
@@ -56,7 +56,13 @@ public class ProfileActivity extends FragmentActivity implements View.OnClickLis
 		mNoSpots = (ImageView) findViewById(R.id.imgNoSpots);
 		mUserPic = (ImageView) findViewById(R.id.imgUserDisplayPic);
 		mTxtFollowers = (TextView) findViewById(R.id.lblFollowers);
+		mTxtFollowers.setOnClickListener(this);
 		mTxtFollowing = (TextView) findViewById(R.id.lblFollowing);
+		mTxtFollowing.setOnClickListener(this);
+		mLblFollowers = (TextView) findViewById(R.id.lblFollowersTitle);
+		mLblFollowers.setOnClickListener(this);
+		mLblFollowing = (TextView) findViewById(R.id.lblFollowingTitle);
+		mLblFollowing.setOnClickListener(this);
 		mTxtLiveSpots = (TextView) findViewById(R.id.lblOldSpots);
 		mTxtUserName = (TextView) findViewById(R.id.lblUserName);
 		mUserName = intent.getStringExtra(Constants.USER_NAME);
@@ -194,7 +200,46 @@ public class ProfileActivity extends FragmentActivity implements View.OnClickLis
 			mBtnFollow.setTextColor(getResources().getColor(R.color.activity_background));
 			mProgressFollow.setVisibility(View.VISIBLE);
 			followUser();
+		}else if (v.getId() == R.id.lblFollowers
+					|| v.getId() == R.id.lblFollowersTitle){
+			String value = (String) mTxtFollowers.getText();
+			if (value != null){
+				try {
+					int val = Integer.parseInt(value);
+					if (Config.DEBUG)
+						Log.d(Constants.APP_NAME, "[Profile Activity]Followers val: " + val);
+					if (val > 0){
+						openList(FollowFollowingActivity.FOLLOWERS);
+					}	
+				}catch (NumberFormatException e){
+					if (Config.DEBUG)
+					Log.d(Constants.APP_NAME, "[Profile Activity]Followers numberformatexception: " + value);
+				}
+			}
+		}else if (v.getId() == R.id.lblFollowing
+				|| v.getId() == R.id.lblFollowingTitle){
+			String value = (String) mTxtFollowing.getText();
+			if (value != null){
+				try {
+					int val = Integer.parseInt(value);
+					if (Config.DEBUG)
+					Log.d(Constants.APP_NAME, "[Profile Activity]Following val: " + val);
+					if (val > 0){
+						openList(FollowFollowingActivity.FOLLOWING);
+					}	
+				}catch (NumberFormatException e){
+					if (Config.DEBUG)
+					Log.d(Constants.APP_NAME, "[Profile Activity]Following numberformatexception: " + value);
+				}
+			}
 		}
+	}
+	
+	private void openList(int requestType){
+		Intent intent = new Intent(this, FollowFollowingActivity.class);
+		intent.putExtra(FollowFollowingActivity.REQUEST_TYPE, requestType);
+		intent.putExtra(Constants.USER_ID, mUserId);
+		startActivity(intent);
 	}
 
 }

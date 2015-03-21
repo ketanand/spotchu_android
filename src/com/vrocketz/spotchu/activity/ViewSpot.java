@@ -62,9 +62,9 @@ public class ViewSpot extends Activity {
 		Long id = 0L;
 		if (action != null && action.equals(Intent.ACTION_VIEW)){
 			List<String> path = uri.getPathSegments();
-			if (Config.DEBUG)
-				Log.d(Constants.APP_NAME, "[ViewSpot] path:" + path.get(2));
 			if (path.size() > 1) {
+				if (Config.DEBUG)
+					Log.d(Constants.APP_NAME, "[ViewSpot] path:" + path.get(2));
 				id = Long.parseLong(path.get(2));
 			}
 			TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);

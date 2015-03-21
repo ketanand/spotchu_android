@@ -339,6 +339,8 @@ public class Util {
 	}
 	
 	public static String getPathFromUri(Uri uri, Activity activity) {
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "[Util getPathFromUri] uri:" + uri);
         String[] projection = { MediaColumns.DATA };
         Cursor cursor = activity
                 .managedQuery(uri, projection, null, null, null);

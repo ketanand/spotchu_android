@@ -1,6 +1,6 @@
 package com.vrocketz.spotchu.spot;
 
-import com.vrocketz.spotchu.GCMMessageType;
+import android.net.Uri;
 
 public class Spot {
 
@@ -13,6 +13,7 @@ public class Spot {
 	private String city;
 	private String locality;
 	private String img;
+	private Uri imgUri;
 	private String url;
 	private String desc;
 	private Long createdAt;
@@ -404,6 +405,14 @@ public class Spot {
 		return this.status;
 	}
 	
+	public Uri getImgUri() {
+		return imgUri;
+	}
+
+	public void setImgUri(Uri imgUri) {
+		this.imgUri = imgUri;
+	}
+
 	public static enum Status {
 		
 		PENDING(1),

@@ -1,5 +1,8 @@
 package com.vrocketz.spotchu.views;
 
+import com.vrocketz.spotchu.helper.Config;
+import com.vrocketz.spotchu.helper.Constants;
+
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.PointF;
@@ -37,6 +40,9 @@ public class TouchImageView extends ImageView {
     ScaleGestureDetector mScaleDetector;
  
     Context context;
+    
+    //State change listener
+    OnZoomChangeListener mZoomListner;
  
     public TouchImageView(Context context) {
         super(context);
@@ -91,6 +97,12 @@ public class TouchImageView extends ImageView {
                     int yDiff = (int) Math.abs(curr.y - start.y);
                     if (xDiff < CLICK && yDiff < CLICK)
                         performClick();
+                    /*
+                     * Call Zoom Listener
+                     */
+                    if (mZoomListner != null){
+                    	mZoomListner.onStateChanged(isInZoomedState());
+                    }
                     break;
  
                 case MotionEvent.ACTION_POINTER_UP:
@@ -108,6 +120,17 @@ public class TouchImageView extends ImageView {
  
     public void setMaxZoom(float x) {
         maxScale = x;
+    }
+    
+    public boolean isInZoomedState(){
+    	if (Float.compare(saveScale, 1F) != 0){
+    		return true;
+    	}
+    	return false;
+    }
+    
+    public void setOnZoomChangedListener(OnZoomChangeListener listener){
+    	mZoomListner = listener;
     }
  
     private class ScaleListener extends
@@ -230,5 +253,9 @@ public class TouchImageView extends ImageView {
             setImageMatrix(matrix);
         }
         fixTrans();
+    }
+    
+    public static interface OnZoomChangeListener{
+    	public void onStateChanged(boolean isZoomed);
     }
 }

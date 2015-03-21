@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.activity.FollowFollowingActivity;
+import com.vrocketz.spotchu.activity.ProfileActivity;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
@@ -84,8 +86,9 @@ public class UserListAdapter extends BaseAdapter{
 		}
 		try {
 			final JSONObject user = (JSONObject) mUsers.get(position);
+			final String imgUrl = user.getString("image_url");
 		    ImageAware imageAware = new ImageViewAware(holder.userDP, false);
-		    ImageLoader.getInstance().displayImage(user.getString("image_url"), imageAware);
+		    ImageLoader.getInstance().displayImage(imgUrl, imageAware);
 		    final String name = user.getString("name");
 			holder.userName.setText(name);
 			if (user.getInt("selfFollowing") == 1){
@@ -139,6 +142,18 @@ public class UserListAdapter extends BaseAdapter{
 				if (Config.DEBUG)
 					Log.d(Constants.APP_NAME, "[UserListAdapter] button hidden, name:" + name);
 			}
+			holder.userDP.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					openProfilePage(userId, name, imgUrl);
+				}
+			});
+			holder.userName.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					openProfilePage(userId, name, imgUrl);
+				}
+			});
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -171,6 +186,12 @@ public class UserListAdapter extends BaseAdapter{
 		public ProgressBar progressFollow;
 	}
 
-
+	private void openProfilePage(Integer userId, String name, String userPic){
+		Intent intent = new Intent(context, ProfileActivity.class);
+		intent.putExtra(Constants.USER_NAME, name);
+		intent.putExtra(Constants.USER_ID, userId);
+		intent.putExtra(Constants.USER_IMG_URL, userPic);
+		context.startActivity(intent);
+	}
 
 }

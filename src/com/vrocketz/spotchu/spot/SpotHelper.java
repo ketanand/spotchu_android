@@ -1,5 +1,8 @@
 package com.vrocketz.spotchu.spot;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -9,6 +12,7 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
 
 import com.vrocketz.spotchu.R;
@@ -118,7 +122,7 @@ public class SpotHelper {
 	}
 	
 	/*
-	 * Get Bitmap Image from saved image Uri
+	 * Get Bitmap Image from saved image path
 	 */
 	public static Bitmap getImageBitmap(String path) {
 		final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -148,6 +152,42 @@ public class SpotHelper {
 		// Decode bitmap with inSampleSize set
 		options.inJustDecodeBounds = false;
 		return BitmapFactory.decodeFile(path, options);
+	}
+	
+	/*
+	 * Get Bitmap Image from saved image Uri
+	 */
+	public static Bitmap getImageBitmap(Uri uri) throws IOException {
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "image path for decoding:" + uri);
+		InputStream input = Util.getApp().getContentResolver().openInputStream(uri);
+		BitmapFactory.decodeStream(input, null, options);
+		// Calculate inSampleSize, Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		options.inPreferredConfig = Bitmap.Config.RGB_565;
+		int inSampleSize = 1;
+
+		if (height > IMG_HEIGHT) {
+			inSampleSize = Math.round((float) height / (float) IMG_HEIGHT);
+		}
+		int expectedWidth = width / inSampleSize;
+
+		if (expectedWidth > IMG_WIDTH) {
+			// if(Math.round((float)width / (float)reqWidth) > inSampleSize) //
+			// If bigger SampSize..
+			inSampleSize = Math.round((float) width / (float) IMG_WIDTH);
+		}
+
+		options.inSampleSize = inSampleSize;
+
+		// Decode bitmap with inSampleSize set
+		options.inJustDecodeBounds = false;
+		Bitmap bitmap = BitmapFactory.decodeStream(input, null, options);
+		input.close();
+		return bitmap;
 	}
 
 }

@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,23 +27,25 @@ import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.spot.Spot;
 
-public class ExploreGridViewAdapter extends ArrayAdapter<Spot> {
+public class ExploreGridViewAdapter extends BaseAdapter {
 
+	private Context context;
+	private ArrayList<Spot> mSpots;
 	private final LayoutInflater mLayoutInflater;
 	private final Random mRandom;
 	private static final SparseArray<Double> sPositionHeightRatios = new SparseArray<Double>();
 
 	public ExploreGridViewAdapter(Context context, int textViewResourceId,
 			ArrayList<Spot> objects) {
-		super(context, textViewResourceId, objects);
 		this.mLayoutInflater = LayoutInflater.from(context);
 		this.mRandom = new Random();
+		mSpots = objects;
+		this.context = context;
 	}
 
 	@Override
 	public Spot getItem(int position) {
-		Spot item = super.getItem(position);
-		return item;
+		return mSpots.get(position);
 	}
 	
 	@Override
@@ -110,6 +113,22 @@ public class ExploreGridViewAdapter extends ArrayAdapter<Spot> {
 	private double getRandomHeightRatio() {
 		return (mRandom.nextDouble() / 2.0) + 1.0; // height will be 1.0 - 1.5
 													// the width
+	}
+
+	@Override
+	public int getCount() {
+		// TODO Auto-generated method stub
+		return mSpots.size();
+	}
+
+	@Override
+	public long getItemId(int position) {
+		// TODO Auto-generated method stub
+		return position;
+	}
+	
+	public void addAll(ArrayList<Spot> list){
+		mSpots.addAll(list);
 	}
 
 }

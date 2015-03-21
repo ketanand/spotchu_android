@@ -2,6 +2,7 @@ package com.vrocketz.spotchu.activity;
 
 import org.json.JSONArray;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +22,7 @@ public class FollowFollowingActivity extends FragmentActivity {
 	
 	public static final Integer FOLLOWERS = 1;
 	public static final Integer FOLLOWING = 2;
+	public static final Integer HI5 = 3;
 	public static final String REQUEST_TYPE = "request_type";
 	private ListView mUserList;
 	private UserListAdapter mAdapter;
@@ -39,6 +41,22 @@ public class FollowFollowingActivity extends FragmentActivity {
 		mUserList = (ListView) findViewById(R.id.lstUsers);
 		fetchDetails();
 		overridePendingTransition(R.anim.bottom_in, R.anim.top_out);
+		//getActionBar().hide();
+		initActionBarTitle();
+	}
+	
+	private void initActionBarTitle(){
+		ActionBar ab = getActionBar();
+		ab.setDisplayShowTitleEnabled(true);
+		ab.setDisplayUseLogoEnabled(false);
+		ab.setIcon(R.drawable.ic_launcher);
+		if (mRequestType == FOLLOWERS){
+			ab.setTitle("Followers");
+		}else if (mRequestType == FOLLOWING){
+			ab.setTitle("Following");
+		}else if (mRequestType == HI5){
+			ab.setTitle("Hi5");
+		}
 	}
 	
 	private void fetchDetails(){
@@ -46,6 +64,8 @@ public class FollowFollowingActivity extends FragmentActivity {
 			fetchFollowersList();
 		}else if (mRequestType == FOLLOWING){
 			fetchFollowingList();
+		}else if (mRequestType == HI5){
+			fetchHi5List();
 		}
 	}
 	
@@ -55,6 +75,10 @@ public class FollowFollowingActivity extends FragmentActivity {
 	
 	private void fetchFollowingList(){
 		new Thread(new GetFollowing(mHandler, mUserId)).start();
+	}
+	
+	private void fetchHi5List(){
+		
 	}
 	
 	private final Handler mHandler = new Handler(){

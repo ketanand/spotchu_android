@@ -137,7 +137,7 @@ public class ExploreGridFragment extends Fragment implements
 	private void initGridView(ArrayList<Spot> spots) {
 		mAdapter = new ExploreGridViewAdapter(getActivity(),
 				android.R.layout.simple_list_item_1, spots);
-		mAdapter.setNotifyOnChange(false);
+		//mAdapter.setNotifyOnChange(false);
 		mGridView.getRefreshableView().setAdapter(mAdapter);
 	}
 

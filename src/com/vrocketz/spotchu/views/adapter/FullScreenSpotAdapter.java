@@ -35,18 +35,22 @@ import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
 import com.vrocketz.spotchu.runnables.Like;
 import com.vrocketz.spotchu.spot.SpotHelper;
+import com.vrocketz.spotchu.views.SpotchuViewPager;
+import com.vrocketz.spotchu.views.TouchImageView;
 
-public class FullScreenSpotAdapter extends PagerAdapter {
+public class FullScreenSpotAdapter extends PagerAdapter implements TouchImageView.OnZoomChangeListener{
 
 	private Activity activity;
 	private Handler mHandler;
 	private JSONArray mSpots;
+	private SpotchuViewPager mPager;
 
 	public FullScreenSpotAdapter(Activity activity, Handler handler,
-			JSONArray spots) {
+			JSONArray spots, SpotchuViewPager pager) {
 		this.activity = activity;
 		this.mHandler = handler;
 		this.mSpots = spots;
+		this.mPager = pager;
 	}
 
 	@Override
@@ -63,7 +67,8 @@ public class FullScreenSpotAdapter extends PagerAdapter {
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		final int pos = position;
-		ImageView imgDisplay, imgUserPic;
+		TouchImageView imgDisplay;
+		ImageView imgUserPic;
 		TextView lblTitle, lblUserName, lblNoOfLikes, lblNoOfComments;
 		ImageButton btnLike, btnComment, btnShare;
 		LayoutInflater inflater = (LayoutInflater) activity
@@ -74,11 +79,12 @@ public class FullScreenSpotAdapter extends PagerAdapter {
 			final JSONObject spot = mSpots.getJSONObject(position);
 			final Long spotId = spot.getLong("id");
 			// Init main Image
-			imgDisplay = (ImageView) viewLayout.findViewById(R.id.imgDisplay);
+			imgDisplay = (TouchImageView) viewLayout.findViewById(R.id.imgDisplay);
 			ImageAware imageAware = new ImageViewAware(imgDisplay, false);
 			ImageLoader.getInstance().displayImage(
 					spot.getString("img").replace(".jpeg", "_or.jpeg"),
 					imageAware);
+			imgDisplay.setOnZoomChangedListener(this);
 
 			lblTitle = (TextView) viewLayout.findViewById(R.id.lblSpotTitle);
 			lblTitle.setText(Util.boldHashTags(spot.getString("desc")));
@@ -213,6 +219,12 @@ public class FullScreenSpotAdapter extends PagerAdapter {
 		intent.putExtra(Constants.USER_ID, userId);
 		intent.putExtra(Constants.USER_IMG_URL, userPic);
 		activity.startActivity(intent);
+	}
+
+	@Override
+	public void onStateChanged(boolean isZoomed) {
+		if (mPager != null)
+			mPager.setPagingEnabled(!isZoomed);
 	}
 	
 	

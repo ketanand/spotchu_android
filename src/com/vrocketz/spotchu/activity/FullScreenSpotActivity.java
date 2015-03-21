@@ -25,6 +25,7 @@ import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
+import com.vrocketz.spotchu.views.SpotchuViewPager;
 import com.vrocketz.spotchu.views.adapter.FullScreenSpotAdapter;
 
 public class FullScreenSpotActivity extends Activity implements OnPageChangeListener{
@@ -33,7 +34,7 @@ public class FullScreenSpotActivity extends Activity implements OnPageChangeList
 	private Uri fileUri;
 	private String imageFilePath;
 	private PagerAdapter mPagerAdapter;
-	private ViewPager mPager;
+	private SpotchuViewPager mPager;
 	private JSONArray mSpots;
 
 	@Override
@@ -56,15 +57,11 @@ public class FullScreenSpotActivity extends Activity implements OnPageChangeList
 			e.printStackTrace();
 		}
 	
-		mPagerAdapter = new FullScreenSpotAdapter(this, mHandler, mSpots);
-	
-		mPager = (ViewPager) findViewById(R.id.pager);
-	
-		mPager.setAdapter(mPagerAdapter);
-	
+		mPager = (SpotchuViewPager) findViewById(R.id.pager);
+		mPagerAdapter = new FullScreenSpotAdapter(this, mHandler, mSpots, mPager);
+		mPager.setAdapter(mPagerAdapter);	
 		mPager.setCurrentItem(position);
 		mPager.setOnPageChangeListener(this);
-	
 	}
 	
 	@Override

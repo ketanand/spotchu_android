@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
@@ -29,6 +30,7 @@ public class PostSpot implements Runnable {
 
 	private final String SERVER_URL = Constants.API_HOST + "spots";
 	private String path;
+	private Uri uri;
 	private Handler handler;
 	private ArrayList<NameValuePair> nameValuePairs;
 	private Spot spot;
@@ -38,23 +40,28 @@ public class PostSpot implements Runnable {
 		this.path = spot.getImg();
 		this.handler = handler;
 		this.nameValuePairs = data;
+		this.uri = spot.getImgUri();
 	}
 
 	@Override
 	public void run() {
-		Bitmap bitmap = SpotHelper.getImageBitmap(this.path);
-		if (Config.DEBUG)
-			Log.d(Constants.APP_NAME, "Upload Image Started, Bitmap formed");
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.JPEG, 90, stream);
-		byte[] byteArr = stream.toByteArray();
-		String image_str = Base64.encodeToString(byteArr, Base64.DEFAULT);
-		if (Config.DEBUG)
-			Log.d(Constants.APP_NAME, "Encoded image: " + image_str);
-		nameValuePairs.add(new BasicNameValuePair("imagerawdata", image_str));
-		nameValuePairs.add(new BasicNameValuePair("deviceCreatedAt", String.valueOf(spot.getCreatedAt())));
-
 		try {
+			Bitmap bitmap;
+			if (uri != null){
+				bitmap = SpotHelper.getImageBitmap(this.uri);
+			}else {
+				bitmap = SpotHelper.getImageBitmap(this.path);
+			}
+			if (Config.DEBUG)
+				Log.d(Constants.APP_NAME, "Upload Image Started, Bitmap formed");
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 90, stream);
+			byte[] byteArr = stream.toByteArray();
+			String image_str = Base64.encodeToString(byteArr, Base64.DEFAULT);
+			if (Config.DEBUG)
+				Log.d(Constants.APP_NAME, "Encoded image: " + image_str);
+			nameValuePairs.add(new BasicNameValuePair("imagerawdata", image_str));
+			nameValuePairs.add(new BasicNameValuePair("deviceCreatedAt", String.valueOf(spot.getCreatedAt())));
 			if (Util.isInternetAvailable()) {
 
 				HttpResponse response = Util.sendPost(SERVER_URL,

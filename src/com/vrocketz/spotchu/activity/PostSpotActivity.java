@@ -59,6 +59,7 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 	
 	private String imageFilePath;
 	private String imageUrl;
+	private Uri mImageUri;
 	private SpotchuLocationService mLocationService;
 	private boolean mIsBound;
 	private Location mLocation;
@@ -152,16 +153,19 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		}else {
 			if (Intent.ACTION_SEND.equals(action) && type != null) {
 		        if (type.startsWith("image/")) {
-		        	Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-		            if (imageUri != null) {
-		            	mImageView.setImageURI(imageUri);
-		            	imageFilePath = Util.getPathFromUri(imageUri, this);
+		        	mImageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+		            if (mImageUri != null) {
+		            	mImageView.setImageURI(mImageUri);
+		            	if (mImageUri.toString().contains("content://"))
+		            		imageFilePath = Util.getPathFromUri(mImageUri, this);
+		            	else
+		            		imageFilePath = mImageUri.toString();
 		            }
 		        }
 		    }else {
 				imageFilePath = intent.getStringExtra("PREVIEW_IMAGE");
-				Uri uri = Uri.fromFile(new File(imageFilePath));
-				mImageView.setImageURI(uri);
+				mImageUri = Uri.fromFile(new File(imageFilePath));
+				mImageView.setImageURI(mImageUri);
 		    }
 		}
 		/*imageFilePath = getIntent().getStringExtra("PREVIEW_IMAGE");
@@ -279,6 +283,7 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 			spot.setLocationLati(String.valueOf(mLocation.getLatitude()));
 		}
 		spot.setImg(imageFilePath);
+		spot.setImgUri(mImageUri);
 		spot.setCreatedAt(Util.getTimeInMilliseconds() / 1000);
 		spot.setStatus(Spot.Status.PENDING);
 		long id;

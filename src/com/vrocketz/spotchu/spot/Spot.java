@@ -5,7 +5,7 @@ import android.net.Uri;
 public class Spot {
 
 	private Long id;
-	private Integer userId;
+	private Long userId;
 	private String tag;
 	private Integer scale;
 	private String locationLong;
@@ -52,7 +52,7 @@ public class Spot {
 	* @return
 	* The userId
 	*/
-	public Integer getUserId() {
+	public Long getUserId() {
 	return userId;
 	}
 	
@@ -61,7 +61,7 @@ public class Spot {
 	* @param userId
 	* The user_id
 	*/
-	public void setUserId(Integer userId) {
+	public void setUserId(Long userId) {
 	this.userId = userId;
 	}
 	

@@ -48,6 +48,10 @@ public class Constants {
 	public static final int USERS_FETCH_FAILED = 20;
 	public static final int USER_FOLLOWERS_FETCHED = 21;
 	public static final int USER_FOLLOWERS_FAILED = 22;
+	public static final int COMMENT_DELETED = 23;
+	public static final int COMMENT_DELETE_FAILED = 24;
+	public static final int SPOT_HI5_LIST_FETCHED = 25;
+	public static final int SPOT_HI5_LIST_FAILED = 26;
 	
 	//Intent data keys
 	public static final String SPOT_ID = "spot_id";

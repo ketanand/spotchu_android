@@ -16,8 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_margin="2dp"
-        android:background="@android:color/transparent"
+        android:padding="2dp"
+        android:background="#80000000"
         android:orientation="horizontal" >
 
         <com.vrocketz.spotchu.views.RoundedImageView
@@ -36,9 +36,28 @@
         <TextView
             android:id="@+id/lblUserName"
             style="@style/label.medium"
-            android:layout_weight="0.7"
+            android:layout_weight="0.6"
             android:textColor="@color/white" />
+        
+        <ImageButton 
+		     android:id="@+id/btnEditSpot"
+        	 android:layout_width="30dp"
+		     android:layout_height="30dp"
+		     android:layout_weight="0.1"
+		     android:src="@drawable/button_edit"
+		     android:scaleType="fitCenter"
+		     android:background="@drawable/button_background_transparent"
+		     android:visibility="gone"
+		/>
     </LinearLayout>
+    
+    <View
+        android:id="@+id/bottomBackground"
+        android:layout_width="fill_parent"
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true"
+        android:background="#80000000"
+        android:layout_margin="0dp" />
 
     <TextView
         android:id="@+id/lblSpotTitle"
@@ -47,6 +66,19 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="2dp"
         android:textColor="@color/white" />
+    
+    <EditText
+        android:id="@+id/txtSpotTitle"
+        style="@style/label.medium"
+        android:ems="10"
+        android:maxLength="160"
+        android:inputType="text"
+    	android:singleLine="true"
+        android:layout_above="@+id/layoutBottom"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="2dp"
+        android:visibility="gone"
+        android:imeOptions="actionDone" />
 
     <LinearLayout
         android:id="@+id/layoutBottom"
@@ -56,7 +88,7 @@
         android:layout_alignParentLeft="true"
         android:background="@android:color/transparent"
         android:orientation="vertical"
-        android:layout_margin="5dp" >
+        android:layout_margin="2dp" >
 
         <TextView
             android:id="@+id/lblNoOfLike"
@@ -73,21 +105,23 @@
 
     <ImageButton
         android:id="@+id/btnHi5Spot"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/btnCommentSpot"
         android:layout_margin="10dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/button_background_transparent"
         android:src="@drawable/hi5_white"
         android:scaleType="fitCenter" />
 
     <ImageButton
         android:id="@+id/btnCommentSpot"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
        	android:layout_alignParentBottom="true"
        	android:layout_margin="10dp"
+       	android:layout_marginTop="4dp"
        	android:layout_toLeftOf="@+id/btnShareSpot"
         android:background="@drawable/button_background_transparent"
         android:src="@drawable/comment"
@@ -95,11 +129,12 @@
 
     <ImageButton
         android:id="@+id/btnShareSpot"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="10dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/button_background_transparent"
         android:src="@drawable/share"
         android:scaleType="fitCenter" />

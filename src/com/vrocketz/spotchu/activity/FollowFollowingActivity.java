@@ -15,6 +15,7 @@ import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.runnables.GetFollowers;
 import com.vrocketz.spotchu.runnables.GetFollowing;
+import com.vrocketz.spotchu.runnables.GetHi5List;
 import com.vrocketz.spotchu.views.AnimatedGifImageView;
 import com.vrocketz.spotchu.views.adapter.UserListAdapter;
 
@@ -26,7 +27,7 @@ public class FollowFollowingActivity extends FragmentActivity {
 	public static final String REQUEST_TYPE = "request_type";
 	private ListView mUserList;
 	private UserListAdapter mAdapter;
-	private Integer mUserId;
+	private Long mUserId;
 	private Integer mRequestType;
 	private AnimatedGifImageView mGifLoader;
 	
@@ -34,7 +35,7 @@ public class FollowFollowingActivity extends FragmentActivity {
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.user_list);
-		mUserId = getIntent().getIntExtra(Constants.USER_ID, 0);
+		mUserId = getIntent().getLongExtra(Constants.USER_ID, 0);
 		mRequestType = getIntent().getIntExtra(REQUEST_TYPE, -1);
 		mGifLoader = (AnimatedGifImageView)findViewById(R.id.gifLoader);
 		mGifLoader.setAnimatedGif(R.raw.loader,	AnimatedGifImageView.TYPE.FIT_CENTER);
@@ -78,7 +79,7 @@ public class FollowFollowingActivity extends FragmentActivity {
 	}
 	
 	private void fetchHi5List(){
-		
+		new Thread(new GetHi5List(mHandler, mUserId)).start();
 	}
 	
 	private final Handler mHandler = new Handler(){
@@ -86,10 +87,12 @@ public class FollowFollowingActivity extends FragmentActivity {
 			final int what = msg.what;
 			switch(what){
 				case Constants.USER_FOLLOWERS_FETCHED:
+				case Constants.SPOT_HI5_LIST_FETCHED:	
 					JSONArray result = (JSONArray) msg.obj;
 					initFollowList(result);
 					break;
 				case Constants.USER_FOLLOWERS_FAILED:
+				case Constants.SPOT_HI5_LIST_FAILED:
 				case Constants.NO_INTERNET:
 					handleFailure(what);
 					break;

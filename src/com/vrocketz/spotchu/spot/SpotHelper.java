@@ -51,7 +51,7 @@ public class SpotHelper {
 	public static Spot getFromJson(JSONObject spotJson) throws JSONException{
 		Spot spot = new Spot();
 		spot.setId(spotJson.getLong(SPOT_ID));
-		spot.setUserId(spotJson.getInt(SPOT_USER_ID));
+		spot.setUserId(spotJson.getLong(SPOT_USER_ID));
 		if (!spotJson.isNull(SPOT_TAG)){
 			spot.setTag(spotJson.getString(SPOT_TAG));
 		}

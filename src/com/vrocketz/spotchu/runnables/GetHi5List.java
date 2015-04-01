@@ -1,6 +1,7 @@
 package com.vrocketz.spotchu.runnables;
 
 import org.apache.http.HttpResponse;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.Handler;
@@ -11,42 +12,44 @@ import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
 
-public class GetUserMeta implements Runnable{
-	
-	private static String END_POINT = "user/meta/";
+public class GetHi5List implements Runnable {
+	private static String END_POINT = "spots/hi5/list/";
 	private static String URL = Constants.API_HOST + END_POINT;
 	private Handler mHandler;
-	private Long mUserId;
-	
-	public GetUserMeta(Handler handler, Long userId){
+	private Long mSpotId;
+
+	public GetHi5List(Handler handler, Long spotId) {
 		mHandler = handler;
-		mUserId = userId;
+		mSpotId = spotId;
 	}
-	
+
 	@Override
 	public void run() {
 		StringBuilder url = new StringBuilder(URL);
-		url.append(mUserId);
+		url.append(mSpotId);
 		try {
 			HttpResponse response = Util.sendGet(url.toString());
 			String res = Util.convertResponseToString(response);
 			if (Config.DEBUG)
-				Log.d(Constants.APP_NAME, "[User Meta Data] response : " + res);
-			if (res != null){
+				Log.d(Constants.APP_NAME, "[Hi5 List] response : " + res);
+			if (res != null) {
 				JSONObject json = new JSONObject(res);
-				if (!json.getBoolean("error")){
-					JSONObject data = json.getJSONObject("data");
-					Message msg = mHandler.obtainMessage(Constants.USER_META_FETCHED, data);
+				if (!json.getBoolean("error")) {
+					JSONArray data = json.getJSONArray("data");
+					Message msg = mHandler.obtainMessage(
+							Constants.SPOT_HI5_LIST_FETCHED, data);
 					mHandler.sendMessage(msg);
 				} else {
-					Message msg = mHandler.obtainMessage(Constants.USER_META_FAILED);
+					Message msg = mHandler
+							.obtainMessage(Constants.SPOT_HI5_LIST_FAILED);
 					mHandler.sendMessage(msg);
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			Message msg = mHandler.obtainMessage(Constants.USER_META_FAILED);
+			Message msg = mHandler
+					.obtainMessage(Constants.SPOT_HI5_LIST_FAILED);
 			mHandler.sendMessage(msg);
-		} 
+		}
 	}
 }

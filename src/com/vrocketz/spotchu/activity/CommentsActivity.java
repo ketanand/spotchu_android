@@ -1,5 +1,7 @@
 package com.vrocketz.spotchu.activity;
 
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,8 +25,10 @@ import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
-import com.vrocketz.spotchu.runnables.Comment;
+import com.vrocketz.spotchu.runnables.PostComment;
 import com.vrocketz.spotchu.runnables.GetComments;
+import com.vrocketz.spotchu.spot.comment.Comment;
+import com.vrocketz.spotchu.spot.comment.CommentHelper;
 import com.vrocketz.spotchu.views.AnimatedGifImageView;
 import com.vrocketz.spotchu.views.adapter.CommentsListAdapter;
 
@@ -37,7 +41,7 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 	ProgressBar mPostProgressBar;
 	Long mSpotId;
 	private CommentsListAdapter mAdapter;
-    private JSONArray mComments;
+    private List<Comment> mComments;
     private Integer mFrom;
     private long mStartTime;
 	
@@ -78,7 +82,7 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 			if (text.length() > 0){
 				hideSoftKeyboard();
 				mText.setText("");
-				new Thread(new Comment(mSpotId, text, mHandler)).start();
+				new Thread(new PostComment(mSpotId, text, mHandler)).start();
 				showPostCommentLoader();
 			}else {
 				Toast.makeText(this, getResources().getString(R.string.required_comment), Toast.LENGTH_LONG).show();
@@ -116,7 +120,7 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 				case Constants.COMMENTS_FETCHED:
 					JSONObject result = (JSONObject) msg.obj;
 					try {
-						onLoadMoreItems(result.getJSONArray("comments"));
+						onLoadMoreItems(CommentHelper.getFromJsonArray(result.getJSONArray("comments")));
 						toggleLoadMoreButton(result.getInt("total"));
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -150,7 +154,7 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 	}
 	
 	private void toggleLoadMoreButton(int total){
-		if (total > mComments.length()){
+		if (total > mComments.size()){
 			mLoadMore.setVisibility(View.VISIBLE);
 		}else {
 			mLoadMore.setVisibility(View.GONE);
@@ -162,31 +166,31 @@ public class CommentsActivity extends FragmentActivity implements OnClickListene
 		mGifLoader.setVisibility(View.GONE);
 	}
 	
-	private void onLoadMoreItems(JSONArray newComments) {
+	private void onLoadMoreItems(List<Comment> newComments) {
 		if (Config.DEBUG)
 			Log.d(Constants.APP_NAME, "[CommentsActivity] onLoadMoreItems.");
 		if (mAdapter == null){
 			mComments = newComments;
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "[CommentsActivity] onLoadMoreItems. Adapter Null" +
-						", data size:" + newComments.length());
+						", data size:" + newComments.size());
 			initListView();
 		}else {
 			mAdapter.addComments(newComments);
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "[CommentsActivity] onLoadMoreItems. Adapter Notified" +
-						", datasize:" + newComments.length() + ", Adapter size:" + mAdapter.getCount());
+						", datasize:" + newComments.size() + ", Adapter size:" + mAdapter.getCount());
 			// notify the adapter that we can update now
 	        mAdapter.notifyDataSetChanged();
 	        mCommentsList.setSelection(mAdapter.getCount() - mFrom - 1);
 		}
-		if (newComments.length() != 0){
-			mFrom += newComments.length();
+		if (newComments.size() != 0){
+			mFrom += newComments.size();
 		}
     }
 	
 	private void initListView(){
-		mAdapter = new CommentsListAdapter(this, mComments);
+		mAdapter = new CommentsListAdapter(this, mComments, mHandler);
 		mCommentsList.setAdapter(mAdapter);
 		mCommentsList.setVisibility(View.VISIBLE);
 		mGifLoader.setVisibility(View.GONE);

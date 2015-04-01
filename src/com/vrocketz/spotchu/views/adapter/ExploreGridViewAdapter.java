@@ -37,10 +37,14 @@ public class ExploreGridViewAdapter extends BaseAdapter {
 
 	public ExploreGridViewAdapter(Context context, int textViewResourceId,
 			ArrayList<Spot> objects) {
-		this.mLayoutInflater = LayoutInflater.from(context);
+		if (context != null){
+			this.mLayoutInflater = LayoutInflater.from(context);
+			mSpots = objects;
+			this.context = context;
+		} else {
+			this.mLayoutInflater = null;
+		}
 		this.mRandom = new Random();
-		mSpots = objects;
-		this.context = context;
 	}
 
 	@Override
@@ -117,8 +121,10 @@ public class ExploreGridViewAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
+		if (mSpots != null)
 		return mSpots.size();
+		else 
+		return 0;	
 	}
 
 	@Override

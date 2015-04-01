@@ -144,14 +144,15 @@
         android:src="@drawable/no_internet"
         android:visibility="gone" />
     
-    <ImageView
-        android:id="@+id/imgNoSpots"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_below="@+id/lblOldSpots"
+    <TextView
+        android:id="@+id/txtNoSpots"
+        style="@style/label.large"
+        android:textStyle="bold"
+        android:textColor="@android:color/primary_text_light"
+        android:layout_margin="5dp"
+        android:layout_below="@+id/divider"
         android:layout_centerHorizontal="true"
-        android:scaleType="fitCenter"
-        android:src="@drawable/no_internet"
+        android:text="@string/no_spots"
         android:visibility="gone" />
 
     <ListView

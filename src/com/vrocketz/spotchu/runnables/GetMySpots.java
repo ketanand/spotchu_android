@@ -22,7 +22,7 @@ public class GetMySpots implements Runnable {
 	private static String END_POINT_SPOTS = "user/spots/";
 	private static String URL_SPOTS = Constants.API_HOST + END_POINT_SPOTS;
 	private Handler mHandler;
-	private Integer mUserId;
+	private Long mUserId;
 	private StringBuilder mUrl;
 	
 	public GetMySpots (Handler handler){
@@ -31,7 +31,7 @@ public class GetMySpots implements Runnable {
 		mUrl = new StringBuilder(URL_MYSPOTS);
 	}
 	
-	public GetMySpots (Handler handler, Integer userId){
+	public GetMySpots (Handler handler, Long userId){
 		mHandler = handler;
 		mUserId = userId;
 		mUrl = new StringBuilder(URL_SPOTS);

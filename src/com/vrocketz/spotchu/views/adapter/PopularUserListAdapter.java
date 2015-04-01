@@ -109,7 +109,7 @@ public class PopularUserListAdapter extends BaseAdapter{
 					holder.btnFollow.setTextColor(context.getResources().getColor(R.color.activity_background));
 					holder.progressFollow.setVisibility(View.VISIBLE);
 					try {
-						followUser(user.getInt("userId"), name);
+						followUser(user.getLong("userId"), name);
 						user.put("followed", !user.getBoolean("followed"));
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -124,7 +124,7 @@ public class PopularUserListAdapter extends BaseAdapter{
 		return view;
 	}
 	
-	private void followUser(Integer id, String name){
+	private void followUser(Long id, String name){
 		new Thread(new Follow(mHandler, id, name)).start();
 	}
 	

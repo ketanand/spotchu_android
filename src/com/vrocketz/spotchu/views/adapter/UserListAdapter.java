@@ -36,14 +36,14 @@ public class UserListAdapter extends BaseAdapter{
 	private LayoutInflater mLayoutInflater;
 	private Context context;
 	private Integer mRequestType;
-	private int mCurrentUserId;
+	private Long mCurrentUserId;
 	
 	public UserListAdapter(Context c, JSONArray users, Integer requestType){
 		mUsers = users;
 		context = c;
 		mLayoutInflater = LayoutInflater.from(c);
 		mRequestType = requestType;
-		mCurrentUserId = Integer.parseInt(Util.getGlobalPreferences().getString(Constants.USER_ID, "-1"));
+		mCurrentUserId = Long.parseLong(Util.getGlobalPreferences().getString(Constants.USER_ID, "-1"));
 		if (Config.DEBUG)
 			Log.d(Constants.APP_NAME, "[UserListAdapter] current User id :" + mCurrentUserId);
 	}
@@ -104,12 +104,12 @@ public class UserListAdapter extends BaseAdapter{
 			}
 			holder.progressFollow.setVisibility(View.GONE);
 			
-			int user_id = 0;
+			Long user_id = 0L;
 			if (mRequestType == FollowFollowingActivity.FOLLOWERS)
-				user_id = user.getInt("follower_id");
-			else if (mRequestType == FollowFollowingActivity.FOLLOWING)
-				user_id = user.getInt("user_id");
-			final int userId = user_id;
+				user_id = user.getLong("follower_id");
+			else 
+				user_id = user.getLong("user_id");
+			final Long userId = user_id;
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "[UserListAdapter] User id :" + userId + ", current:" +mCurrentUserId
 						+ ", name:" + name);
@@ -161,7 +161,7 @@ public class UserListAdapter extends BaseAdapter{
 		return view;
 	}
 	
-	private void followUser(Integer id, String name){
+	private void followUser(Long id, String name){
 		new Thread(new Follow(mHandler, id, name)).start();
 	}
 	
@@ -186,7 +186,7 @@ public class UserListAdapter extends BaseAdapter{
 		public ProgressBar progressFollow;
 	}
 
-	private void openProfilePage(Integer userId, String name, String userPic){
+	private void openProfilePage(Long userId, String name, String userPic){
 		Intent intent = new Intent(context, ProfileActivity.class);
 		intent.putExtra(Constants.USER_NAME, name);
 		intent.putExtra(Constants.USER_ID, userId);

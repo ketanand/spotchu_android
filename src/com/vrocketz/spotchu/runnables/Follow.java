@@ -23,11 +23,11 @@ public class Follow implements Runnable {
 	private static String END_POINT = "user/follow";
 	private static String URL = Constants.API_HOST + END_POINT;
 	
-	private Integer mUserId;
+	private Long mUserId;
 	private String mUserName;
 	private Handler mHandler;
 	
-	public Follow(Handler handler, Integer id, String name){
+	public Follow(Handler handler, Long id, String name){
 		mHandler = handler;
 		mUserId = id;
 		mUserName = name;

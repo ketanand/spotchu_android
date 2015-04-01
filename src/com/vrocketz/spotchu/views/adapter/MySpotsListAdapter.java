@@ -11,9 +11,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
+import android.sax.StartElementListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -27,12 +29,14 @@ import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.vrocketz.spotchu.NotificationService;
 import com.vrocketz.spotchu.R;
+import com.vrocketz.spotchu.activity.PostSpotActivity;
 import com.vrocketz.spotchu.activity.ViewSpot;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
 import com.vrocketz.spotchu.runnables.DeleteSpot;
 import com.vrocketz.spotchu.spot.Spot;
+import com.vrocketz.spotchu.spot.SpotHelper;
 
 public class MySpotsListAdapter extends BaseAdapter{
 	
@@ -41,6 +45,7 @@ public class MySpotsListAdapter extends BaseAdapter{
 	private Context context;
 	private Animation mAnim;
 	private boolean mShowDelete;
+	private boolean mShowEdit;
 	
 	public MySpotsListAdapter(Context c){
 		context = c;
@@ -48,6 +53,7 @@ public class MySpotsListAdapter extends BaseAdapter{
 		mSpots = new ArrayList<Spot>();
 		mAnim = AnimationUtils.loadAnimation(context, R.anim.fade_out);
 		mShowDelete = true;
+		mShowEdit = false;
 	}
 	
 	public MySpotsListAdapter(Context c, ArrayList<Spot> spots){
@@ -56,6 +62,7 @@ public class MySpotsListAdapter extends BaseAdapter{
 		mLayoutInflater = LayoutInflater.from(c);
 		mAnim = AnimationUtils.loadAnimation(context, R.anim.fade_out);
 		mShowDelete = true;
+		mShowEdit = false;
 	}
 	
 	public void setSpots(ArrayList<Spot> spots){
@@ -69,6 +76,10 @@ public class MySpotsListAdapter extends BaseAdapter{
 	
 	public void showDelete(boolean val){
 		mShowDelete = val;
+	}
+	
+	public void showEdit(boolean val){
+		mShowEdit = val;
 	}
 
 	@Override
@@ -100,6 +111,7 @@ public class MySpotsListAdapter extends BaseAdapter{
 			holder.hi5Count = (TextView) view.findViewById(R.id.lblHi5Count);
 			holder.commentCount = (TextView) view.findViewById(R.id.lblCommentCount);
 			holder.delete = (ImageButton) view.findViewById(R.id.btnDeleteSpot);
+			holder.edit = (ImageButton) view.findViewById(R.id.btnEditSpot);
 			view.setTag(holder);
 		}else {
 			view = convertView;
@@ -119,10 +131,29 @@ public class MySpotsListAdapter extends BaseAdapter{
 			holder.time.setText(Util.getPrintableTimeFormat(spot.getCreatedAt()));
 			holder.hi5Count.setText(String.valueOf(spot.getNoOfLikes()));
 			holder.commentCount.setText(String.valueOf(spot.getNoOfComments()));
+			
 			if (mShowDelete)
 				setDeleteOnClickListner(holder.delete, view, pos, this);
 			else 
 				holder.delete.setVisibility(View.GONE);
+			
+			if (mShowEdit){
+				holder.edit.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View view) {
+						Intent i = new Intent(context, PostSpotActivity.class);
+						i.putExtra(PostSpotActivity.PREVIEW_IMAGE, spot.getImg());
+						i.putExtra(SpotHelper.SPOT_ID, spot.getId());
+						i.putExtra(SpotHelper.SPOT_DESC, spot.getDesc());
+						i.putExtra(PostSpotActivity.UPDATE, true);
+						context.startActivity(i);
+					}
+				});
+			}else {
+				holder.edit.setVisibility(View.GONE);
+			}	
+			
 			holder.img.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
@@ -186,7 +217,7 @@ public class MySpotsListAdapter extends BaseAdapter{
 	
 	private class ViewHolder {
 		public TextView title, time, hi5Count, commentCount;
-		public ImageButton img, delete;
+		public ImageButton img, delete, edit;
 	}
 
 

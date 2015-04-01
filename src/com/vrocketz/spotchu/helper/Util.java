@@ -17,6 +17,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
@@ -124,6 +125,20 @@ public class Util {
         }
 		httppost.setEntity(new UrlEncodedFormEntity(postData));
 		HttpResponse response = httpclient.execute(httppost);
+		return response;
+	}
+	
+	public static HttpResponse sendPut(String url, ArrayList<NameValuePair> putData) throws ClientProtocolException, IOException{
+		if (Config.DEBUG)
+        	Log.d(Constants.APP_NAME, "[HTTP PUT], url=" + url);
+		HttpClient httpclient = new DefaultHttpClient();
+        HttpPut httpput = new HttpPut(url);
+        String regId = Util.getRegistrationId();
+        if (regId != null){
+        	httpput.addHeader("Authorization", regId);
+        }
+        httpput.setEntity(new UrlEncodedFormEntity(putData));
+		HttpResponse response = httpclient.execute(httpput);
 		return response;
 	}
 	

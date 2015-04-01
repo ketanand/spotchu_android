@@ -83,24 +83,24 @@
 		>
 		</TextView>
 		
-		<!-- ImageButton 
+		<ImageButton 
 		     android:id="@+id/btnEditSpot"
 		     android:layout_toLeftOf="@+id/btnDeleteSpot"
 		     android:layout_alignParentTop="true"
-        	 android:layout_width="40dp"
-		     android:layout_height="40dp"
+        	 android:layout_width="30dp"
+		     android:layout_height="30dp"
 		     android:src="@android:drawable/ic_menu_edit"
-		     android:background="@color/white"
-		/-->
+		     android:background="@drawable/button_background"
+		/>
 		
 		<ImageButton 
 		     android:id="@+id/btnDeleteSpot"
 		     android:layout_alignParentRight="true"
 		     android:layout_alignParentTop="true"
-        	 android:layout_width="40dp"
-		     android:layout_height="40dp"
+        	 android:layout_width="30dp"
+		     android:layout_height="30dp"
 		     android:src="@android:drawable/ic_menu_delete"
-		     android:background="@drawable/button_background"
+		     android:background="@drawable/button_background_transparent"
 		/>
 </RelativeLayout>
 

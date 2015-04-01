@@ -45,6 +45,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.imageaware.ImageAware;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.SpotchuLocationService;
 import com.vrocketz.spotchu.helper.Config;
@@ -52,11 +55,15 @@ import com.vrocketz.spotchu.helper.Constants;
 import com.vrocketz.spotchu.helper.Util;
 import com.vrocketz.spotchu.runnables.GetAddress;
 import com.vrocketz.spotchu.runnables.PostSpot;
+import com.vrocketz.spotchu.runnables.UpdateSpot;
 import com.vrocketz.spotchu.spot.PendingSpotDao;
 import com.vrocketz.spotchu.spot.Spot;
+import com.vrocketz.spotchu.spot.SpotHelper;
 
 public class PostSpotActivity extends FragmentActivity implements OnClickListener {
 	
+	public static final String UPDATE = "isUpdate";
+	public static final String PREVIEW_IMAGE = "PREVIEW_IMAGE";
 	private String imageFilePath;
 	private String imageUrl;
 	private Uri mImageUri;
@@ -69,9 +76,11 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 	private Button mButton;
 	private NotificationManager mNM;
 	private static int NOTIFICATION_ID = 999;
-	private boolean isUpdate;
 	private Spot mSpot;
 	private CheckBox mCheck;
+	
+	private boolean isUpdate;
+	private Long spotId;
 	
 	
 	//Image Effects Variables
@@ -131,7 +140,10 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 					if (actionId == EditorInfo.IME_ACTION_DONE) {
 						mSpot = createPendingSpot();
 						if (mSpot != null){
-							postSpot();
+							//if (!isUpdate)
+								postSpot();
+							//else 
+							//	updateSpot();
 						}else {
 							if (Config.DEBUG)
 								Log.d(Constants.APP_NAME, "[CreateSpot] NULL.");
@@ -148,8 +160,9 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		
 		//Initialize Image View
 		mImageView = (ImageView)findViewById(R.id.imgPic);
-		if (isUpdate = getIntent().getBooleanExtra("isUpdate", false)){
+		if (isUpdate = getIntent().getBooleanExtra(UPDATE, false)){
 			//TODO integrate update spot API
+			initUpdateView(intent);
 		}else {
 			if (Intent.ACTION_SEND.equals(action) && type != null) {
 		        if (type.startsWith("image/")) {
@@ -158,12 +171,13 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		            	mImageView.setImageURI(mImageUri);
 		            	if (mImageUri.toString().contains("content://"))
 		            		imageFilePath = Util.getPathFromUri(mImageUri, this);
-		            	else
-		            		imageFilePath = mImageUri.toString();
+		            	else {
+		            		imageFilePath = mImageUri.getPath();
+		            	}	
 		            }
 		        }
 		    }else {
-				imageFilePath = intent.getStringExtra("PREVIEW_IMAGE");
+				imageFilePath = intent.getStringExtra(PREVIEW_IMAGE);
 				mImageUri = Uri.fromFile(new File(imageFilePath));
 				mImageView.setImageURI(mImageUri);
 		    }
@@ -178,6 +192,22 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
         mCurrentEffect = R.id.btnNoEffect;*/
 		
 		mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+	}
+	
+	private void initUpdateView(Intent intent){
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "[Update Spot] init start.");
+		String imageUrl = intent.getStringExtra(PREVIEW_IMAGE);
+		imageFilePath = imageUrl;
+		mImageUri = Uri.parse(imageUrl);
+		ImageAware imageAware = new ImageViewAware(mImageView, false);
+	    ImageLoader.getInstance().displayImage(imageFilePath, imageAware);
+		spotId = intent.getLongExtra(SpotHelper.SPOT_ID, 0);
+		mTitle.setText(intent.getStringExtra(SpotHelper.SPOT_DESC));
+		mCheck.setVisibility(View.GONE);
+		isUpdate = true;
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "[Update Spot] spot url: " + imageUrl +  ", spotId:" +spotId);
 	}
 	
 	private TextWatcher mTitleTextWatcher = new TextWatcher() {
@@ -212,7 +242,6 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 	    switch (item.getItemId()) {
 	    // Respond to the action bar's Up/Home button
 	    case android.R.id.home:
-	    	//TODO : Add save spot logic to allow user to repost from MySpots section
 	        NavUtils.navigateUpFromSameTask(this);
 	        return true;
 	    }
@@ -266,6 +295,20 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		return true;
 	}
 	
+	/*private void updateSpot(){
+		ArrayList<NameValuePair> nameValuePairs = new  ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("desc", mSpot.getDesc()));
+		nameValuePairs.add(new BasicNameValuePair("tags", mSpot.getTag()));
+		UpdateSpot instance = new UpdateSpot(mSpot,spotId, mHandler, nameValuePairs);
+		Thread t = new Thread(instance);
+		t.start();
+		if (Config.DEBUG)
+			Log.d(Constants.APP_NAME, "Update Spot Runnable called");
+		
+		showNotification();
+		finish();
+	}*/
+	
 	private Spot createPendingSpot(){
 		PendingSpotDao dao = new PendingSpotDao(this);
 		dao.open();
@@ -304,7 +347,10 @@ public class PostSpotActivity extends FragmentActivity implements OnClickListene
 		case R.id.btnOk:
 			mSpot = createPendingSpot();
 			if (mSpot != null){
-				postSpot();
+				//if (isUpdate)
+					//updateSpot();
+				//else 
+					postSpot();
 			}else {
 				if (Config.DEBUG)
 					Log.d(Constants.APP_NAME, "[CreateSpot] NULL.");

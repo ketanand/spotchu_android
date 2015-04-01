@@ -1,8 +1,6 @@
 package com.vrocketz.spotchu.activity.fragment;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,31 +9,23 @@ import org.json.JSONObject;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vrocketz.spotchu.R;
 import com.vrocketz.spotchu.activity.FollowFollowingActivity;
-import com.vrocketz.spotchu.activity.FullScreenSpotActivity;
 import com.vrocketz.spotchu.activity.MainActivity;
 import com.vrocketz.spotchu.helper.Config;
 import com.vrocketz.spotchu.helper.Constants;
@@ -45,7 +35,6 @@ import com.vrocketz.spotchu.runnables.GetUserMeta;
 import com.vrocketz.spotchu.spot.PendingSpotDao;
 import com.vrocketz.spotchu.spot.Spot;
 import com.vrocketz.spotchu.spot.SpotHelper;
-import com.vrocketz.spotchu.spot.SpotSQLiteHelper;
 import com.vrocketz.spotchu.views.AnimatedGifImageView;
 import com.vrocketz.spotchu.views.adapter.MySpotsListAdapter;
 import com.vrocketz.spotchu.views.adapter.PendingSpotListAdapter;
@@ -116,7 +105,7 @@ public class MySpotsFragment extends Fragment implements OnClickListener {
 		mSpotList.setAdapter(adapter);
 
 		new Thread(new GetMySpots(mHandler)).start();
-		new Thread(new GetUserMeta(mHandler, 0)).start();
+		new Thread(new GetUserMeta(mHandler, 0L)).start();
 		// Pending listview
 		initPendingSpotList(v);
 		return v;
@@ -231,7 +220,7 @@ public class MySpotsFragment extends Fragment implements OnClickListener {
 	private void openList(int requestType){
 		Intent intent = new Intent(getActivity(), FollowFollowingActivity.class);
 		intent.putExtra(FollowFollowingActivity.REQUEST_TYPE, requestType);
-		int id = Integer.parseInt(Util.getGlobalPreferences().getString(Constants.USER_ID, "-1"));
+		long id = Long.parseLong(Util.getGlobalPreferences().getString(Constants.USER_ID, "-1"));
 		intent.putExtra(Constants.USER_ID, id);
 		startActivity(intent);
 	}

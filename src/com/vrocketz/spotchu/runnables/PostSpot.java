@@ -47,11 +47,11 @@ public class PostSpot implements Runnable {
 	public void run() {
 		try {
 			Bitmap bitmap;
-			if (uri != null){
-				bitmap = SpotHelper.getImageBitmap(this.uri);
-			}else {
+			//if (uri != null){
+			//	bitmap = SpotHelper.getImageBitmap(this.uri);
+			//}else {
 				bitmap = SpotHelper.getImageBitmap(this.path);
-			}
+			//}
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "Upload Image Started, Bitmap formed");
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();

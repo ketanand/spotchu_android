@@ -17,9 +17,9 @@ public class GetFollowers implements Runnable {
 	private static String END_POINT = "user/followers/";
 	private static String URL = Constants.API_HOST + END_POINT;
 	private Handler mHandler;
-	private Integer mUserId;
+	private Long mUserId;
 	
-	public GetFollowers(Handler handler, Integer userId){
+	public GetFollowers(Handler handler, Long userId){
 		mHandler = handler;
 		mUserId = userId;
 	}

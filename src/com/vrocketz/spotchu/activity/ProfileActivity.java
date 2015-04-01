@@ -33,11 +33,14 @@ import com.vrocketz.spotchu.spot.SpotHelper;
 import com.vrocketz.spotchu.views.AnimatedGifImageView;
 import com.vrocketz.spotchu.views.adapter.MySpotsListAdapter;
 
-public class ProfileActivity extends FragmentActivity implements View.OnClickListener{
-	
-	private ImageView mUserPic, mNoSpots, mNoInternet;
-	private TextView mTxtUserName, mTxtFollowers, mTxtFollowing, mTxtLiveSpots, mLblFollowers, mLblFollowing;
-	private Integer mUserId;
+public class ProfileActivity extends FragmentActivity implements
+		View.OnClickListener {
+
+	private ImageView mUserPic, mNoInternet;
+	private TextView mTxtUserName, mTxtFollowers, mTxtFollowing, mTxtLiveSpots,
+			mLblFollowers, mLblFollowing, mTxtNoSpots;
+	private Long mUserId;
+	private String mImagePath;
 	private String mUserName;
 	private boolean mIsFollowed;
 	private ArrayList<Spot> mSpots;
@@ -46,14 +49,14 @@ public class ProfileActivity extends FragmentActivity implements View.OnClickLis
 	private AnimatedGifImageView mGifLoader;
 	private Button mBtnFollow;
 	private ProgressBar mProgressFollow;
-	
+
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.profile);
 		Intent intent = getIntent();
 		mNoInternet = (ImageView) findViewById(R.id.imgNoInternet);
-		mNoSpots = (ImageView) findViewById(R.id.imgNoSpots);
+		mTxtNoSpots = (TextView) findViewById(R.id.txtNoSpots);
 		mUserPic = (ImageView) findViewById(R.id.imgUserDisplayPic);
 		mTxtFollowers = (TextView) findViewById(R.id.lblFollowers);
 		mTxtFollowers.setOnClickListener(this);
@@ -67,109 +70,117 @@ public class ProfileActivity extends FragmentActivity implements View.OnClickLis
 		mTxtUserName = (TextView) findViewById(R.id.lblUserName);
 		mUserName = intent.getStringExtra(Constants.USER_NAME);
 		mTxtUserName.setText(mUserName);
-		ImageAware imageAwareUserPic = new ImageViewAware(mUserPic,
-				false);
-		ImageLoader.getInstance().displayImage(
-				intent.getStringExtra(Constants.USER_IMG_URL), imageAwareUserPic);
-		mUserId = intent.getIntExtra(Constants.USER_ID, 0);
-		if (mUserId != 0){
+
+		ImageAware imageAwareUserPic = new ImageViewAware(mUserPic, false);
+		mImagePath = intent.getStringExtra(Constants.USER_IMG_URL);
+		ImageLoader.getInstance().displayImage(mImagePath, imageAwareUserPic);
+		mUserPic.setOnClickListener(this);
+
+		mUserId = intent.getLongExtra(Constants.USER_ID, 0);
+		if (mUserId != 0) {
 			if (Config.DEBUG)
 				Log.d(Constants.APP_NAME, "[Profile] UserID :" + mUserId);
 			getUserMetaData();
 			getUserSpots();
 		}
-		
-		//Follow Button
+
+		// Follow Button
 		mBtnFollow = (Button) findViewById(R.id.btnFollow);
 		mBtnFollow.setVisibility(View.GONE);
 		mBtnFollow.setOnClickListener(this);
-		
+
 		mProgressFollow = (ProgressBar) findViewById(R.id.progressBarFollow);
 	}
-	
-	private Handler mHandler = new Handler(){
-		public void handleMessage(Message msg){
+
+	private Handler mHandler = new Handler() {
+		public void handleMessage(Message msg) {
 			final int what = msg.what;
-			switch(what){
-				case Constants.SPOTS_FETCHED:
-					JSONArray spots = (JSONArray) msg.obj;
-					try {
-						if (spots.length() == 0){
-							mNoSpots.setVisibility(View.VISIBLE);
-						}else {
-							mSpots = SpotHelper.getFromJsonArray(spots);
-							mAdapter.setSpots(mSpots);
-							mSpotList.setVisibility(View.VISIBLE);
-							mTxtLiveSpots.setVisibility(View.VISIBLE);
-							mAdapter.notifyDataSetChanged();
-						}	
-					} catch (JSONException e) {
-						e.printStackTrace();
+			switch (what) {
+			case Constants.SPOTS_FETCHED:
+				JSONArray spots = (JSONArray) msg.obj;
+				try {
+					if (spots.length() == 0) {
+						mTxtNoSpots.setVisibility(View.VISIBLE);
+						mTxtLiveSpots.setVisibility(View.GONE);
+					} else {
+						mSpots = SpotHelper.getFromJsonArray(spots);
+						mAdapter.setSpots(mSpots);
+						mSpotList.setVisibility(View.VISIBLE);
+						mTxtLiveSpots.setVisibility(View.VISIBLE);
+						mAdapter.notifyDataSetChanged();
 					}
-					mGifLoader.setVisibility(View.GONE);
-					break;
-				case Constants.USER_META_FETCHED:
-					JSONObject meta = (JSONObject)msg.obj;
-					updateUserInfo(meta);
-					break;
-				case Constants.USER_FOLLOWED:
-					mIsFollowed = !mIsFollowed;
-					updateFollowButton(mIsFollowed);
-					break;
-				case Constants.NO_INTERNET:	
-				case Constants.USER_META_FAILED:	
-				case Constants.SPOTS_FETCH_FAILED:	
-				case Constants.USER_FOLLOW_FAILED:
-					handleFailure(what);
-					break;
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				mGifLoader.setVisibility(View.GONE);
+				break;
+			case Constants.USER_META_FETCHED:
+				JSONObject meta = (JSONObject) msg.obj;
+				updateUserInfo(meta);
+				break;
+			case Constants.USER_FOLLOWED:
+				mIsFollowed = !mIsFollowed;
+				updateFollowButton(mIsFollowed);
+				break;
+			case Constants.NO_INTERNET:
+			case Constants.USER_META_FAILED:
+			case Constants.SPOTS_FETCH_FAILED:
+			case Constants.USER_FOLLOW_FAILED:
+				handleFailure(what);
+				break;
 			}
 		}
 	};
-	
-	private void getUserSpots(){
+
+	private void getUserSpots() {
 		mGifLoader = (AnimatedGifImageView) findViewById(R.id.gifLoader);
-		mGifLoader.setAnimatedGif(R.raw.loader,	AnimatedGifImageView.TYPE.FIT_CENTER);
+		mGifLoader.setAnimatedGif(R.raw.loader,
+				AnimatedGifImageView.TYPE.FIT_CENTER);
 		mSpotList = (ListView) findViewById(R.id.lstMySpots);
 		mAdapter = new MySpotsListAdapter(this);
 		mAdapter.showDelete(false);
+		mAdapter.showEdit(false);
 		mSpotList.setAdapter(mAdapter);
 		new Thread(new GetMySpots(mHandler, mUserId)).start();
 	}
-	
-	private void getUserMetaData(){
+
+	private void getUserMetaData() {
 		new Thread(new GetUserMeta(mHandler, mUserId)).start();
 	}
-	
-	private void followUser(){
+
+	private void followUser() {
 		new Thread(new Follow(mHandler, mUserId, mUserName)).start();
 	}
-	
-	private void updateFollowButton(boolean isFollowed){
+
+	private void updateFollowButton(boolean isFollowed) {
 		if (Config.DEBUG)
-			Log.d(Constants.APP_NAME, "[Profile] UpdateFollowButton : " + isFollowed);
+			Log.d(Constants.APP_NAME, "[Profile] UpdateFollowButton : "
+					+ isFollowed);
 		mBtnFollow.setEnabled(true);
 		mBtnFollow.setVisibility(View.VISIBLE);
 		mProgressFollow.setVisibility(View.GONE);
-		if (isFollowed){
+		if (isFollowed) {
 			mBtnFollow.setBackgroundResource(R.drawable.red_button);
 			String text = "- " + getResources().getString(R.string.following);
 			mBtnFollow.setText(text);
 			mBtnFollow.setTextColor(getResources().getColor(R.color.white));
-		}else {
-			mBtnFollow.setBackgroundResource(R.drawable.white_button_red_border);
+		} else {
+			mBtnFollow
+					.setBackgroundResource(R.drawable.white_button_red_border);
 			String text = "+ " + getResources().getString(R.string.follow);
 			mBtnFollow.setText(text);
-			mBtnFollow.setTextColor(getResources().getColor(R.color.theme_color));
+			mBtnFollow.setTextColor(getResources()
+					.getColor(R.color.theme_color));
 		}
 	}
-	
-	private void updateUserInfo(JSONObject meta){
+
+	private void updateUserInfo(JSONObject meta) {
 		try {
 			mTxtFollowers.setText(meta.getString("followers"));
 			mTxtFollowing.setText(meta.getString("following"));
-			if (meta.getInt("selfFollowing") == 0){
+			if (meta.getInt("selfFollowing") == 0) {
 				mIsFollowed = false;
-			}else {
+			} else {
 				mIsFollowed = true;
 			}
 			updateFollowButton(mIsFollowed);
@@ -177,9 +188,9 @@ public class ProfileActivity extends FragmentActivity implements View.OnClickLis
 			e.printStackTrace();
 		}
 	}
-	
-	private void handleFailure(int what){
-		switch(what){
+
+	private void handleFailure(int what) {
+		switch (what) {
 		case Constants.NO_INTERNET:
 			mNoInternet.setVisibility(View.VISIBLE);
 			break;
@@ -194,51 +205,67 @@ public class ProfileActivity extends FragmentActivity implements View.OnClickLis
 	public void onClick(View v) {
 		if (Config.DEBUG)
 			Log.d(Constants.APP_NAME, "[Profile ] onClick : " + v.getId());
-		if (v.getId() == R.id.btnFollow){
+		if (v.getId() == R.id.btnFollow) {
 			mBtnFollow.setEnabled(false);
-			mBtnFollow.setBackgroundResource(R.drawable.white_button_grey_border);
-			mBtnFollow.setTextColor(getResources().getColor(R.color.activity_background));
+			mBtnFollow
+					.setBackgroundResource(R.drawable.white_button_grey_border);
+			mBtnFollow.setTextColor(getResources().getColor(
+					R.color.activity_background));
 			mProgressFollow.setVisibility(View.VISIBLE);
 			followUser();
-		}else if (v.getId() == R.id.lblFollowers
-					|| v.getId() == R.id.lblFollowersTitle){
+		} else if (v.getId() == R.id.lblFollowers
+				|| v.getId() == R.id.lblFollowersTitle) {
 			String value = (String) mTxtFollowers.getText();
-			if (value != null){
+			if (value != null) {
 				try {
 					int val = Integer.parseInt(value);
 					if (Config.DEBUG)
-						Log.d(Constants.APP_NAME, "[Profile Activity]Followers val: " + val);
-					if (val > 0){
+						Log.d(Constants.APP_NAME,
+								"[Profile Activity]Followers val: " + val);
+					if (val > 0) {
 						openList(FollowFollowingActivity.FOLLOWERS);
-					}	
-				}catch (NumberFormatException e){
+					}
+				} catch (NumberFormatException e) {
 					if (Config.DEBUG)
-					Log.d(Constants.APP_NAME, "[Profile Activity]Followers numberformatexception: " + value);
+						Log.d(Constants.APP_NAME,
+								"[Profile Activity]Followers numberformatexception: "
+										+ value);
 				}
 			}
-		}else if (v.getId() == R.id.lblFollowing
-				|| v.getId() == R.id.lblFollowingTitle){
+		} else if (v.getId() == R.id.lblFollowing
+				|| v.getId() == R.id.lblFollowingTitle) {
 			String value = (String) mTxtFollowing.getText();
-			if (value != null){
+			if (value != null) {
 				try {
 					int val = Integer.parseInt(value);
 					if (Config.DEBUG)
-					Log.d(Constants.APP_NAME, "[Profile Activity]Following val: " + val);
-					if (val > 0){
+						Log.d(Constants.APP_NAME,
+								"[Profile Activity]Following val: " + val);
+					if (val > 0) {
 						openList(FollowFollowingActivity.FOLLOWING);
-					}	
-				}catch (NumberFormatException e){
+					}
+				} catch (NumberFormatException e) {
 					if (Config.DEBUG)
-					Log.d(Constants.APP_NAME, "[Profile Activity]Following numberformatexception: " + value);
+						Log.d(Constants.APP_NAME,
+								"[Profile Activity]Following numberformatexception: "
+										+ value);
 				}
 			}
+		} else if (v.getId() == R.id.imgUserDisplayPic) {
+			openFullScreenDP(mImagePath);
 		}
 	}
-	
-	private void openList(int requestType){
+
+	private void openList(int requestType) {
 		Intent intent = new Intent(this, FollowFollowingActivity.class);
 		intent.putExtra(FollowFollowingActivity.REQUEST_TYPE, requestType);
 		intent.putExtra(Constants.USER_ID, mUserId);
+		startActivity(intent);
+	}
+
+	private void openFullScreenDP(String path) {
+		Intent intent = new Intent(this, ProfilePicActivity.class);
+		intent.putExtra(ProfilePicActivity.IMAGE_URL, path);
 		startActivity(intent);
 	}
 

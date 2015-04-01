@@ -48,6 +48,17 @@
 		        style="@style/label.small"
 		>
 		</TextView>
+		
+	    <ImageButton 
+		     android:id="@+id/btnDeleteComment"
+		     android:layout_alignParentRight="true"
+		     android:layout_alignParentTop="true"
+        	 android:layout_width="25dp"
+		     android:layout_height="25dp"
+		     android:background="@drawable/button_delete"
+		     android:scaleType="fitCenter"
+		     android:layout_margin="0dp"
+		/>
     
 
 </RelativeLayout>

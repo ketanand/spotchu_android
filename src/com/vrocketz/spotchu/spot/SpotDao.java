@@ -108,7 +108,7 @@ public class SpotDao {
 	  private Spot cursorToSpot(Cursor cursor) {
 	    Spot spot = new Spot();
 	    spot.setId(cursor.getLong(0));
-	    spot.setUserId(cursor.getInt(1));
+	    spot.setUserId(cursor.getLong(1));
 	    spot.setTag(cursor.getString(2));
 	    spot.setScale(cursor.getInt(3));
 	    spot.setLocationLong(cursor.getString(4));

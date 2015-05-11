@@ -101,7 +101,7 @@ public class ViewSpot extends Activity implements OnClickListener {
 		new Thread(new GetSpotById(mHandler, id)).start();
 		areControlsVisible = true;
 		mCurrentUserId = Long.parseLong(Util.getGlobalPreferences().getString(
-				Constants.USER_ID, "-1L"));
+				Constants.USER_ID, "-1"));
 	}
 
 	private final Handler mHandler = new Handler() {

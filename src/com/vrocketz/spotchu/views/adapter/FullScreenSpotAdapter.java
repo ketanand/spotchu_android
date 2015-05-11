@@ -65,7 +65,7 @@ public class FullScreenSpotAdapter extends PagerAdapter implements TouchImageVie
 		this.mSpots = spots;
 		this.mPager = pager;
 		mCurrentUserId = Long.parseLong(Util.getGlobalPreferences().getString(
-				Constants.USER_ID, "-1L"));
+				Constants.USER_ID, "-1"));
 	}
 
 	@Override
